@@ -209,5 +209,19 @@
   "dash_publishing_reject": "Rechazar",
   "dash_publishing_stat_published_week": "Publicados Esta Semana",
   "dash_publishing_stat_avg_engagement": "Interacci\u00f3n Promedio",
-  "dash_publishing_stat_queue_health": "Salud de Cola"
+  "dash_publishing_stat_queue_health": "Salud de Cola",
+
+  "dash_brand_title": "Marca y Campa\u00f1as",
+  "dash_brand_health_score": "Salud de Marca",
+  "dash_brand_industry": "Industria",
+  "dash_brand_audience": "Audiencia Objetivo",
+  "dash_brand_voice_title": "Voz de Marca",
+  "dash_brand_campaigns_title": "Campa\u00f1as Activas",
+  "dash_brand_new_campaign": "Nueva Campa\u00f1a",
+  "dash_brand_content_mix": "Mix de Contenido",
+  "dash_brand_posts_progress": "{published}/{total} publicaciones",
+  "dash_brand_status_active": "Activa",
+  "dash_brand_status_paused": "Pausada",
+  "dash_brand_status_completed": "Completada",
+  "dash_brand_status_draft": "Borrador"
 }

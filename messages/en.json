@@ -209,5 +209,19 @@
   "dash_publishing_reject": "Reject",
   "dash_publishing_stat_published_week": "Published This Week",
   "dash_publishing_stat_avg_engagement": "Avg. Engagement",
-  "dash_publishing_stat_queue_health": "Queue Health"
+  "dash_publishing_stat_queue_health": "Queue Health",
+
+  "dash_brand_title": "Brand & Campaigns",
+  "dash_brand_health_score": "Brand Health",
+  "dash_brand_industry": "Industry",
+  "dash_brand_audience": "Target Audience",
+  "dash_brand_voice_title": "Brand Voice",
+  "dash_brand_campaigns_title": "Active Campaigns",
+  "dash_brand_new_campaign": "New Campaign",
+  "dash_brand_content_mix": "Content Mix",
+  "dash_brand_posts_progress": "{published}/{total} posts",
+  "dash_brand_status_active": "Active",
+  "dash_brand_status_paused": "Paused",
+  "dash_brand_status_completed": "Completed",
+  "dash_brand_status_draft": "Draft"
 }

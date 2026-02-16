@@ -47,10 +47,13 @@ Plans:
   4. All dashboard pages use the same design system tokens as the landing page
   5. Pages work with static/mock data and are ready to be wired to real backends later
 **Reference files**: `design-variants/dashboard/variant-{1-5}.html`
-**Plans**: 0 plans (run /gsd:plan-phase 5 to break down)
+**Plans**: 4 plans
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 5 to break down)
+- [ ] 05-01-PLAN.md — Foundation: layout group refactoring, dashboard shell (sidebar + header), CSS variables, i18n chrome keys
+- [ ] 05-02-PLAN.md — Overview / Analytics page (variant-1): KPI cards, performance chart, activity feed, schedule
+- [ ] 05-03-PLAN.md — Content Calendar (variant-2) + Brand & Campaigns (variant-4): calendar grid, radial charts, campaigns
+- [ ] 05-04-PLAN.md — Content Editor (variant-3) + Publishing Hub (variant-5): 3-panel editor, kanban board, AI panel
 
 ### Phase 2: Auth, Onboarding & LinkedIn
 **Goal**: A new user can sign up, complete the full onboarding flow (Quick Start with website scraping, Deep Brief wizard, Asset Library uploads), connect their LinkedIn account, and have everything the AI needs to generate content
@@ -111,7 +114,7 @@ Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4
 | Phase | Plans Complete | Status | Completed |
 |-------|---------------|--------|-----------|
 | 1. Landing Page & Design System | 2/2 | Complete | 2026-02-16 |
-| 5. Dashboard UI | 0/? | Next up | - |
+| 5. Dashboard UI | 0/4 | Next up | - |
 | 2. Auth, Onboarding & LinkedIn | 0/3 | Not started | - |
 | 3. AI Generation Pipeline | 0/2 | Not started | - |
 | 4. Calendar, Review & Publishing | 0/3 | Not started | - |

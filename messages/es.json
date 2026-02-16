@@ -174,5 +174,22 @@
   "dash_editor_target_audience": "Audiencia Objetivo",
   "dash_editor_content_type": "Tipo de Contenido",
   "dash_editor_tags": "Etiquetas",
-  "dash_editor_selected": "Seleccionado"
+  "dash_editor_selected": "Seleccionado",
+
+  "dash_calendar_title": "Calendario de Contenido",
+  "dash_calendar_month": "Mes",
+  "dash_calendar_week": "Semana",
+  "dash_calendar_add_content": "Agregar Contenido",
+  "dash_calendar_today_queue": "Cola de Hoy",
+  "dash_calendar_ai_suggestions": "Sugerencias IA",
+  "dash_calendar_schedule_btn": "Programar",
+  "dash_calendar_more_items": "+{count} m\u00e1s",
+  "dash_calendar_no_content": "Sin contenido programado",
+  "dash_calendar_mon": "Lun",
+  "dash_calendar_tue": "Mar",
+  "dash_calendar_wed": "Mi\u00e9",
+  "dash_calendar_thu": "Jue",
+  "dash_calendar_fri": "Vie",
+  "dash_calendar_sat": "S\u00e1b",
+  "dash_calendar_sun": "Dom"
 }

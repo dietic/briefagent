@@ -174,5 +174,22 @@
   "dash_editor_target_audience": "Target Audience",
   "dash_editor_content_type": "Content Type",
   "dash_editor_tags": "Tags",
-  "dash_editor_selected": "Selected"
+  "dash_editor_selected": "Selected",
+
+  "dash_calendar_title": "Content Calendar",
+  "dash_calendar_month": "Month",
+  "dash_calendar_week": "Week",
+  "dash_calendar_add_content": "Add Content",
+  "dash_calendar_today_queue": "Today's Queue",
+  "dash_calendar_ai_suggestions": "AI Suggestions",
+  "dash_calendar_schedule_btn": "Schedule",
+  "dash_calendar_more_items": "+{count} more",
+  "dash_calendar_no_content": "No content scheduled",
+  "dash_calendar_mon": "Mon",
+  "dash_calendar_tue": "Tue",
+  "dash_calendar_wed": "Wed",
+  "dash_calendar_thu": "Thu",
+  "dash_calendar_fri": "Fri",
+  "dash_calendar_sat": "Sat",
+  "dash_calendar_sun": "Sun"
 }

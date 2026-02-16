@@ -53,6 +53,13 @@
   --scrollbar-thumb: rgba(0, 0, 0, 0.12);
   --input-bg: rgba(0, 0, 0, 0.02);
   --surface-raised: #f8fafb;
+
+  /* RGB channel values for alpha compositing in components */
+  --chip-electric-rgb: 8 145 178;
+  --chip-secondary-rgb: 234 88 12;
+  --chip-tertiary-rgb: 219 39 119;
+  --chip-positive-rgb: 5 150 105;
+  --bg-surface-rgb: 255 255 255;
 }
 
 :root:where(.dark, .dark *) {
@@ -95,6 +102,13 @@
   --scrollbar-thumb: rgba(255, 255, 255, 0.1);
   --input-bg: rgba(255, 255, 255, 0.03);
   --surface-raised: #121a20;
+
+  /* RGB channel values for alpha compositing in components */
+  --chip-electric-rgb: 6 182 212;
+  --chip-secondary-rgb: 249 115 22;
+  --chip-tertiary-rgb: 236 72 153;
+  --chip-positive-rgb: 52 211 153;
+  --bg-surface-rgb: 14 21 25;
 }
 
 /* Smooth scrolling for anchor navigation */

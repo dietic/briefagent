@@ -10,29 +10,29 @@ See: .planning/PROJECT.md (updated 2026-02-16)
 ## Current Position
 
 Phase: 5 of 5 (Dashboard UI)
-Plan: 2 of 4 (05-02 next)
-Status: Executing — 05-01 complete, continuing to 05-02
-Last activity: 2026-02-16 — Completed 05-01 (layout shell + sidebar + header)
+Plan: 4 of 4 (05-04 complete)
+Status: Executing — 05-01 through 05-04 complete (wave 2 parallel plans done)
+Last activity: 2026-02-16 — Completed 05-04 (Content Editor + Publishing Hub)
 
-Progress: [###░░░░░░░] 28% (1 phase + 1 plan complete)
+Progress: [#######░░░] 70% (1 phase + 4 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3 (Phase 1 retroactive + 05-01)
-- Average duration: 6.3min
-- Total execution time: 0.32 hours
+- Total plans completed: 4 (Phase 1 retroactive + 05-01 through 05-04)
+- Average duration: 5.8min
+- Total execution time: 0.4 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-landing-page-design-system | 2/2 | 15min | 7.5min |
-| 05-dashboard-ui | 1/4 | 4min | 4min |
+| 05-dashboard-ui | 4/4 | 24min | 6min |
 
 **Recent Trend:**
-- Last 5 plans: 10min, 5min, 4min
-- Trend: Accelerating
+- Last 5 plans: 10min, 5min, 4min, 5min
+- Trend: Consistent (~5min)
 
 *Updated after each plan completion*
 
@@ -64,6 +64,10 @@ Recent decisions affecting current work:
 - [05-01]: typeof LayoutDashboard for lucide-svelte icon type (Svelte 5 Component type incompatible)
 - [05-01]: Dashboard CSS Grid layout: 240px sidebar + 1fr content
 - [05-01]: Dashboard CSS variables extend app.css (not separate file) for theme toggle compat
+- [05-04]: Full-height dashboard pages use h-[calc(100%+4rem)] -m-8 to expand into layout padding
+- [05-04]: KanbanColumn uses Svelte 5 Snippet type for typed children composition
+- [05-04]: PostCard uses $derived for platform color lookup (Svelte 5 reactivity best practice)
+- [05-04]: Mock data pattern: typed interfaces + const exports in src/lib/data/
 
 ### Roadmap Evolution
 
@@ -84,5 +88,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-16
-Stopped at: Completed 05-01-PLAN.md (dashboard layout shell)
-Resume: Execute 05-02-PLAN.md (overview dashboard page)
+Stopped at: Completed 05-04-PLAN.md (Content Editor + Publishing Hub)
+Resume: Phase 5 complete if 05-02 and 05-03 also done (parallel). Next: Phase 2 (Auth/Onboarding)

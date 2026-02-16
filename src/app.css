@@ -41,6 +41,18 @@
 
   /* Gradient text needs to be dark in light mode */
   --headline-color: #0c1820;
+
+  /* Dashboard extensions */
+  --bg-sidebar: #edf4f7;
+  --bg-sidebar-active: rgba(8, 145, 178, 0.08);
+  --bg-sidebar-hover: rgba(0, 0, 0, 0.03);
+  --text-muted: #94a8b3;
+  --card-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  --positive: #059669;
+  --negative: #dc2626;
+  --scrollbar-thumb: rgba(0, 0, 0, 0.12);
+  --input-bg: rgba(0, 0, 0, 0.02);
+  --surface-raised: #f8fafb;
 }
 
 :root:where(.dark, .dark *) {
@@ -71,6 +83,18 @@
   --toggle-hover: rgba(255, 255, 255, 0.1);
 
   --headline-color: #ffffff;
+
+  /* Dashboard extensions */
+  --bg-sidebar: #0a0f13;
+  --bg-sidebar-active: rgba(6, 182, 212, 0.08);
+  --bg-sidebar-hover: rgba(255, 255, 255, 0.03);
+  --text-muted: #3d5563;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --positive: #34d399;
+  --negative: #f87171;
+  --scrollbar-thumb: rgba(255, 255, 255, 0.1);
+  --input-bg: rgba(255, 255, 255, 0.03);
+  --surface-raised: #121a20;
 }
 
 /* Smooth scrolling for anchor navigation */

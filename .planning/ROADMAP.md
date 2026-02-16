@@ -61,17 +61,18 @@ Plans:
 **Requirements**: AUTH-01, AUTH-02, AUTH-03, AUTH-04, AUTH-05, ONBR-01, ONBR-02, ONBR-03, ONBR-04, ONBR-05, ONBR-06, ONBR-07, ONBR-08, ASET-01, ASET-02, ASET-03, ASET-04, LINK-01, LINK-02, LINK-03, LINK-04
 **Success Criteria** (what must be TRUE):
   1. User can sign up with email/password, receive a verification email, log in, stay logged in across browser refreshes, and log out from any page
-  2. User can reset a forgotten password via email link
+  2. User can reset a forgotten password via email link, set a new password, and log in with the new password
   3. User can complete Quick Start (product name, URL, description, logo) and the system auto-scrapes the URL for brand data -- with graceful fallback if scraping fails
   4. User can complete the Deep Brief wizard (product details, audience, brand voice traits/examples/words, goals and posting frequency)
   5. User can upload assets (screenshots, photos, etc.), tag them by type, add descriptions, and mark primary assets
   6. User can connect a LinkedIn personal profile or company page via OAuth, and the system securely manages tokens with refresh logic
+**Wave Structure**: Wave 1 = 02-01 (auth), Wave 2 = 02-02 + 02-03 (onboarding and LinkedIn in parallel)
 **Plans**: 3 plans
 
 Plans:
 - [ ] 02-01-PLAN.md — Auth system: Supabase SSR setup, adapter-node, hooks middleware, auth pages (login, signup, forgot-password, reset-password, verify-email, callback), dashboard auth guard, logout
-- [ ] 02-02-PLAN.md — Onboarding flow: Drizzle ORM schema (4 tables), Quick Start with URL scraping, Deep Brief wizard (4 sections), Asset Library with drag-and-drop uploads, stepper layout
-- [ ] 02-03-PLAN.md — LinkedIn OAuth: authorize/callback endpoints, AES-256-GCM token encryption, LinkedIn API client, settings page with connection management
+- [ ] 02-02-PLAN.md — Onboarding flow: Drizzle ORM schema (4 tables), stepper layout, Quick Start with URL scraping, Deep Brief wizard (4 sections), Asset Library with drag-and-drop uploads, dashboard integration
+- [ ] 02-03-PLAN.md — LinkedIn OAuth: authorize/callback endpoints, AES-256-GCM token encryption, LinkedIn API client, settings page with connection management (runs parallel with 02-02)
 
 ### Phase 3: AI Generation Pipeline
 **Goal**: The user can generate a full 2-week content plan from their brief, then generate platform-optimized copy and brand-coherent original images for each post slot

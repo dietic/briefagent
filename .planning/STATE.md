@@ -9,29 +9,29 @@ See: .planning/PROJECT.md (updated 2026-02-16)
 
 ## Current Position
 
-Phase: 5 of 5 (Dashboard UI) — next in execution order after Phase 1
-Plan: Not yet planned
-Status: Ready to plan — run /gsd:plan-phase 5
-Last activity: 2026-02-16 — Phase 1 marked complete, Phase 5 added and ready
+Phase: 5 of 5 (Dashboard UI)
+Plan: 2 of 4 (05-02 next)
+Status: Executing — 05-01 complete, continuing to 05-02
+Last activity: 2026-02-16 — Completed 05-01 (layout shell + sidebar + header)
 
-Progress: [##░░░░░░░░] 20% (1 of 5 phases complete)
+Progress: [###░░░░░░░] 28% (1 phase + 1 plan complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2 (Phase 1, tracked retroactively)
-- Average duration: 7.5min
-- Total execution time: 0.25 hours
+- Total plans completed: 3 (Phase 1 retroactive + 05-01)
+- Average duration: 6.3min
+- Total execution time: 0.32 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-landing-page-design-system | 2/2 | 15min | 7.5min |
-| 05-dashboard-ui | 0/? | - | - |
+| 05-dashboard-ui | 1/4 | 4min | 4min |
 
 **Recent Trend:**
-- Last 5 plans: 10min, 5min
+- Last 5 plans: 10min, 5min, 4min
 - Trend: Accelerating
 
 *Updated after each plan completion*
@@ -60,6 +60,10 @@ Recent decisions affecting current work:
 - [01-02]: Tailwind 4 tree-shakes @keyframes not referenced by --animate-* utility classes — use animate-* classes, not inline style="animation:"
 - [Landing]: All landing components use CSS variables (--bg-page, --text-main, --text-dim, etc.) for theme support
 - [Landing]: Emojis used for icons in hero cards, features, and how-it-works (not Lucide icons)
+- [05-01]: Layout groups: (landing) for public pages, /dashboard for app pages
+- [05-01]: typeof LayoutDashboard for lucide-svelte icon type (Svelte 5 Component type incompatible)
+- [05-01]: Dashboard CSS Grid layout: 240px sidebar + 1fr content
+- [05-01]: Dashboard CSS variables extend app.css (not separate file) for theme toggle compat
 
 ### Roadmap Evolution
 
@@ -80,5 +84,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-16
-Stopped at: Phase 5 ready to plan
-Resume: Run /gsd:plan-phase 5 to break down dashboard UI into executable plans
+Stopped at: Completed 05-01-PLAN.md (dashboard layout shell)
+Resume: Execute 05-02-PLAN.md (overview dashboard page)

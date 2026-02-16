@@ -64,6 +64,9 @@ Recent decisions affecting current work:
 - [05-01]: typeof LayoutDashboard for lucide-svelte icon type (Svelte 5 Component type incompatible)
 - [05-01]: Dashboard CSS Grid layout: 240px sidebar + 1fr content
 - [05-01]: Dashboard CSS variables extend app.css (not separate file) for theme toggle compat
+- [05-03]: RGB channel CSS custom properties (--chip-electric-rgb etc.) for alpha compositing in Svelte style bindings
+- [05-03]: Radial chart component with discriminated union props for score vs donut modes
+- [05-03]: Calendar grid uses $derived.by() for reactive month/week view switching
 - [05-04]: Full-height dashboard pages use h-[calc(100%+4rem)] -m-8 to expand into layout padding
 - [05-04]: KanbanColumn uses Svelte 5 Snippet type for typed children composition
 - [05-04]: PostCard uses $derived for platform color lookup (Svelte 5 reactivity best practice)
@@ -88,5 +91,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-16
-Stopped at: Completed 05-04-PLAN.md (Content Editor + Publishing Hub)
-Resume: Phase 5 complete if 05-02 and 05-03 also done (parallel). Next: Phase 2 (Auth/Onboarding)
+Stopped at: Completed 05-03-PLAN.md (Calendar + Brand pages)
+Resume: Phase 5 complete (all wave 2 parallel plans done). Next: Phase 2 (Auth/Onboarding)

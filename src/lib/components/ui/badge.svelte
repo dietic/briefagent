@@ -20,10 +20,10 @@
 	const baseClasses = 'inline-flex items-center rounded-full font-medium';
 
 	const variants: Record<string, string> = {
-		default: 'bg-white/[0.06] border border-white/[0.08] text-neutral-300',
-		accent: 'bg-primary-500/10 border border-primary-500/20 text-primary-400',
+		default: 'bg-[var(--toggle-bg)] border border-[var(--border-subtle)] text-[var(--text-dim)]',
+		accent: 'bg-primary-500/10 border border-primary-500/20 text-primary-500',
 		outline:
-			'border border-neutral-700 text-neutral-400',
+			'border border-[var(--btn-outline-border)] text-[var(--text-dim)]',
 		success: 'bg-success/10 border border-success/20 text-success'
 	};
 

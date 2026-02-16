@@ -20,17 +20,17 @@
 	}: Props = $props();
 
 	const baseClasses =
-		'inline-flex items-center justify-center font-semibold rounded-[0.875rem] transition-all duration-300 ease-out active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950 cursor-pointer';
+		'inline-flex items-center justify-center font-bold rounded-[0.875rem] transition-all duration-300 ease-out active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/50 focus-visible:ring-offset-2 cursor-pointer';
 
 	const variants: Record<string, string> = {
 		primary:
-			'bg-primary-500 text-white hover:bg-primary-400 shadow-lg shadow-primary-500/20 hover:shadow-primary-400/30 hover:shadow-xl',
+			'bg-primary-500 text-white shadow-lg shadow-primary-500/20 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgb(6_182_212/0.25),0_0_0_1px_rgb(6_182_212)]',
 		secondary:
 			'bg-neutral-800 text-neutral-100 border border-neutral-700/50 hover:bg-neutral-750 hover:border-neutral-600/50',
 		ghost:
-			'text-neutral-400 hover:text-white hover:bg-white/5',
+			'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-black/5 dark:hover:bg-white/5 font-normal',
 		outline:
-			'border border-neutral-700 text-neutral-300 hover:border-primary-500/50 hover:text-white hover:bg-primary-500/5',
+			'border border-[var(--btn-outline-border)] text-[var(--text-dim)] font-normal hover:border-[var(--btn-outline-hover-border)] hover:text-[var(--text-main)] hover:bg-[var(--btn-outline-hover-bg)]',
 		inverted:
 			'bg-white text-neutral-950 hover:bg-neutral-100 shadow-lg'
 	};

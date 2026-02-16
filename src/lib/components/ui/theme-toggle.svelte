@@ -6,7 +6,7 @@
 
 <button
 	onclick={toggleMode}
-	class="p-2 rounded-lg transition-all duration-200 hover:bg-white/[0.06] text-neutral-400 hover:text-white"
+	class="p-2 rounded-lg transition-all duration-200 text-[var(--text-dim)] hover:text-[var(--text-main)]"
 	aria-label={m.ui_theme_toggle()}
 >
 	{#if $mode === 'dark'}

@@ -154,5 +154,25 @@
   "dash_activity_scheduled": "Programado",
   "dash_activity_generated": "Generado",
   "dash_activity_approved": "Aprobado",
-  "dash_activity_edited": "Editado"
+  "dash_activity_edited": "Editado",
+
+  "dash_editor_title": "Editor de Contenido",
+  "dash_editor_brief": "Brief",
+  "dash_editor_generate": "Generar",
+  "dash_editor_generate_new": "Generar Nuevo",
+  "dash_editor_variants": "Variantes",
+  "dash_editor_history": "Historial",
+  "dash_editor_score_ai": "Puntaje IA",
+  "dash_editor_score_hook": "Gancho",
+  "dash_editor_score_cta": "CTA",
+  "dash_editor_score_readability": "Legibilidad",
+  "dash_editor_char_count": "{count} / {limit}",
+  "dash_editor_just_now": "Ahora mismo",
+  "dash_editor_campaign": "Campa\u00f1a",
+  "dash_editor_topic": "Tema",
+  "dash_editor_key_message": "Mensaje Clave",
+  "dash_editor_target_audience": "Audiencia Objetivo",
+  "dash_editor_content_type": "Tipo de Contenido",
+  "dash_editor_tags": "Etiquetas",
+  "dash_editor_selected": "Seleccionado"
 }

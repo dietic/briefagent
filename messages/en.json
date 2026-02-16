@@ -154,5 +154,25 @@
   "dash_activity_scheduled": "Scheduled",
   "dash_activity_generated": "Generated",
   "dash_activity_approved": "Approved",
-  "dash_activity_edited": "Edited"
+  "dash_activity_edited": "Edited",
+
+  "dash_editor_title": "Content Editor",
+  "dash_editor_brief": "Brief",
+  "dash_editor_generate": "Generate",
+  "dash_editor_generate_new": "Generate New",
+  "dash_editor_variants": "Variants",
+  "dash_editor_history": "History",
+  "dash_editor_score_ai": "AI Score",
+  "dash_editor_score_hook": "Hook",
+  "dash_editor_score_cta": "CTA",
+  "dash_editor_score_readability": "Readability",
+  "dash_editor_char_count": "{count} / {limit}",
+  "dash_editor_just_now": "Just now",
+  "dash_editor_campaign": "Campaign",
+  "dash_editor_topic": "Topic",
+  "dash_editor_key_message": "Key Message",
+  "dash_editor_target_audience": "Target Audience",
+  "dash_editor_content_type": "Content Type",
+  "dash_editor_tags": "Tags",
+  "dash_editor_selected": "Selected"
 }

@@ -1,0 +1,158 @@
+<script lang="ts">
+	import { page } from '$app/stores';
+	import * as m from '$lib/paraglide/messages.js';
+	import {
+		LayoutDashboard,
+		CalendarDays,
+		PenTool,
+		Megaphone,
+		Send,
+		BarChart3,
+		Settings
+	} from 'lucide-svelte';
+	type NavItem = {
+		href: string;
+		label: () => string;
+		icon: typeof LayoutDashboard;
+		disabled?: boolean;
+	};
+
+	type NavSection = {
+		label: () => string;
+		items: NavItem[];
+	};
+
+	const sections: NavSection[] = [
+		{
+			label: () => m.dash_nav_section_main(),
+			items: [
+				{ href: '/dashboard', label: () => m.dash_nav_overview(), icon: LayoutDashboard },
+				{ href: '/dashboard/calendar', label: () => m.dash_nav_calendar(), icon: CalendarDays },
+				{ href: '/dashboard/editor', label: () => m.dash_nav_content(), icon: PenTool },
+				{ href: '/dashboard/brand', label: () => m.dash_nav_campaigns(), icon: Megaphone },
+				{ href: '/dashboard/publishing', label: () => m.dash_nav_publishing(), icon: Send }
+			]
+		},
+		{
+			label: () => m.dash_nav_section_tools(),
+			items: [
+				{ href: '#', label: () => 'Analytics', icon: BarChart3, disabled: true }
+			]
+		},
+		{
+			label: () => m.dash_nav_section_system(),
+			items: [
+				{ href: '#', label: () => m.dash_nav_settings(), icon: Settings, disabled: true }
+			]
+		}
+	];
+
+	function isActive(pathname: string, href: string): boolean {
+		if (href === '/dashboard') return pathname === '/dashboard';
+		return pathname.startsWith(href);
+	}
+</script>
+
+<aside
+	class="flex flex-col h-full overflow-y-auto"
+	style="background: var(--bg-sidebar); border-right: 1px solid var(--border-subtle);"
+>
+	<!-- Logo -->
+	<div class="flex items-center gap-2.5 h-14 px-5 shrink-0" style="border-bottom: 1px solid var(--border-subtle);">
+		<a href="/" class="flex items-center gap-2.5 group">
+			<div
+				class="flex items-center justify-center w-7 h-7 rounded-lg text-white text-[0.75rem] font-extrabold"
+				style="background: linear-gradient(135deg, var(--c-electric), var(--c-electric));"
+			>
+				B
+			</div>
+			<span class="font-display font-extrabold text-[0.95rem] tracking-[-0.03em]">
+				<span style="color: var(--text-main);">Brief</span><span style="color: var(--c-electric);">Agent</span>
+			</span>
+		</a>
+	</div>
+
+	<!-- Navigation -->
+	<nav class="flex-1 py-2 px-3 overflow-y-auto">
+		{#each sections as section}
+			<div
+				class="text-[0.65rem] font-bold uppercase tracking-[0.1em] px-3 pt-5 pb-2"
+				style="color: var(--text-muted);"
+			>
+				{section.label()}
+			</div>
+
+			{#each section.items as item}
+				{@const active = !item.disabled && isActive($page.url.pathname, item.href)}
+				{#if item.disabled}
+					<div
+						class="flex items-center gap-3 px-3 py-2.5 rounded-[10px] text-[0.85rem] opacity-40 cursor-not-allowed select-none"
+						style="color: var(--text-dim);"
+					>
+						<svelte:component this={item.icon} class="w-[18px] h-[18px]" />
+						<span>{item.label()}</span>
+					</div>
+				{:else}
+					<a
+						href={item.href}
+						class="flex items-center gap-3 px-3 py-2.5 rounded-[10px] text-[0.85rem] transition-all duration-150 relative"
+						style="
+							color: {active ? 'var(--c-electric)' : 'var(--text-dim)'};
+							background: {active ? 'var(--bg-sidebar-active)' : 'transparent'};
+						"
+						onmouseenter={(e) => {
+							if (!active) {
+								e.currentTarget.style.color = 'var(--text-main)';
+								e.currentTarget.style.background = 'var(--bg-sidebar-hover)';
+							}
+						}}
+						onmouseleave={(e) => {
+							if (!active) {
+								e.currentTarget.style.color = 'var(--text-dim)';
+								e.currentTarget.style.background = 'transparent';
+							}
+						}}
+					>
+						{#if active}
+							<div
+								class="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-5 rounded-r"
+								style="background: var(--c-electric);"
+							></div>
+						{/if}
+						<svelte:component this={item.icon} class="w-[18px] h-[18px]" />
+						<span class={active ? 'font-semibold' : 'font-normal'}>{item.label()}</span>
+					</a>
+				{/if}
+			{/each}
+		{/each}
+	</nav>
+
+	<!-- User pill -->
+	<div
+		class="shrink-0 px-3 py-3"
+		style="border-top: 1px solid var(--border-subtle);"
+	>
+		<div
+			class="flex items-center gap-3 px-3 py-2.5 rounded-[10px] transition-colors duration-150 cursor-pointer"
+			role="button"
+			tabindex="0"
+			onmouseenter={(e) => e.currentTarget.style.background = 'var(--bg-sidebar-hover)'}
+			onmouseleave={(e) => e.currentTarget.style.background = 'transparent'}
+		>
+			<div
+				class="flex items-center justify-center w-8 h-8 rounded-lg text-white text-[0.7rem] font-bold shrink-0"
+				style="background: linear-gradient(135deg, var(--c-tertiary), var(--c-secondary));"
+			>
+				DM
+			</div>
+			<div class="flex flex-col min-w-0">
+				<span class="text-[0.8rem] font-semibold truncate" style="color: var(--text-main);">
+					{m.dash_user_name()}
+				</span>
+				<span class="mono text-[0.65rem]" style="color: var(--c-electric);">
+					{m.dash_user_plan()}
+				</span>
+			</div>
+		</div>
+	</div>
+</aside>

@@ -1,0 +1,106 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+
+  "nav_brand_name": "BriefAgent",
+  "nav_features": "Funciones",
+  "nav_how_it_works": "Como funciona",
+  "nav_pricing": "Precios",
+  "nav_get_started": "Empezar",
+
+  "landing_hero_tagline": "La agencia de marketing con IA que puedes briefear en 5 minutos",
+  "landing_hero_description": "Describe tu producto una vez. Obtiene estrategias de contenido profesionales, visuales originales y copy optimizado para cada plataforma — generado y publicado automaticamente.",
+  "landing_hero_cta": "Empieza gratis",
+  "landing_hero_cta_secondary": "Mira como funciona",
+
+  "landing_features_title": "Todo lo que necesitas para hacer marketing como un profesional",
+  "landing_features_subtitle": "Seis herramientas de IA trabajando juntas para mantener tu marca visible, consistente y en crecimiento — sin el precio de una agencia.",
+
+  "landing_features_ai_strategy_title": "Estrategia de contenido con IA",
+  "landing_features_ai_strategy_description": "Obtiene un plan de contenido completo de 2 semanas generado a partir de tu brief. La IA planifica temas, formatos y horarios adaptados a tu audiencia y objetivos.",
+
+  "landing_features_ai_visuals_title": "Visuales originales con IA",
+  "landing_features_ai_visuals_description": "Generacion de imagenes basada en tu marca, no plantillas. La IA estudia tu identidad visual y crea graficos originales que se sienten autenticamente tuyos.",
+
+  "landing_features_optimized_copy_title": "Copy optimizado por plataforma",
+  "landing_features_optimized_copy_description": "Ganchos que detienen el scroll, cuerpo de texto con valor y CTAs alineados con tus objetivos — elaborados segun las mejores practicas de cada plataforma.",
+
+  "landing_features_publishing_title": "Publicacion con un clic",
+  "landing_features_publishing_description": "Programa y publica automaticamente en LinkedIn con un solo clic. Tu contenido se publica a tiempo, siempre — sin necesidad de publicar manualmente.",
+
+  "landing_features_brand_understanding_title": "Comprension profunda de tu marca",
+  "landing_features_brand_understanding_description": "Tu brief le ensena a la IA tu voz, audiencia y objetivos. Cuanto mas compartas, mas alineado con tu marca sera cada pieza de contenido.",
+
+  "landing_features_review_title": "Revisa y aprueba",
+  "landing_features_review_description": "La IA propone, tu decides. Revisa cada publicacion, cambia los visuales, ajusta el copy o regenera — siempre tienes la ultima palabra.",
+
+  "landing_how_title": "Como funciona",
+  "landing_how_subtitle": "De brief a contenido publicado en tres simples pasos.",
+
+  "landing_how_step1_title": "Describe tu producto",
+  "landing_how_step1_description": "Cuentanos sobre tu producto, marca y audiencia. Pega la URL de tu sitio web y extraemos el resto automaticamente. Toma unos 5 minutos.",
+
+  "landing_how_step2_title": "La IA genera tu estrategia",
+  "landing_how_step2_description": "Nuestra IA crea un plan de contenido completo de 2 semanas con visuales originales y copy optimizado por plataforma — adaptado a tu marca y objetivos.",
+
+  "landing_how_step3_title": "Revisa y publica",
+  "landing_how_step3_description": "Previsualiza cada publicacion, edita si quieres, luego aprueba y programa. BriefAgent se encarga del resto — publicando a tiempo, siempre.",
+
+  "landing_pricing_title": "Precios simples y transparentes",
+  "landing_pricing_subtitle": "Empieza gratis, mejora cuando estes listo. No se necesita tarjeta de credito.",
+  "landing_pricing_beta_badge": "Gratis durante la beta",
+  "landing_pricing_coming_soon": "Proximamente",
+  "landing_pricing_cta": "Empieza gratis",
+
+  "landing_pricing_free_name": "Gratis",
+  "landing_pricing_free_price": "$0",
+  "landing_pricing_free_description": "Perfecto para empezar",
+  "landing_pricing_free_feature_1": "1 producto",
+  "landing_pricing_free_feature_2": "1 cuenta social",
+  "landing_pricing_free_feature_3": "10 publicaciones al mes",
+  "landing_pricing_free_feature_4": "Aprobacion manual",
+
+  "landing_pricing_pro_name": "Pro",
+  "landing_pricing_pro_price": "$19/mes",
+  "landing_pricing_pro_description": "Para creadores que van en serio",
+  "landing_pricing_pro_feature_1": "3 productos",
+  "landing_pricing_pro_feature_2": "5 cuentas sociales",
+  "landing_pricing_pro_feature_3": "100 publicaciones al mes",
+  "landing_pricing_pro_feature_4": "Modo autopiloto",
+  "landing_pricing_pro_feature_5": "Sin marca de agua",
+
+  "landing_pricing_agency_name": "Agencia",
+  "landing_pricing_agency_price": "$49/mes",
+  "landing_pricing_agency_description": "Escala tu maquina de contenido",
+  "landing_pricing_agency_feature_1": "10 productos",
+  "landing_pricing_agency_feature_2": "20 cuentas sociales",
+  "landing_pricing_agency_feature_3": "Publicaciones ilimitadas",
+  "landing_pricing_agency_feature_4": "Miembros del equipo (3)",
+  "landing_pricing_agency_feature_5": "Soporte prioritario",
+
+  "landing_cta_title": "Listo para dejar de luchar con el marketing?",
+  "landing_cta_description": "Unite a la beta y deja que la IA se encargue de tu estrategia de contenido, visuales y publicacion — mientras te enfocas en construir tu producto.",
+  "landing_cta_button": "Empieza gratis",
+
+  "footer_tagline": "La agencia de marketing con IA que puedes briefear en 5 minutos.",
+  "footer_product": "Producto",
+  "footer_company": "Empresa",
+  "footer_legal": "Legal",
+  "footer_features": "Funciones",
+  "footer_pricing": "Precios",
+  "footer_how_it_works": "Como funciona",
+  "footer_about": "Acerca de",
+  "footer_blog": "Blog",
+  "footer_contact": "Contacto",
+  "footer_privacy": "Politica de privacidad",
+  "footer_terms": "Terminos de servicio",
+  "footer_copyright": "Todos los derechos reservados.",
+
+  "ui_theme_toggle": "Cambiar tema",
+  "ui_language_label": "Idioma",
+
+  "landing_hero_badge": "Marketing con IA",
+  "landing_meta_title": "BriefAgent — La Agencia de Marketing con IA que Puedes Briefear en 5 Minutos",
+  "landing_meta_description": "Describe tu producto una vez. Obtiene estrategias de contenido profesionales, visuales originales y copy optimizado para cada plataforma — generado y publicado automaticamente.",
+  "nav_menu": "Menu",
+  "nav_close_menu": "Cerrar menu"
+}

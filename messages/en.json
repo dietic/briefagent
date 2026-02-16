@@ -1,0 +1,106 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+
+  "nav_brand_name": "BriefAgent",
+  "nav_features": "Features",
+  "nav_how_it_works": "How it works",
+  "nav_pricing": "Pricing",
+  "nav_get_started": "Get started",
+
+  "landing_hero_tagline": "The AI marketing agency you can brief in 5 minutes",
+  "landing_hero_description": "Brief your product once. Get professional content strategies, original visuals, and platform-optimized copy — generated and published automatically.",
+  "landing_hero_cta": "Get started free",
+  "landing_hero_cta_secondary": "See how it works",
+
+  "landing_features_title": "Everything you need to market like a pro",
+  "landing_features_subtitle": "Six powerful AI tools working together to keep your brand visible, consistent, and growing — without the agency price tag.",
+
+  "landing_features_ai_strategy_title": "AI Content Strategy",
+  "landing_features_ai_strategy_description": "Get a full 2-week content plan generated from your brief. The AI maps out topics, formats, and timing tailored to your audience and goals.",
+
+  "landing_features_ai_visuals_title": "Original AI Visuals",
+  "landing_features_ai_visuals_description": "Brand-informed image generation, not templates. The AI studies your visual identity and creates original graphics that feel authentically yours.",
+
+  "landing_features_optimized_copy_title": "Platform-Optimized Copy",
+  "landing_features_optimized_copy_description": "Scroll-stopping hooks, value-driven body copy, and goal-aligned CTAs — crafted for each platform's best practices and character limits.",
+
+  "landing_features_publishing_title": "One-Click Publishing",
+  "landing_features_publishing_description": "Schedule and auto-publish to LinkedIn with a single click. Your content goes live on time, every time — no manual posting needed.",
+
+  "landing_features_brand_understanding_title": "Deep Brand Understanding",
+  "landing_features_brand_understanding_description": "Your brief teaches the AI your voice, audience, and goals. The more you share, the more on-brand every piece of content becomes.",
+
+  "landing_features_review_title": "Review & Approve",
+  "landing_features_review_description": "AI proposes, you dispose. Review every post, swap visuals, tweak copy, or regenerate — you always have the final say.",
+
+  "landing_how_title": "How it works",
+  "landing_how_subtitle": "From brief to published content in three simple steps.",
+
+  "landing_how_step1_title": "Brief your product",
+  "landing_how_step1_description": "Tell us about your product, brand, and audience. Paste your website URL and we'll auto-extract the rest. Takes about 5 minutes.",
+
+  "landing_how_step2_title": "AI generates your strategy",
+  "landing_how_step2_description": "Our AI creates a complete 2-week content plan with original visuals and platform-optimized copy — tailored to your brand and goals.",
+
+  "landing_how_step3_title": "Review & publish",
+  "landing_how_step3_description": "Preview every post, make edits if you want, then approve and schedule. BriefAgent handles the rest — publishing on time, every time.",
+
+  "landing_pricing_title": "Simple, transparent pricing",
+  "landing_pricing_subtitle": "Start free, upgrade when you're ready. No credit card required.",
+  "landing_pricing_beta_badge": "Free during beta",
+  "landing_pricing_coming_soon": "Coming soon",
+  "landing_pricing_cta": "Get started free",
+
+  "landing_pricing_free_name": "Free",
+  "landing_pricing_free_price": "$0",
+  "landing_pricing_free_description": "Perfect for getting started",
+  "landing_pricing_free_feature_1": "1 product",
+  "landing_pricing_free_feature_2": "1 social account",
+  "landing_pricing_free_feature_3": "10 posts per month",
+  "landing_pricing_free_feature_4": "Manual approval",
+
+  "landing_pricing_pro_name": "Pro",
+  "landing_pricing_pro_price": "$19/mo",
+  "landing_pricing_pro_description": "For creators who mean business",
+  "landing_pricing_pro_feature_1": "3 products",
+  "landing_pricing_pro_feature_2": "5 social accounts",
+  "landing_pricing_pro_feature_3": "100 posts per month",
+  "landing_pricing_pro_feature_4": "Autopilot mode",
+  "landing_pricing_pro_feature_5": "No watermark",
+
+  "landing_pricing_agency_name": "Agency",
+  "landing_pricing_agency_price": "$49/mo",
+  "landing_pricing_agency_description": "Scale your content machine",
+  "landing_pricing_agency_feature_1": "10 products",
+  "landing_pricing_agency_feature_2": "20 social accounts",
+  "landing_pricing_agency_feature_3": "Unlimited posts",
+  "landing_pricing_agency_feature_4": "Team members (3)",
+  "landing_pricing_agency_feature_5": "Priority support",
+
+  "landing_cta_title": "Ready to stop struggling with marketing?",
+  "landing_cta_description": "Join the beta and let AI handle your content strategy, visuals, and publishing — while you focus on building your product.",
+  "landing_cta_button": "Start for free",
+
+  "footer_tagline": "The AI marketing agency you can brief in 5 minutes.",
+  "footer_product": "Product",
+  "footer_company": "Company",
+  "footer_legal": "Legal",
+  "footer_features": "Features",
+  "footer_pricing": "Pricing",
+  "footer_how_it_works": "How it works",
+  "footer_about": "About",
+  "footer_blog": "Blog",
+  "footer_contact": "Contact",
+  "footer_privacy": "Privacy Policy",
+  "footer_terms": "Terms of Service",
+  "footer_copyright": "All rights reserved.",
+
+  "ui_theme_toggle": "Toggle theme",
+  "ui_language_label": "Language",
+
+  "landing_hero_badge": "AI-Powered Marketing",
+  "landing_meta_title": "BriefAgent — The AI Marketing Agency You Can Brief in 5 Minutes",
+  "landing_meta_description": "Brief your product once. Get professional content strategies, original visuals, and platform-optimized copy — generated and published automatically.",
+  "nav_menu": "Menu",
+  "nav_close_menu": "Close menu"
+}

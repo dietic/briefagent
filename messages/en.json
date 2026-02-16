@@ -191,5 +191,23 @@
   "dash_calendar_thu": "Thu",
   "dash_calendar_fri": "Fri",
   "dash_calendar_sat": "Sat",
-  "dash_calendar_sun": "Sun"
+  "dash_calendar_sun": "Sun",
+
+  "dash_publishing_title": "Publishing Hub",
+  "dash_publishing_new_post": "New Post",
+  "dash_publishing_filter_all": "All",
+  "dash_publishing_col_drafts": "Drafts",
+  "dash_publishing_col_review": "In Review",
+  "dash_publishing_col_scheduled": "Scheduled",
+  "dash_publishing_col_published": "Published",
+  "dash_publishing_ai_assistant": "AI Assistant",
+  "dash_publishing_ai_suggestions": "Suggestions",
+  "dash_publishing_ai_ask": "Ask AI...",
+  "dash_publishing_edit": "Edit",
+  "dash_publishing_submit": "Submit",
+  "dash_publishing_approve": "Approve",
+  "dash_publishing_reject": "Reject",
+  "dash_publishing_stat_published_week": "Published This Week",
+  "dash_publishing_stat_avg_engagement": "Avg. Engagement",
+  "dash_publishing_stat_queue_health": "Queue Health"
 }

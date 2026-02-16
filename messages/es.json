@@ -191,5 +191,23 @@
   "dash_calendar_thu": "Jue",
   "dash_calendar_fri": "Vie",
   "dash_calendar_sat": "S\u00e1b",
-  "dash_calendar_sun": "Dom"
+  "dash_calendar_sun": "Dom",
+
+  "dash_publishing_title": "Centro de Publicaci\u00f3n",
+  "dash_publishing_new_post": "Nueva Publicaci\u00f3n",
+  "dash_publishing_filter_all": "Todos",
+  "dash_publishing_col_drafts": "Borradores",
+  "dash_publishing_col_review": "En Revisi\u00f3n",
+  "dash_publishing_col_scheduled": "Programados",
+  "dash_publishing_col_published": "Publicados",
+  "dash_publishing_ai_assistant": "Asistente IA",
+  "dash_publishing_ai_suggestions": "Sugerencias",
+  "dash_publishing_ai_ask": "Preguntar a IA...",
+  "dash_publishing_edit": "Editar",
+  "dash_publishing_submit": "Enviar",
+  "dash_publishing_approve": "Aprobar",
+  "dash_publishing_reject": "Rechazar",
+  "dash_publishing_stat_published_week": "Publicados Esta Semana",
+  "dash_publishing_stat_avg_engagement": "Interacci\u00f3n Promedio",
+  "dash_publishing_stat_queue_health": "Salud de Cola"
 }

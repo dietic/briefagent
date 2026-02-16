@@ -70,6 +70,9 @@ Recent decisions affecting current work:
 - [05-04]: Full-height dashboard pages use h-[calc(100%+4rem)] -m-8 to expand into layout padding
 - [05-04]: KanbanColumn uses Svelte 5 Snippet type for typed children composition
 - [05-04]: PostCard uses $derived for platform color lookup (Svelte 5 reactivity best practice)
+- [05-02]: Explicit i18n label maps instead of dynamic m[key] indexing for type safety with Paraglide
+- [05-02]: SVG sparklines and area charts rendered inline (no chart library) for zero extra dependencies
+- [05-02]: Dashboard components receive typed props from centralized mock data file
 - [05-04]: Mock data pattern: typed interfaces + const exports in src/lib/data/
 
 ### Roadmap Evolution

@@ -2,37 +2,55 @@
 
 ## Overview
 
-BriefAgent goes from zero to a fully functional AI marketing agency platform in four phases. Phase 1 establishes the visual identity and public presence through the landing page. Phase 2 builds the complete user input pipeline (auth, onboarding, brief, assets, LinkedIn connection). Phase 3 delivers the AI engine that transforms briefs into content plans, copy, and images. Phase 4 completes the loop with the calendar, review/approval workflow, automated publishing, and dashboard.
+BriefAgent goes from zero to a fully functional AI marketing agency platform in five phases. Phase 1 established the visual identity and public presence through the landing page (complete). Phase 5 builds the full dashboard UI with all 5 views using mock data. Phase 2 builds the user input pipeline (auth, onboarding, brief, assets, LinkedIn connection). Phase 3 delivers the AI engine. Phase 4 completes the loop with calendar, review/approval, automated publishing, and wires real data into the dashboard.
 
 ## Phases
 
 **Phase Numbering:**
-- Integer phases (1, 2, 3, 4): Planned milestone work
+- Integer phases (1, 2, 3, 4, 5): Planned milestone work
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Landing Page & Design System** - Establish visual identity and public-facing presence
+- [x] **Phase 1: Landing Page & Design System** - Establish visual identity and public-facing presence *(COMPLETE)*
+- [ ] **Phase 5: Dashboard UI** - Build all 5 dashboard views as SvelteKit pages with shared layout and mock data
 - [ ] **Phase 2: Auth, Onboarding & LinkedIn** - User journey from signup through completed brief with connected account
 - [ ] **Phase 3: AI Generation Pipeline** - Content plan, copy, and image generation from product brief
-- [ ] **Phase 4: Calendar, Review & Publishing** - Content calendar, approval workflow, automated LinkedIn publishing, and dashboard
+- [ ] **Phase 4: Calendar, Review & Publishing** - Content calendar, approval workflow, automated LinkedIn publishing, wire real data into dashboard
 
 ## Phase Details
 
-### Phase 1: Landing Page & Design System
+### Phase 1: Landing Page & Design System *(COMPLETE)*
 **Goal**: Visitors see a vibrant, creative landing page that communicates the product value and establishes the design language (color palette, typography, components) used across the entire app
 **Depends on**: Nothing (first phase)
 **Requirements**: LAND-01, LAND-02, LAND-03, LAND-04, LAND-05, LAND-06
-**Success Criteria** (what must be TRUE):
-  1. A visitor landing on briefagent.ai sees a hero section with product explanation and tagline, a features section, a how-it-works visual flow, and pricing tiers
-  2. The page has a clear call-to-action that leads to signup
-  3. The design is vibrant and creative (bold gradients, strong colors, polished interactions) -- not generic SaaS blue
-  4. A reusable design system (color tokens, typography scale, button/card/layout components) exists and is used by the landing page, ready for the app to consume
-**Plans**: 2 plans
+**Status**: COMPLETE — Landing page built with hero, features, how-it-works, pricing, CTA, navbar, footer. Design system established: Cyan (#06b6d4) / Orange (#f97316) / Pink (#ec4899) palette, Bricolage Grotesque + Fira Code typography, CSS variable system for light/dark theme, reusable UI components (button, badge, card). i18n with Paraglide (en/es, 106+ keys).
+**Plans**: 2 plans (completed outside GSD tracking)
 
 Plans:
-- [ ] 01-01-PLAN.md -- Design system foundation (SvelteKit scaffold, Tailwind v4 @theme tokens, Paraglide i18n, core UI components)
-- [ ] 01-02-PLAN.md -- Landing page build (hero, features, how-it-works, pricing, CTA, footer with animations)
+- [x] 01-01-PLAN.md -- Design system foundation (SvelteKit scaffold, Tailwind v4 @theme tokens, Paraglide i18n, core UI components)
+- [x] 01-02-PLAN.md -- Landing page build (hero, features, how-it-works, pricing, CTA, footer with animations)
+
+### Phase 5: Dashboard UI
+**Goal**: All 5 dashboard views are built as SvelteKit pages under `/dashboard/` with a shared layout (sidebar nav, header), matching the approved design variants. Uses static/mock data — real data integration happens when backend phases are complete.
+**Depends on**: Phase 1 (design system)
+**Dashboard Views**:
+  1. **Overview / Analytics** — KPI cards, performance chart, activity feed, upcoming schedule (variant-1)
+  2. **Content Calendar** — Monthly/weekly calendar grid, content chips, AI suggestions, daily queue (variant-2)
+  3. **Content Editor** — 3-panel: brief form, AI-generated content preview, variants & history (variant-3)
+  4. **Brand & Campaigns** — Brand profile with score, campaign cards, brand voice, content mix chart (variant-4)
+  5. **Publishing Hub** — Kanban pipeline (Drafts → Review → Scheduled → Published), AI assistant panel (variant-5)
+**Success Criteria** (what must be TRUE):
+  1. User can navigate between all 5 dashboard views via the sidebar
+  2. Each view renders a polished UI matching its design variant with proper light/dark theme support
+  3. Shared layout (sidebar, header, theme toggle) is consistent across all views
+  4. All dashboard pages use the same design system tokens as the landing page
+  5. Pages work with static/mock data and are ready to be wired to real backends later
+**Reference files**: `design-variants/dashboard/variant-{1-5}.html`
+**Plans**: 0 plans (run /gsd:plan-phase 5 to break down)
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 5 to break down)
 
 ### Phase 2: Auth, Onboarding & LinkedIn
 **Goal**: A new user can sign up, complete the full onboarding flow (Quick Start with website scraping, Deep Brief wizard, Asset Library uploads), connect their LinkedIn account, and have everything the AI needs to generate content
@@ -88,11 +106,12 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4
+Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|---------------|--------|-----------|
-| 1. Landing Page & Design System | 0/2 | Not started | - |
+| 1. Landing Page & Design System | 2/2 | Complete | 2026-02-16 |
+| 5. Dashboard UI | 0/? | Next up | - |
 | 2. Auth, Onboarding & LinkedIn | 0/3 | Not started | - |
 | 3. AI Generation Pipeline | 0/2 | Not started | - |
 | 4. Calendar, Review & Publishing | 0/3 | Not started | - |

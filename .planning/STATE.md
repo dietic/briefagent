@@ -2,24 +2,24 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-15)
+See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** A user with zero design or marketing skills can brief the AI and get professional, brand-consistent marketing content generated and published to their social accounts.
-**Current focus:** Phase 1 - Landing Page & Design System (redesign in progress — visual verification)
+**Current focus:** Phase 5 - Dashboard UI (all 5 views with mock data)
 
 ## Current Position
 
-Phase: 1 of 4 (Landing Page & Design System)
-Plan: 2 of 2 in current phase (redesigned, awaiting human-verify checkpoint)
-Status: Checkpoint -- awaiting visual verification after redesign
-Last activity: 2026-02-15 -- Full redesign: hot pink palette, pnpm migration, light mode fix, contrast fix
+Phase: 5 of 5 (Dashboard UI) — next in execution order after Phase 1
+Plan: Not yet planned
+Status: Ready to plan — run /gsd:plan-phase 5
+Last activity: 2026-02-16 — Phase 1 marked complete, Phase 5 added and ready
 
-Progress: [####░░░░░░] 25%
+Progress: [##░░░░░░░░] 20% (1 of 5 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
+- Total plans completed: 2 (Phase 1, tracked retroactively)
 - Average duration: 7.5min
 - Total execution time: 0.25 hours
 
@@ -28,6 +28,7 @@ Progress: [####░░░░░░] 25%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-landing-page-design-system | 2/2 | 15min | 7.5min |
+| 05-dashboard-ui | 0/? | - | - |
 
 **Recent Trend:**
 - Last 5 plans: 10min, 5min
@@ -43,21 +44,29 @@ Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
 - [Roadmap]: Landing page is Phase 1 to establish design system before app build
-- [Roadmap]: 4 phases at quick depth -- Landing, Auth/Onboarding, AI Pipeline, Calendar/Publishing
+- [Roadmap]: 5 phases — Landing, Dashboard UI, Auth/Onboarding, AI Pipeline, Calendar/Publishing
+- [Roadmap]: Dashboard UI (Phase 5) executes after Phase 1, before Phase 2 — frontend-first with mock data
+- [Design]: Variant 2c selected as final design direction
+- [Design]: Palette changed from hot pink to Cyan (#06b6d4) / Orange (#f97316) / Pink (#ec4899)
+- [Design]: Typography: Bricolage Grotesque (display) + Fira Code (mono)
+- [Design]: Dark background #070b0e, surface #0e1519, glass-morphism navbar
+- [Design]: Split-color logo: "Brief" (white) + "Agent" (cyan)
+- [Design]: Full light/dark theme support via CSS variables + mode-watcher
+- [Design]: 5 dashboard variants approved — all 5 to be built as SvelteKit pages
 - [01-01]: Used Paraglide JS v2 with cookie strategy instead of deprecated @inlang/paraglide-sveltekit adapter
 - [01-01]: LanguageSwitcher uses setLocale() cookie-based approach instead of URL-based locale prefixes
 - [01-02]: CSS animations over Svelte transitions for hero to prevent SSR hydration flash
 - [01-02]: svelte-inview v4 oninview_enter event name for Svelte 5 compatibility
-- [01-02]: Flex wrapper in pricing cards for equal-height column alignment
-- [Redesign]: Switched from npm to pnpm
-- [Redesign]: Replaced muddy purple+orange palette with hot pink primary (#FF3E80-ish, oklch 0.65 0.27 358) + electric blue accent
-- [Redesign]: Added Space Grotesk as display font for more distinctive headlines
-- [Redesign]: Added 'inverted' Button variant (white bg, pink text) to fix invisible pricing buttons
-- [Redesign]: Navbar now scroll-aware: white text when transparent over hero, dark text when scrolled with glass bg
-- [Redesign]: Section 'dark' variant always forces white text regardless of theme mode
-- [Redesign]: Section 'gradient' uses neutral-950 via primary-950 (warm charcoal, not purple)
-- [Redesign]: Badge 'accent' now uses primary-500 (hot pink) instead of accent-600
-- [Redesign]: Feature icon backgrounds alternate between pink and blue tints
+- [01-02]: Tailwind 4 tree-shakes @keyframes not referenced by --animate-* utility classes — use animate-* classes, not inline style="animation:"
+- [Landing]: All landing components use CSS variables (--bg-page, --text-main, --text-dim, etc.) for theme support
+- [Landing]: Emojis used for icons in hero cards, features, and how-it-works (not Lucide icons)
+
+### Roadmap Evolution
+
+- Phase 5 added: Dashboard UI — all 5 dashboard views as SvelteKit pages
+- Phase 5 dependency set to Phase 1 (not Phase 4) — build UI first with mock data
+- Phase 1 marked complete retroactively (work done outside GSD tracking)
+- Execution order changed: 1 -> 5 -> 2 -> 3 -> 4
 
 ### Pending Todos
 
@@ -70,6 +79,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-15
-Stopped at: 01-02-PLAN.md Task 3 checkpoint (human-verify)
-Resume file: .planning/phases/01-landing-page-design-system/01-02-SUMMARY.md
+Last session: 2026-02-16
+Stopped at: Phase 5 ready to plan
+Resume: Run /gsd:plan-phase 5 to break down dashboard UI into executable plans

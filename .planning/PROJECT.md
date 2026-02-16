@@ -117,6 +117,16 @@ Pricing sustainability will be validated against real AI generation costs post-l
 
 Vibrant, creative, energetic — inspired by Gumloop and Relume.io. Bold gradients, strong colors, polished interactions. Not "safe SaaS blue" — this should feel like a creative agency platform. Stand out from typical B2B tools.
 
+**Established Design System (variant-2c):**
+- Palette: Cyan (#06b6d4) primary, Orange (#f97316) secondary, Pink (#ec4899) tertiary
+- Typography: Bricolage Grotesque (display, weight 200-800) + Fira Code (mono, weight 300-500)
+- Dark background: #070b0e, Surface: #0e1519, Surface-alt: #0c1620
+- Light background: #f6fcfd, Surface: #ffffff, Surface-alt: #f0f5f7
+- Full light/dark theme via CSS variables + mode-watcher
+- Glass-morphism navbar, floating geometric shapes, scroll-reveal animations
+- Split-color logo: "Brief" (white/dark) + "Agent" (cyan)
+- Dashboard variants: 5 approved in `design-variants/dashboard/variant-{1-5}.html`
+
 ### Design Principles
 
 1. Everything starts with the brief
@@ -147,6 +157,9 @@ Vibrant, creative, energetic — inspired by Gumloop and Relume.io. Bold gradien
 | Landing page in Phase 1 (moved from Phase 3) | Need public-facing presence for user acquisition | — Pending |
 | Custom design system from scratch | No pre-styled component libraries — use Bits UI (headless) with fully custom styling. Every component handcrafted to match Gumloop/Relume.io vibrant aesthetic | — Pending |
 | Use frontend-design skill for all UI work | Ensures high-quality, creative design across all screens | — Pending |
+| Variant 2c as design direction | Cyan/Orange/Pink palette with Bricolage Grotesque + Fira Code, dark-first | Adopted |
+| Dashboard UI before auth | Build all 5 dashboard views with mock data first (Phase 5 before Phase 2) | Adopted |
+| All 5 dashboard variants as views | Overview, Calendar, Editor, Brand/Campaigns, Publishing Hub — all built as SvelteKit pages | Adopted |
 
 ---
-*Last updated: 2026-02-15 after initialization*
+*Last updated: 2026-02-16 — design direction finalized, dashboard phase added*

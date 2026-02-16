@@ -69,9 +69,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: Auth system (signup, verification, login, sessions, password reset, logout)
-- [ ] 02-02: Onboarding flow (Quick Start with URL scraping, Deep Brief wizard, Asset Library)
-- [ ] 02-03: LinkedIn OAuth integration (personal profile, company page, token management)
+- [ ] 02-01-PLAN.md — Auth system: Supabase SSR setup, adapter-node, hooks middleware, auth pages (login, signup, forgot-password, reset-password, verify-email, callback), dashboard auth guard, logout
+- [ ] 02-02-PLAN.md — Onboarding flow: Drizzle ORM schema (4 tables), Quick Start with URL scraping, Deep Brief wizard (4 sections), Asset Library with drag-and-drop uploads, stepper layout
+- [ ] 02-03-PLAN.md — LinkedIn OAuth: authorize/callback endpoints, AES-256-GCM token encryption, LinkedIn API client, settings page with connection management
 
 ### Phase 3: AI Generation Pipeline
 **Goal**: The user can generate a full 2-week content plan from their brief, then generate platform-optimized copy and brand-coherent original images for each post slot

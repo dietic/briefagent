@@ -5,7 +5,7 @@
 	import Sidebar from '$lib/components/dashboard/sidebar.svelte';
 	import DashboardHeader from '$lib/components/dashboard/header.svelte';
 
-	let { children } = $props();
+	let { children, data } = $props();
 
 	const titleMap: Record<string, () => string> = {
 		'/dashboard': () => m.dash_breadcrumb_overview(),
@@ -24,7 +24,7 @@
 >
 	<!-- Sidebar spans full height -->
 	<div class="row-span-full">
-		<Sidebar />
+		<Sidebar user={data.user} />
 	</div>
 
 	<!-- Header -->

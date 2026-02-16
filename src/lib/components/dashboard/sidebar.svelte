@@ -8,8 +8,10 @@
 		Megaphone,
 		Send,
 		BarChart3,
-		Settings
+		Settings,
+		LogOut
 	} from 'lucide-svelte';
+
 	type NavItem = {
 		href: string;
 		label: () => string;
@@ -21,6 +23,19 @@
 		label: () => string;
 		items: NavItem[];
 	};
+
+	let { user }: { user?: { email?: string } } = $props();
+
+	let userInitials = $derived(() => {
+		if (!user?.email) return '??';
+		const name = user.email.split('@')[0];
+		return name.slice(0, 2).toUpperCase();
+	});
+
+	let userName = $derived(() => {
+		if (!user?.email) return 'User';
+		return user.email.split('@')[0];
+	});
 
 	const sections: NavSection[] = [
 		{
@@ -89,7 +104,7 @@
 						class="flex items-center gap-3 px-3 py-2.5 rounded-[10px] text-[0.85rem] opacity-40 cursor-not-allowed select-none"
 						style="color: var(--text-dim);"
 					>
-						<svelte:component this={item.icon} class="w-[18px] h-[18px]" />
+						<item.icon class="w-[18px] h-[18px]" />
 						<span>{item.label()}</span>
 					</div>
 				{:else}
@@ -119,7 +134,7 @@
 								style="background: var(--c-electric);"
 							></div>
 						{/if}
-						<svelte:component this={item.icon} class="w-[18px] h-[18px]" />
+						<item.icon class="w-[18px] h-[18px]" />
 						<span class={active ? 'font-semibold' : 'font-normal'}>{item.label()}</span>
 					</a>
 				{/if}
@@ -127,32 +142,46 @@
 		{/each}
 	</nav>
 
-	<!-- User pill -->
+	<!-- User pill + Logout -->
 	<div
 		class="shrink-0 px-3 py-3"
 		style="border-top: 1px solid var(--border-subtle);"
 	>
 		<div
-			class="flex items-center gap-3 px-3 py-2.5 rounded-[10px] transition-colors duration-150 cursor-pointer"
-			role="button"
-			tabindex="0"
-			onmouseenter={(e) => e.currentTarget.style.background = 'var(--bg-sidebar-hover)'}
-			onmouseleave={(e) => e.currentTarget.style.background = 'transparent'}
+			class="flex items-center gap-3 px-3 py-2.5 rounded-[10px]"
 		>
 			<div
 				class="flex items-center justify-center w-8 h-8 rounded-lg text-white text-[0.7rem] font-bold shrink-0"
 				style="background: linear-gradient(135deg, var(--c-tertiary), var(--c-secondary));"
 			>
-				DM
+				{userInitials()}
 			</div>
-			<div class="flex flex-col min-w-0">
+			<div class="flex flex-col min-w-0 flex-1">
 				<span class="text-[0.8rem] font-semibold truncate" style="color: var(--text-main);">
-					{m.dash_user_name()}
+					{userName()}
 				</span>
 				<span class="mono text-[0.65rem]" style="color: var(--c-electric);">
 					{m.dash_user_plan()}
 				</span>
 			</div>
+			<form method="POST" action="/logout">
+				<button
+					type="submit"
+					class="flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-150 cursor-pointer"
+					style="color: var(--text-muted);"
+					title="Logout"
+					onmouseenter={(e) => {
+						e.currentTarget.style.color = 'var(--c-electric)';
+						e.currentTarget.style.background = 'var(--bg-sidebar-hover)';
+					}}
+					onmouseleave={(e) => {
+						e.currentTarget.style.color = 'var(--text-muted)';
+						e.currentTarget.style.background = 'transparent';
+					}}
+				>
+					<LogOut class="w-[16px] h-[16px]" />
+				</button>
+			</form>
 		</div>
 	</div>
 </aside>

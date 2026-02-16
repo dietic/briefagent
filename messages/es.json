@@ -6,8 +6,10 @@
   "nav_how_it_works": "Como funciona",
   "nav_pricing": "Precios",
   "nav_get_started": "Empezar",
+  "nav_log_in": "Iniciar sesion",
+  "nav_start_free": "Empezar gratis",
 
-  "landing_hero_tagline": "La agencia de marketing con IA que puedes briefear en 5 minutos",
+  "landing_hero_tagline": "Tu equipo de marketing con IA esta listo.",
   "landing_hero_description": "Describe tu producto una vez. Obtiene estrategias de contenido profesionales, visuales originales y copy optimizado para cada plataforma — generado y publicado automaticamente.",
   "landing_hero_cta": "Empieza gratis",
   "landing_hero_cta_secondary": "Mira como funciona",
@@ -98,7 +100,7 @@
   "ui_theme_toggle": "Cambiar tema",
   "ui_language_label": "Idioma",
 
-  "landing_hero_badge": "Marketing con IA",
+  "landing_hero_badge": "En beta publica",
   "landing_meta_title": "BriefAgent — La Agencia de Marketing con IA que Puedes Briefear en 5 Minutos",
   "landing_meta_description": "Describe tu producto una vez. Obtiene estrategias de contenido profesionales, visuales originales y copy optimizado para cada plataforma — generado y publicado automaticamente.",
   "nav_menu": "Menu",

@@ -6,8 +6,10 @@
   "nav_how_it_works": "How it works",
   "nav_pricing": "Pricing",
   "nav_get_started": "Get started",
+  "nav_log_in": "Log in",
+  "nav_start_free": "Start free",
 
-  "landing_hero_tagline": "The AI marketing agency you can brief in 5 minutes",
+  "landing_hero_tagline": "Your AI marketing team is ready.",
   "landing_hero_description": "Brief your product once. Get professional content strategies, original visuals, and platform-optimized copy — generated and published automatically.",
   "landing_hero_cta": "Get started free",
   "landing_hero_cta_secondary": "See how it works",
@@ -98,7 +100,7 @@
   "ui_theme_toggle": "Toggle theme",
   "ui_language_label": "Language",
 
-  "landing_hero_badge": "AI-Powered Marketing",
+  "landing_hero_badge": "Now in public beta",
   "landing_meta_title": "BriefAgent — The AI Marketing Agency You Can Brief in 5 Minutes",
   "landing_meta_description": "Brief your product once. Get professional content strategies, original visuals, and platform-optimized copy — generated and published automatically.",
   "nav_menu": "Menu",

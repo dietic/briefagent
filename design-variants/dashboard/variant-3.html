@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BriefAgent — Content Editor & Strategy Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@200;400;600;700;800&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── THEME TOKENS ── */
+[data-theme="dark"] {
+  --bg: #070b0e;
+  --surface: #0e1519;
+  --surface-alt: #0c1620;
+  --surface-glass: rgba(14, 21, 25, 0.65);
+  --surface-glass-border: rgba(255, 255, 255, 0.06);
+  --surface-glass-hover: rgba(14, 21, 25, 0.8);
+  --electric: #06b6d4;
+  --electric-dim: #0891b2;
+  --electric-glow: rgba(6, 182, 212, 0.15);
+  --electric-glow-strong: rgba(6, 182, 212, 0.3);
+  --secondary: #f97316;
+  --secondary-dim: rgba(249, 115, 22, 0.12);
+  --tertiary: #ec4899;
+  --tertiary-dim: rgba(236, 72, 153, 0.12);
+  --text: #edf4f7;
+  --text-dim: #6b8a99;
+  --text-micro: #4a6a7a;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.12);
+  --border-active: rgba(6, 182, 212, 0.3);
+  --input-bg: rgba(255, 255, 255, 0.03);
+  --input-focus: rgba(6, 182, 212, 0.08);
+  --sidebar-bg: rgba(7, 11, 14, 0.95);
+  --sidebar-icon: #4a6a7a;
+  --sidebar-icon-hover: #edf4f7;
+  --sidebar-icon-active: #06b6d4;
+  --badge-bg: rgba(6, 182, 212, 0.1);
+  --badge-text: #06b6d4;
+  --score-high: #34d399;
+  --score-mid: #fbbf24;
+  --score-low: #f87171;
+  --shadow-panel: 0 4px 40px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 40px rgba(6, 182, 212, 0.08);
+  --scrollbar-track: rgba(255, 255, 255, 0.02);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] {
+  --bg: #f6fcfd;
+  --surface: #ffffff;
+  --surface-alt: #f0f5f7;
+  --surface-glass: rgba(255, 255, 255, 0.7);
+  --surface-glass-border: rgba(0, 0, 0, 0.08);
+  --surface-glass-hover: rgba(255, 255, 255, 0.85);
+  --electric: #0891b2;
+  --electric-dim: #06b6d4;
+  --electric-glow: rgba(8, 145, 178, 0.12);
+  --electric-glow-strong: rgba(8, 145, 178, 0.2);
+  --secondary: #ea580c;
+  --secondary-dim: rgba(234, 88, 12, 0.08);
+  --tertiary: #db2777;
+  --tertiary-dim: rgba(219, 39, 119, 0.08);
+  --text: #0c1820;
+  --text-dim: #5a7a8a;
+  --text-micro: #8aa0ac;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-hover: rgba(0, 0, 0, 0.15);
+  --border-active: rgba(8, 145, 178, 0.3);
+  --input-bg: rgba(0, 0, 0, 0.02);
+  --input-focus: rgba(8, 145, 178, 0.06);
+  --sidebar-bg: rgba(255, 255, 255, 0.95);
+  --sidebar-icon: #8aa0ac;
+  --sidebar-icon-hover: #0c1820;
+  --sidebar-icon-active: #0891b2;
+  --badge-bg: rgba(8, 145, 178, 0.08);
+  --badge-text: #0891b2;
+  --score-high: #059669;
+  --score-mid: #d97706;
+  --score-low: #dc2626;
+  --shadow-panel: 0 4px 40px rgba(0, 0, 0, 0.06);
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.05);
+  --shadow-glow: 0 0 40px rgba(8, 145, 178, 0.04);
+  --scrollbar-track: rgba(0, 0, 0, 0.02);
+  --scrollbar-thumb: rgba(0, 0, 0, 0.1);
+}
+
+/* ── RESET & BASE ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Bricolage Grotesque', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+
+/* ── LAYOUT SHELL ── */
+.app-shell {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* ── SIDEBAR NAV ── */
+.sidebar {
+  width: 60px;
+  min-width: 60px;
+  background: var(--sidebar-bg);
+  backdrop-filter: blur(24px);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  gap: 4px;
+  z-index: 50;
+  transition: background 0.5s, border-color 0.5s;
+}
+
+.sidebar-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--electric), var(--tertiary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-weight: 800;
+  font-size: 14px;
+  color: #fff;
+  letter-spacing: -0.04em;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-logo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.2));
+  border-radius: inherit;
+}
+
+.nav-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 0 8px;
+}
+
+.nav-divider {
+  width: 28px;
+  height: 1px;
+  background: var(--border);
+  margin: 8px 0;
+  transition: background 0.5s;
+}
+
+.nav-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--sidebar-icon);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  font-size: 18px;
+}
+
+.nav-btn:hover {
+  background: var(--input-bg);
+  color: var(--sidebar-icon-hover);
+}
+
+.nav-btn.active {
+  background: var(--electric-glow);
+  color: var(--sidebar-icon-active);
+}
+
+.nav-btn.active::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 20px;
+  background: var(--electric);
+  border-radius: 0 3px 3px 0;
+}
+
+.nav-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+}
+
+.theme-toggle-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--sidebar-icon);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 16px;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--input-bg);
+  color: var(--sidebar-icon-hover);
+  border-color: var(--border-hover);
+}
+
+.theme-toggle-btn .icon-sun,
+.theme-toggle-btn .icon-moon { display: none; }
+
+[data-theme="dark"] .theme-toggle-btn .icon-sun { display: flex; }
+[data-theme="light"] .theme-toggle-btn .icon-moon { display: flex; }
+
+.avatar-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: linear-gradient(135deg, var(--secondary), var(--tertiary));
+  cursor: pointer;
+  transition: border-color 0.2s;
+  margin-top: 4px;
+}
+
+.avatar-btn:hover {
+  border-color: var(--border-hover);
+}
+
+/* ── WORKSPACE (3 panels) ── */
+.workspace {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Ambient background glow behind center panel */
+.workspace::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(ellipse, var(--electric-glow) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+/* ── LEFT PANEL — Content Brief ── */
+.panel-left {
+  width: 300px;
+  min-width: 300px;
+  background: var(--surface-glass);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: background 0.5s, border-color 0.5s;
+  z-index: 1;
+}
+
+.panel-header {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-shrink: 0;
+  transition: border-color 0.5s;
+}
+
+.panel-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  transition: color 0.5s;
+}
+
+.panel-badge {
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--badge-text);
+  background: var(--badge-bg);
+  padding: 3px 8px;
+  border-radius: 6px;
+  transition: all 0.5s;
+}
+
+.panel-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Brief form fields */
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  transition: color 0.5s;
+}
+
+.field-value {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text);
+  padding: 10px 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: all 0.25s;
+  cursor: text;
+  line-height: 1.5;
+}
+
+.field-value:hover {
+  border-color: var(--border-hover);
+}
+
+.field-value:focus-within {
+  border-color: var(--border-active);
+  background: var(--input-focus);
+  outline: none;
+}
+
+.field-value.brand-name {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+}
+
+.field-value.mono {
+  font-family: 'Fira Code', monospace;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-dim);
+}
+
+/* Platform tags */
+.platform-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.platform-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.platform-tag:hover {
+  border-color: var(--border-hover);
+}
+
+.platform-tag.selected {
+  border-color: var(--electric);
+  background: var(--electric-glow);
+  color: var(--electric);
+}
+
+.platform-tag .emoji {
+  font-size: 13px;
+}
+
+/* Tone selector */
+.tone-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tone-pill {
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tone-pill:hover {
+  border-color: var(--border-hover);
+  color: var(--text);
+}
+
+.tone-pill.active {
+  background: var(--secondary-dim);
+  border-color: var(--secondary);
+  color: var(--secondary);
+}
+
+/* Goals */
+.goals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.goal-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text);
+  transition: color 0.5s;
+}
+
+.goal-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.goal-check.checked {
+  background: var(--electric);
+  border-color: var(--electric);
+}
+
+.goal-check.checked svg {
+  opacity: 1;
+}
+
+.goal-check svg {
+  width: 11px;
+  height: 11px;
+  stroke: #fff;
+  fill: none;
+  stroke-width: 2.5;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+/* Generate button in left panel */
+.generate-btn {
+  margin-top: auto;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--electric), var(--electric-dim));
+  color: #fff;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.generate-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.generate-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px var(--electric-glow-strong);
+}
+
+.generate-btn:hover::before {
+  opacity: 1;
+}
+
+.generate-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+
+/* ── CENTER PANEL — AI-Generated Content ── */
+.panel-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.center-header {
+  padding: 16px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface-glass);
+  backdrop-filter: blur(20px);
+  flex-shrink: 0;
+  transition: all 0.5s;
+}
+
+.center-title-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.center-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--electric);
+  background: var(--electric-glow);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(6, 182, 212, 0.15);
+}
+
+.ai-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--electric);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-btn {
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.header-btn:hover {
+  border-color: var(--border-hover);
+  color: var(--text);
+  background: var(--input-bg);
+}
+
+.header-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+}
+
+/* Platform tabs */
+.platform-tabs {
+  display: flex;
+  padding: 0 28px;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-glass);
+  backdrop-filter: blur(20px);
+  flex-shrink: 0;
+  transition: all 0.5s;
+}
+
+.platform-tab {
+  padding: 12px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.platform-tab:hover {
+  color: var(--text);
+}
+
+.platform-tab.active {
+  color: var(--electric);
+  border-bottom-color: var(--electric);
+}
+
+.platform-tab .tab-emoji {
+  font-size: 14px;
+}
+
+.platform-tab .tab-count {
+  font-family: 'Fira Code', monospace;
+  font-size: 9px;
+  background: var(--input-bg);
+  padding: 2px 5px;
+  border-radius: 4px;
+  color: var(--text-micro);
+}
+
+/* Center content area */
+.center-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Post preview card */
+.post-card {
+  background: var(--surface-glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-panel);
+  transition: all 0.5s;
+  animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.post-card-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+  transition: border-color 0.5s;
+}
+
+.post-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--electric), var(--tertiary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  color: #fff;
+}
+
+.post-meta {
+  flex: 1;
+}
+
+.post-author {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  transition: color 0.5s;
+}
+
+.post-handle {
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  transition: color 0.5s;
+}
+
+.post-platform-icon {
+  font-size: 18px;
+  opacity: 0.5;
+}
+
+.post-body {
+  padding: 20px;
+}
+
+.post-copy {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 16px;
+  transition: color 0.5s;
+  white-space: pre-line;
+}
+
+.post-copy .hashtag {
+  color: var(--electric);
+  font-weight: 600;
+}
+
+.post-copy .mention {
+  color: var(--tertiary);
+  font-weight: 600;
+}
+
+/* AI-generated image placeholder */
+.image-placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  background: linear-gradient(135deg,
+    var(--surface-alt) 0%,
+    color-mix(in srgb, var(--electric) 8%, var(--surface-alt)) 40%,
+    color-mix(in srgb, var(--tertiary) 6%, var(--surface-alt)) 70%,
+    var(--surface-alt) 100%
+  );
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s;
+}
+
+.image-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 40px,
+      var(--border) 40px,
+      var(--border) 41px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 40px,
+      var(--border) 40px,
+      var(--border) 41px
+    );
+  opacity: 0.3;
+}
+
+.image-placeholder .img-icon {
+  font-size: 36px;
+  position: relative;
+  z-index: 1;
+  filter: grayscale(0.3);
+}
+
+.image-placeholder .img-label {
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  color: var(--text-micro);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.image-placeholder .img-label .generating-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--electric);
+  animation: blink-gen 1.4s ease-in-out infinite;
+}
+
+.image-placeholder .img-label .generating-dot:nth-child(2) { animation-delay: 0.2s; }
+.image-placeholder .img-label .generating-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink-gen {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+.image-dimensions {
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  font-family: 'Fira Code', monospace;
+  font-size: 9px;
+  color: var(--text-micro);
+  background: var(--surface-glass);
+  padding: 3px 7px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  z-index: 1;
+}
+
+/* Post stats bar */
+.post-stats {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: border-color 0.5s;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  transition: color 0.5s;
+}
+
+.stat-item svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+}
+
+.stat-item .stat-val {
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* Hashtag bar below post */
+.hashtag-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+}
+
+.hashtag-chip {
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  color: var(--electric);
+  background: var(--electric-glow);
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(6, 182, 212, 0.1);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.hashtag-chip:hover {
+  background: var(--electric-glow-strong);
+  border-color: rgba(6, 182, 212, 0.2);
+}
+
+/* Action buttons */
+.action-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 4px;
+  animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+}
+
+.action-btn {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.action-btn:hover {
+  border-color: var(--border-hover);
+  background: var(--input-bg);
+  transform: translateY(-1px);
+}
+
+.action-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+}
+
+.action-btn.primary {
+  background: var(--electric);
+  border-color: var(--electric);
+  color: #fff;
+}
+
+.action-btn.primary:hover {
+  box-shadow: 0 4px 20px var(--electric-glow-strong);
+  background: var(--electric-dim);
+}
+
+.action-btn.secondary-action {
+  border-color: var(--secondary);
+  color: var(--secondary);
+}
+
+.action-btn.secondary-action:hover {
+  background: var(--secondary-dim);
+}
+
+.action-spacer {
+  flex: 1;
+}
+
+.action-btn.subtle {
+  border: none;
+  color: var(--text-dim);
+  padding: 10px 14px;
+}
+
+.action-btn.subtle:hover {
+  color: var(--text);
+  background: var(--input-bg);
+}
+
+/* ── RIGHT PANEL — Variants & History ── */
+.panel-right {
+  width: 280px;
+  min-width: 280px;
+  background: var(--surface-glass);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: background 0.5s, border-color 0.5s;
+  z-index: 1;
+}
+
+.panel-right .panel-body {
+  gap: 12px;
+}
+
+/* Variant cards */
+.variant-card {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.variant-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  border-radius: 3px 0 0 3px;
+  background: var(--border);
+  transition: background 0.2s;
+}
+
+.variant-card:hover {
+  border-color: var(--border-hover);
+  background: var(--surface-glass-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card);
+}
+
+.variant-card.active {
+  border-color: var(--border-active);
+  background: var(--electric-glow);
+}
+
+.variant-card.active::before {
+  background: var(--electric);
+}
+
+.variant-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.variant-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.variant-tag {
+  font-family: 'Fira Code', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.variant-tag.winner {
+  background: rgba(52, 211, 153, 0.12);
+  color: var(--score-high);
+}
+
+.variant-tag.testing {
+  background: rgba(251, 191, 36, 0.12);
+  color: var(--score-mid);
+}
+
+.variant-score {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.score-bar {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.score-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.score-bar-fill.high { background: var(--score-high); }
+.score-bar-fill.mid { background: var(--score-mid); }
+.score-bar-fill.low { background: var(--score-low); }
+
+.score-pct {
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.score-pct.high { color: var(--score-high); }
+.score-pct.mid { color: var(--score-mid); }
+.score-pct.low { color: var(--score-low); }
+
+.variant-preview {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-dim);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.5s;
+}
+
+.variant-meta {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  color: var(--text-micro);
+}
+
+.variant-meta svg {
+  width: 12px;
+  height: 12px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+}
+
+.variant-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* Section divider in right panel */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0 4px;
+}
+
+.section-divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.section-divider-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-micro);
+  white-space: nowrap;
+}
+
+/* Version history items */
+.history-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  position: relative;
+}
+
+.history-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 32px;
+  bottom: -10px;
+  width: 1px;
+  background: var(--border);
+}
+
+.history-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--surface-alt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.5s;
+}
+
+.history-dot.current {
+  border-color: var(--electric);
+  background: var(--electric-glow);
+}
+
+.history-dot svg {
+  width: 10px;
+  height: 10px;
+  stroke: var(--text-micro);
+  fill: none;
+  stroke-width: 2;
+}
+
+.history-dot.current svg {
+  stroke: var(--electric);
+}
+
+.history-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.history-action {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  transition: color 0.5s;
+  margin-bottom: 2px;
+}
+
+.history-time {
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  color: var(--text-micro);
+}
+
+.history-desc {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.panel-left { animation: slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
+.panel-center { animation: fadeIn 0.4s ease both; }
+.panel-right { animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both; }
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Stagger brief fields */
+.field-group:nth-child(1) { animation: fadeSlideUp 0.4s ease 0.15s both; }
+.field-group:nth-child(2) { animation: fadeSlideUp 0.4s ease 0.2s both; }
+.field-group:nth-child(3) { animation: fadeSlideUp 0.4s ease 0.25s both; }
+.field-group:nth-child(4) { animation: fadeSlideUp 0.4s ease 0.3s both; }
+.field-group:nth-child(5) { animation: fadeSlideUp 0.4s ease 0.35s both; }
+.field-group:nth-child(6) { animation: fadeSlideUp 0.4s ease 0.4s both; }
+
+/* Stagger variant cards */
+.variant-card:nth-child(1) { animation: fadeSlideUp 0.4s ease 0.2s both; }
+.variant-card:nth-child(2) { animation: fadeSlideUp 0.4s ease 0.3s both; }
+.variant-card:nth-child(3) { animation: fadeSlideUp 0.4s ease 0.4s both; }
+
+/* Stagger history items */
+.history-item:nth-child(1) { animation: fadeSlideUp 0.4s ease 0.5s both; }
+.history-item:nth-child(2) { animation: fadeSlideUp 0.4s ease 0.6s both; }
+.history-item:nth-child(3) { animation: fadeSlideUp 0.4s ease 0.7s both; }
+.history-item:nth-child(4) { animation: fadeSlideUp 0.4s ease 0.8s both; }
+
+/* ── TOOLTIP ── */
+.nav-btn[data-tooltip] {
+  position: relative;
+}
+
+.nav-btn[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%) scale(0.9);
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  white-space: nowrap;
+  padding: 4px 8px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100;
+  box-shadow: var(--shadow-card);
+}
+
+.nav-btn[data-tooltip]:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- ════════════ SIDEBAR ════════════ -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">BA</div>
+
+    <div class="nav-group">
+      <button class="nav-btn" data-tooltip="Dashboard">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      </button>
+      <button class="nav-btn active" data-tooltip="Content Editor">
+        <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </button>
+      <button class="nav-btn" data-tooltip="Calendar">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </button>
+      <button class="nav-btn" data-tooltip="Analytics">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      </button>
+    </div>
+
+    <div class="nav-divider"></div>
+
+    <div class="nav-group">
+      <button class="nav-btn" data-tooltip="Brand Assets">
+        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+      </button>
+      <button class="nav-btn" data-tooltip="Team">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </button>
+    </div>
+
+    <div class="sidebar-bottom">
+      <button class="theme-toggle-btn" onclick="toggleTheme()">
+        <span class="icon-sun">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </span>
+        <span class="icon-moon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </span>
+      </button>
+      <button class="nav-btn" data-tooltip="Settings">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+      <div class="avatar-btn"></div>
+    </div>
+  </nav>
+
+  <div class="workspace">
+
+    <!-- ════════════ LEFT PANEL — Content Brief ════════════ -->
+    <aside class="panel-left">
+      <div class="panel-header">
+        <span class="panel-title">Content Brief</span>
+        <span class="panel-badge">DRAFT</span>
+      </div>
+      <div class="panel-body">
+
+        <div class="field-group">
+          <label class="field-label">Brand</label>
+          <div class="field-value brand-name">NovaTech Labs</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Target Audience</label>
+          <div class="field-value">SaaS founders &amp; startup CTOs (25-45) who need to ship marketing content fast without hiring a full creative team.</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Tone</label>
+          <div class="tone-pills">
+            <button class="tone-pill">formal</button>
+            <button class="tone-pill active">bold</button>
+            <button class="tone-pill">playful</button>
+            <button class="tone-pill">minimal</button>
+            <button class="tone-pill">technical</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Platforms</label>
+          <div class="platform-tags">
+            <button class="platform-tag selected">
+              <span class="emoji">📸</span> Instagram
+            </button>
+            <button class="platform-tag selected">
+              <span class="emoji">🐦</span> X
+            </button>
+            <button class="platform-tag selected">
+              <span class="emoji">💼</span> LinkedIn
+            </button>
+            <button class="platform-tag">
+              <span class="emoji">📘</span> Facebook
+            </button>
+            <button class="platform-tag">
+              <span class="emoji">🎵</span> TikTok
+            </button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Campaign Context</label>
+          <div class="field-value mono">Product launch — AI-powered analytics dashboard. Emphasize speed, real-time insights, and ease of onboarding.</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Content Goals</label>
+          <div class="goals-list">
+            <div class="goal-item">
+              <div class="goal-check checked">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              Drive sign-ups to waitlist
+            </div>
+            <div class="goal-item">
+              <div class="goal-check checked">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              Build thought leadership
+            </div>
+            <div class="goal-item">
+              <div class="goal-check">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              Increase brand awareness
+            </div>
+            <div class="goal-item">
+              <div class="goal-check checked">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              Generate social proof
+            </div>
+          </div>
+        </div>
+
+        <button class="generate-btn">
+          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Generate Content
+        </button>
+      </div>
+    </aside>
+
+    <!-- ════════════ CENTER PANEL — AI-Generated Content ════════════ -->
+    <main class="panel-center">
+      <div class="center-header">
+        <div class="center-title-area">
+          <span class="center-title">AI-Generated Content</span>
+          <span class="ai-badge">
+            <span class="dot"></span>
+            GPT-4o active
+          </span>
+        </div>
+        <div class="header-actions">
+          <button class="header-btn">
+            <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+            Export
+          </button>
+          <button class="header-btn">
+            <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Share
+          </button>
+        </div>
+      </div>
+
+      <div class="platform-tabs">
+        <button class="platform-tab">
+          <span class="tab-emoji">📸</span> Instagram
+          <span class="tab-count">3</span>
+        </button>
+        <button class="platform-tab active">
+          <span class="tab-emoji">🐦</span> X (Twitter)
+          <span class="tab-count">3</span>
+        </button>
+        <button class="platform-tab">
+          <span class="tab-emoji">💼</span> LinkedIn
+          <span class="tab-count">2</span>
+        </button>
+      </div>
+
+      <div class="center-content">
+        <!-- Post Preview Card -->
+        <div class="post-card">
+          <div class="post-card-header">
+            <div class="post-avatar">N</div>
+            <div class="post-meta">
+              <div class="post-author">NovaTech Labs</div>
+              <div class="post-handle">@novatechlabs</div>
+            </div>
+            <div class="post-platform-icon">🐦</div>
+          </div>
+
+          <div class="post-body">
+            <div class="post-copy">We spent 6 months building what most teams need 6 weeks to understand:
+
+<span class="hashtag">Real-time analytics</span> that actually make sense.
+
+No more waiting for overnight data crunches. No more "let me pull that report" delays. Your metrics, live, the second they happen.
+
+NovaTech Analytics is launching next week.
+Early access spots are limited.
+
+<span class="mention">@ProductHunt</span> launch incoming <span class="hashtag">#BuildInPublic</span>
+
+Drop a ⚡ if you're tired of dashboards that feel like archaeology.</div>
+
+            <!-- AI-Generated Image Placeholder -->
+            <div class="image-placeholder">
+              <span class="img-icon">🎨</span>
+              <span class="img-label">
+                Generating visual
+                <span class="generating-dot"></span>
+                <span class="generating-dot"></span>
+                <span class="generating-dot"></span>
+              </span>
+              <span class="image-dimensions">1200 x 675</span>
+            </div>
+          </div>
+
+          <div class="post-stats">
+            <div class="stat-item">
+              <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              <span class="stat-val">~2.4k</span> predicted
+            </div>
+            <div class="stat-item">
+              <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span class="stat-val">~180</span>
+            </div>
+            <div class="stat-item">
+              <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+              <span class="stat-val">~890</span>
+            </div>
+            <div class="stat-item">
+              <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span class="stat-val">~48k</span> reach
+            </div>
+          </div>
+        </div>
+
+        <!-- Hashtag suggestions -->
+        <div class="hashtag-bar">
+          <span class="hashtag-chip">#BuildInPublic</span>
+          <span class="hashtag-chip">#SaaS</span>
+          <span class="hashtag-chip">#Analytics</span>
+          <span class="hashtag-chip">#StartupLife</span>
+          <span class="hashtag-chip">#ProductLaunch</span>
+          <span class="hashtag-chip">#RealtimeData</span>
+          <span class="hashtag-chip">#TechStartup</span>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="action-bar">
+          <button class="action-btn secondary-action">
+            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            Regenerate
+          </button>
+          <button class="action-btn">
+            <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Edit
+          </button>
+          <button class="action-btn primary">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Approve &amp; Schedule
+          </button>
+          <span class="action-spacer"></span>
+          <button class="action-btn subtle">
+            <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </button>
+          <button class="action-btn subtle">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- ════════════ RIGHT PANEL — Variants & History ════════════ -->
+    <aside class="panel-right">
+      <div class="panel-header">
+        <span class="panel-title">Variants &amp; History</span>
+        <span class="panel-badge">A/B</span>
+      </div>
+      <div class="panel-body">
+
+        <!-- Variant A — Winner -->
+        <div class="variant-card active">
+          <div class="variant-card-head">
+            <span class="variant-label">
+              Variant A
+              <span class="variant-tag winner">WINNER</span>
+            </span>
+            <div class="variant-score">
+              <div class="score-bar"><div class="score-bar-fill high" style="width: 87%"></div></div>
+              <span class="score-pct high">87%</span>
+            </div>
+          </div>
+          <div class="variant-preview">We spent 6 months building what most teams need 6 weeks to understand: Real-time analytics that actually make sense...</div>
+          <div class="variant-meta">
+            <span class="variant-meta-item">
+              <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              2.4k
+            </span>
+            <span class="variant-meta-item">
+              <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/></svg>
+              890
+            </span>
+            <span class="variant-meta-item">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              2m ago
+            </span>
+          </div>
+        </div>
+
+        <!-- Variant B — Testing -->
+        <div class="variant-card">
+          <div class="variant-card-head">
+            <span class="variant-label">
+              Variant B
+              <span class="variant-tag testing">TESTING</span>
+            </span>
+            <div class="variant-score">
+              <div class="score-bar"><div class="score-bar-fill mid" style="width: 64%"></div></div>
+              <span class="score-pct mid">64%</span>
+            </div>
+          </div>
+          <div class="variant-preview">Your data shouldn't sleep. NovaTech Analytics delivers real-time insights the moment they happen. No delays, no exports, no friction...</div>
+          <div class="variant-meta">
+            <span class="variant-meta-item">
+              <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              1.6k
+            </span>
+            <span class="variant-meta-item">
+              <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/></svg>
+              540
+            </span>
+            <span class="variant-meta-item">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              5m ago
+            </span>
+          </div>
+        </div>
+
+        <!-- Variant C — Low performer -->
+        <div class="variant-card">
+          <div class="variant-card-head">
+            <span class="variant-label">
+              Variant C
+              <span class="variant-tag testing">TESTING</span>
+            </span>
+            <div class="variant-score">
+              <div class="score-bar"><div class="score-bar-fill low" style="width: 38%"></div></div>
+              <span class="score-pct low">38%</span>
+            </div>
+          </div>
+          <div class="variant-preview">Introducing NovaTech Analytics: the smartest way to track your startup's growth metrics in real-time. Join our exclusive early access...</div>
+          <div class="variant-meta">
+            <span class="variant-meta-item">
+              <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              420
+            </span>
+            <span class="variant-meta-item">
+              <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/></svg>
+              120
+            </span>
+            <span class="variant-meta-item">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              8m ago
+            </span>
+          </div>
+        </div>
+
+        <!-- Version History -->
+        <div class="section-divider">
+          <span class="section-divider-line"></span>
+          <span class="section-divider-label">Version History</span>
+          <span class="section-divider-line"></span>
+        </div>
+
+        <div class="history-item">
+          <div class="history-dot current">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="history-info">
+            <div class="history-action">Variant A selected</div>
+            <div class="history-time">Today, 2:34 PM</div>
+            <div class="history-desc">AI recommended based on predicted engagement score</div>
+          </div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-dot">
+            <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <div class="history-info">
+            <div class="history-action">3 variants generated</div>
+            <div class="history-time">Today, 2:33 PM</div>
+            <div class="history-desc">GPT-4o generated X thread variants</div>
+          </div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-dot">
+            <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
+          <div class="history-info">
+            <div class="history-action">Brief updated</div>
+            <div class="history-time">Today, 2:30 PM</div>
+            <div class="history-desc">Changed tone from "formal" to "bold"</div>
+          </div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-dot">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div class="history-info">
+            <div class="history-action">Brief created</div>
+            <div class="history-time">Today, 2:15 PM</div>
+            <div class="history-desc">NovaTech Labs product launch campaign</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </div><!-- /workspace -->
+</div><!-- /app-shell -->
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+}
+
+// Interactive tone pills
+document.querySelectorAll('.tone-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    document.querySelectorAll('.tone-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+  });
+});
+
+// Interactive platform tags
+document.querySelectorAll('.platform-tag').forEach(tag => {
+  tag.addEventListener('click', () => {
+    tag.classList.toggle('selected');
+  });
+});
+
+// Interactive goal checkboxes
+document.querySelectorAll('.goal-check').forEach(check => {
+  check.addEventListener('click', () => {
+    check.classList.toggle('checked');
+  });
+});
+
+// Interactive platform tabs
+document.querySelectorAll('.platform-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.platform-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+
+// Interactive variant cards
+document.querySelectorAll('.variant-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.variant-card').forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+  });
+});
+
+// Interactive sidebar nav
+document.querySelectorAll('.nav-group .nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-group .nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>

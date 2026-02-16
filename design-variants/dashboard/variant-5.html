@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BriefAgent — Publishing Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@200;400;600;700;800&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   THEME TOKENS
+   ══════════════════════════════════════════ */
+[data-theme="dark"] {
+  --bg: #070b0e;
+  --bg-sidebar: #0a0f13;
+  --surface: #0e1519;
+  --surface-alt: #0c1620;
+  --surface-raised: #121a20;
+  --electric: #06b6d4;
+  --electric-dim: #0e7490;
+  --electric-glow: rgba(6, 182, 212, 0.15);
+  --electric-glow-strong: rgba(6, 182, 212, 0.3);
+  --secondary: #f97316;
+  --secondary-glow: rgba(249, 115, 22, 0.15);
+  --tertiary: #ec4899;
+  --tertiary-glow: rgba(236, 72, 153, 0.15);
+  --text: #edf4f7;
+  --text-dim: #6b8a99;
+  --text-muted: #3d5563;
+  --border: rgba(255,255,255,0.06);
+  --border-hover: rgba(255,255,255,0.12);
+  --border-strong: rgba(255,255,255,0.15);
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.4);
+  --shadow-card-hover: 0 8px 32px rgba(0,0,0,0.5);
+  --shadow-panel: 0 4px 40px rgba(0,0,0,0.6);
+  --toggle-bg: rgba(255,255,255,0.06);
+  --toggle-hover: rgba(255,255,255,0.1);
+  --scrollbar-thumb: rgba(255,255,255,0.1);
+  --scrollbar-track: transparent;
+  --success: #22c55e;
+  --success-bg: rgba(34, 197, 94, 0.1);
+  --warning: #eab308;
+  --warning-bg: rgba(234, 179, 8, 0.1);
+  --overlay: rgba(7,11,14,0.6);
+}
+
+[data-theme="light"] {
+  --bg: #f6fcfd;
+  --bg-sidebar: #edf5f7;
+  --surface: #ffffff;
+  --surface-alt: #f0f5f7;
+  --surface-raised: #f8fafb;
+  --electric: #0891b2;
+  --electric-dim: #0e7490;
+  --electric-glow: rgba(8, 145, 178, 0.12);
+  --electric-glow-strong: rgba(8, 145, 178, 0.25);
+  --secondary: #ea580c;
+  --secondary-glow: rgba(234, 88, 12, 0.12);
+  --tertiary: #db2777;
+  --tertiary-glow: rgba(219, 39, 119, 0.12);
+  --text: #0c1820;
+  --text-dim: #5a7a8a;
+  --text-muted: #94a8b3;
+  --border: rgba(0,0,0,0.08);
+  --border-hover: rgba(0,0,0,0.15);
+  --border-strong: rgba(0,0,0,0.2);
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.06);
+  --shadow-card-hover: 0 8px 32px rgba(0,0,0,0.1);
+  --shadow-panel: 0 4px 40px rgba(0,0,0,0.08);
+  --toggle-bg: rgba(0,0,0,0.05);
+  --toggle-hover: rgba(0,0,0,0.08);
+  --scrollbar-thumb: rgba(0,0,0,0.12);
+  --scrollbar-track: transparent;
+  --success: #16a34a;
+  --success-bg: rgba(22, 163, 74, 0.08);
+  --warning: #ca8a04;
+  --warning-bg: rgba(202, 138, 4, 0.08);
+  --overlay: rgba(246,252,253,0.6);
+}
+
+/* ══════════════════════════════════════════
+   RESET & BASE
+   ══════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { height: 100%; }
+body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Bricolage Grotesque', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.4s, color 0.4s;
+  overflow: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+
+/* ══════════════════════════════════════════
+   APP SHELL
+   ══════════════════════════════════════════ */
+.app-shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  grid-template-rows: 56px 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  grid-row: 1 / -1;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  transition: background 0.4s, border-color 0.4s;
+  z-index: 10;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.25rem;
+  height: 56px;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+  transition: border-color 0.4s;
+}
+
+.logo-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--electric), var(--electric-dim));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.75rem;
+  color: white;
+  letter-spacing: -0.04em;
+  flex-shrink: 0;
+}
+
+.logo-text {
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  transition: color 0.4s;
+}
+.logo-text span { color: var(--electric); }
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+}
+
+.nav-section-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  padding: 1rem 0.75rem 0.4rem;
+  transition: color 0.4s;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 400;
+  color: var(--text-dim);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid transparent;
+}
+.nav-item:hover {
+  color: var(--text);
+  background: var(--toggle-bg);
+}
+.nav-item.active {
+  color: var(--electric);
+  background: var(--electric-glow);
+  border-color: rgba(6, 182, 212, 0.12);
+  font-weight: 600;
+}
+
+.nav-item svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+.nav-item.active svg { opacity: 1; }
+
+.nav-item .badge {
+  margin-left: auto;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.6rem;
+  font-weight: 500;
+  background: var(--electric-glow);
+  color: var(--electric);
+  padding: 0.1rem 0.45rem;
+  border-radius: 6px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  padding: 0.75rem;
+  border-top: 1px solid var(--border);
+  transition: border-color 0.4s;
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.sidebar-user:hover { background: var(--toggle-bg); }
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--tertiary), var(--secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.7rem;
+  color: white;
+  flex-shrink: 0;
+}
+
+.user-info { flex: 1; min-width: 0; }
+.user-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.4s;
+}
+.user-plan {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.6rem;
+  color: var(--electric);
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.4s, border-color 0.4s;
+  height: 56px;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.topbar-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.topbar-title .icon { font-size: 1.15rem; }
+
+.topbar-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.topbar-breadcrumb span { color: var(--text-dim); }
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.topbar-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.topbar-btn.primary {
+  background: var(--electric);
+  color: white;
+}
+.topbar-btn.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px var(--electric-glow-strong);
+}
+
+.topbar-btn.ghost {
+  background: var(--toggle-bg);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+.topbar-btn.ghost:hover {
+  color: var(--text);
+  border-color: var(--border-hover);
+}
+
+.theme-toggle {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--toggle-bg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+.theme-toggle:hover {
+  background: var(--toggle-hover);
+  color: var(--text);
+  border-color: var(--border-hover);
+}
+
+[data-theme="dark"] .icon-sun { display: inline; }
+[data-theme="dark"] .icon-moon { display: none; }
+[data-theme="light"] .icon-sun { display: none; }
+[data-theme="light"] .icon-moon { display: inline; }
+
+.notification-btn {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--toggle-bg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+.notification-btn:hover {
+  background: var(--toggle-hover);
+  color: var(--text);
+}
+.notification-dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--tertiary);
+  border: 1.5px solid var(--bg);
+}
+
+/* ══════════════════════════════════════════
+   MAIN CONTENT AREA
+   ══════════════════════════════════════════ */
+.main-content {
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+.kanban-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* ── KANBAN COLUMNS ── */
+.kanban-wrapper {
+  flex: 1;
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem 0.75rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.kanban-column {
+  flex: 1;
+  min-width: 280px;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--surface-alt);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: background 0.4s, border-color 0.4s;
+}
+
+.column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border);
+  transition: border-color 0.4s;
+  flex-shrink: 0;
+}
+
+.column-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.column-emoji { font-size: 1rem; }
+
+.column-count {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  background: var(--toggle-bg);
+  color: var(--text-dim);
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  transition: background 0.4s, color 0.4s;
+}
+
+.column-add {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: all 0.15s;
+}
+.column-add:hover {
+  background: var(--toggle-bg);
+  color: var(--text-dim);
+  border-color: var(--border-hover);
+}
+
+.column-cards {
+  flex: 1;
+  padding: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow-y: auto;
+}
+
+/* ── CARDS ── */
+.post-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.85rem;
+  cursor: grab;
+  transition: all 0.2s;
+  position: relative;
+}
+.post-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-1px);
+}
+.post-card:active { cursor: grabbing; }
+
+.card-drag-handle {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+  margin-bottom: 0.6rem;
+  opacity: 0.3;
+  transition: opacity 0.15s;
+}
+.post-card:hover .card-drag-handle { opacity: 0.6; }
+
+.drag-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-dim);
+}
+
+.card-platform-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 14px 14px 0 0;
+}
+.card-platform-accent.linkedin { background: var(--electric); }
+.card-platform-accent.instagram { background: var(--secondary); }
+.card-platform-accent.twitter { background: var(--tertiary); }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text);
+  transition: color 0.4s;
+}
+
+.card-platform-icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.card-badge {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.6rem;
+  font-weight: 400;
+  padding: 0.15rem 0.45rem;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.badge-words {
+  background: var(--toggle-bg);
+  color: var(--text-dim);
+}
+
+.badge-ai {
+  background: var(--electric-glow);
+  color: var(--electric);
+}
+
+.badge-time {
+  background: var(--secondary-glow);
+  color: var(--secondary);
+}
+
+.badge-live {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+/* Preview thumbnail for review cards */
+.card-preview {
+  width: 100%;
+  height: 80px;
+  border-radius: 8px;
+  margin-bottom: 0.6rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-preview.p-linkedin {
+  background: linear-gradient(135deg, #0c1620, #0e3a4d);
+}
+.card-preview.p-instagram {
+  background: linear-gradient(135deg, #1a0e15, #2d1520, #1a1005);
+}
+.card-preview.p-twitter {
+  background: linear-gradient(135deg, #15080e, #1a0e20);
+}
+
+.preview-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--overlay);
+  opacity: 0;
+  transition: opacity 0.2s;
+  border-radius: 8px;
+}
+.post-card:hover .preview-overlay { opacity: 1; }
+
+.preview-btn {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.65rem;
+  color: white;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: background 0.15s;
+}
+.preview-btn:hover { background: rgba(255,255,255,0.25); }
+
+/* Approval buttons */
+.card-actions {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.action-btn {
+  flex: 1;
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.4rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.action-btn.approve {
+  background: var(--success-bg);
+  color: var(--success);
+  border-color: rgba(34, 197, 94, 0.15);
+}
+.action-btn.approve:hover {
+  background: var(--success);
+  color: white;
+  border-color: var(--success);
+}
+
+.action-btn.revise {
+  background: var(--warning-bg);
+  color: var(--warning);
+  border-color: rgba(234, 179, 8, 0.15);
+}
+.action-btn.revise:hover {
+  background: var(--warning);
+  color: #1a1500;
+  border-color: var(--warning);
+}
+
+/* Schedule info */
+.card-schedule {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  transition: color 0.4s;
+}
+.card-schedule svg {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.countdown-badge {
+  margin-left: auto;
+  font-size: 0.6rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 5px;
+  background: var(--electric-glow);
+  color: var(--electric);
+  font-weight: 500;
+}
+
+/* Engagement metrics for published */
+.card-engagement {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+  transition: border-color 0.4s;
+}
+
+.engagement-metric {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  transition: color 0.4s;
+}
+
+.engagement-metric svg {
+  width: 13px;
+  height: 13px;
+  opacity: 0.6;
+}
+
+/* ══════════════════════════════════════════
+   QUICK STATS BAR
+   ══════════════════════════════════════════ */
+.quick-stats {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem 1rem;
+  flex-shrink: 0;
+}
+
+.stat-block {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.7rem 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  transition: all 0.2s;
+}
+.stat-block:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-card);
+}
+
+.stat-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+.stat-icon.s1 { background: var(--success-bg); }
+.stat-icon.s2 { background: var(--electric-glow); }
+.stat-icon.s3 { background: var(--secondary-glow); }
+.stat-icon.s4 { background: var(--tertiary-glow); }
+
+.stat-info { min-width: 0; }
+.stat-value {
+  font-family: 'Fira Code', monospace;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.2;
+  transition: color 0.4s;
+}
+.stat-label {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  font-weight: 400;
+  white-space: nowrap;
+  transition: color 0.4s;
+}
+
+/* ══════════════════════════════════════════
+   AI ASSISTANT PANEL
+   ══════════════════════════════════════════ */
+.ai-panel {
+  width: 300px;
+  flex-shrink: 0;
+  background: var(--bg);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  transition: background 0.4s, border-color 0.4s;
+}
+
+.ai-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  transition: border-color 0.4s;
+}
+
+.ai-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--electric), var(--tertiary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+.ai-avatar svg {
+  width: 14px;
+  height: 14px;
+  color: white;
+}
+.ai-pulse {
+  position: absolute;
+  inset: -3px;
+  border-radius: 10px;
+  border: 1.5px solid var(--electric);
+  opacity: 0;
+  animation: aiPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes aiPulse {
+  0%, 100% { opacity: 0; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.15); }
+}
+
+.ai-panel-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.ai-panel-status {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.6rem;
+  color: var(--success);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.ai-panel-status::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.ai-suggestions {
+  flex: 1;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  overflow-y: auto;
+}
+
+.ai-suggestion {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.85rem;
+  transition: all 0.2s;
+}
+.ai-suggestion:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-card);
+}
+
+.suggestion-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+.suggestion-type {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.58rem;
+  font-weight: 500;
+  padding: 0.12rem 0.4rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.suggestion-type.optimize {
+  background: var(--electric-glow);
+  color: var(--electric);
+}
+.suggestion-type.insight {
+  background: var(--tertiary-glow);
+  color: var(--tertiary);
+}
+.suggestion-type.warning-type {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.suggestion-time {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.suggestion-text {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+  margin-bottom: 0.65rem;
+  transition: color 0.4s;
+}
+
+.suggestion-actions {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.suggestion-btn {
+  font-family: inherit;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.35rem 0.7rem;
+  border-radius: 7px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.suggestion-btn.accept {
+  background: var(--electric);
+  color: white;
+}
+.suggestion-btn.accept:hover {
+  box-shadow: 0 2px 12px var(--electric-glow-strong);
+  transform: translateY(-1px);
+}
+
+.suggestion-btn.dismiss {
+  background: var(--toggle-bg);
+  color: var(--text-dim);
+}
+.suggestion-btn.dismiss:hover {
+  background: var(--toggle-hover);
+  color: var(--text);
+}
+
+.ai-input-area {
+  padding: 0.75rem;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  transition: border-color 0.4s;
+}
+
+.ai-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.45rem 0.55rem;
+  transition: border-color 0.2s;
+}
+.ai-input-wrapper:focus-within {
+  border-color: var(--electric);
+  box-shadow: 0 0 0 2px var(--electric-glow);
+}
+
+.ai-input {
+  flex: 1;
+  font-family: inherit;
+  font-size: 0.75rem;
+  color: var(--text);
+  background: none;
+  border: none;
+  outline: none;
+}
+.ai-input::placeholder { color: var(--text-muted); }
+
+.ai-send {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  border: none;
+  background: var(--electric);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.ai-send:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px var(--electric-glow-strong);
+}
+.ai-send svg { width: 12px; height: 12px; }
+
+/* ══════════════════════════════════════════
+   ANIMATIONS
+   ══════════════════════════════════════════ */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.kanban-column {
+  opacity: 0;
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.kanban-column:nth-child(1) { animation-delay: 0.05s; }
+.kanban-column:nth-child(2) { animation-delay: 0.12s; }
+.kanban-column:nth-child(3) { animation-delay: 0.19s; }
+.kanban-column:nth-child(4) { animation-delay: 0.26s; }
+
+.post-card {
+  opacity: 0;
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.column-cards .post-card:nth-child(1) { animation-delay: 0.2s; }
+.column-cards .post-card:nth-child(2) { animation-delay: 0.3s; }
+.column-cards .post-card:nth-child(3) { animation-delay: 0.4s; }
+
+.stat-block {
+  opacity: 0;
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.stat-block:nth-child(1) { animation-delay: 0.35s; }
+.stat-block:nth-child(2) { animation-delay: 0.4s; }
+.stat-block:nth-child(3) { animation-delay: 0.45s; }
+.stat-block:nth-child(4) { animation-delay: 0.5s; }
+
+.ai-panel {
+  opacity: 0;
+  animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+}
+
+/* ══════════════════════════════════════════
+   AMBIENT GLOW EFFECTS
+   ══════════════════════════════════════════ */
+.kanban-area::before {
+  content: '';
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(ellipse, var(--electric-glow) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+.kanban-wrapper, .quick-stats {
+  position: relative;
+  z-index: 1;
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar">
+    <a class="sidebar-logo" href="#">
+      <div class="logo-mark">B</div>
+      <div class="logo-text">Brief<span>Agent</span></div>
+    </a>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </a>
+
+      <a class="nav-item active" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+        Publishing Hub
+        <span class="badge">12</span>
+      </a>
+
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        AI Writer
+      </a>
+
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+        Analytics
+      </a>
+
+      <div class="nav-section-label">Channels</div>
+
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+        Instagram
+      </a>
+
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16h-4.267z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg>
+        X / Twitter
+      </a>
+
+      <div class="nav-section-label">Settings</div>
+
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar">DM</div>
+        <div class="user-info">
+          <div class="user-name">Diego Martinez</div>
+          <div class="user-plan">Pro Plan</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══ TOP BAR ═══ -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-title">
+        <span class="icon">&#128232;</span>
+        Publishing Hub
+      </div>
+      <div class="topbar-breadcrumb">
+        <span>All channels</span>
+        <span>&bull;</span>
+        <span>This week</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-btn ghost">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        Filter
+      </button>
+      <button class="topbar-btn primary" onclick="void(0)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Post
+      </button>
+      <button class="notification-btn" aria-label="Notifications">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="notification-dot"></span>
+      </button>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <span class="icon-sun">&#9728;&#65039;</span>
+        <span class="icon-moon">&#127769;</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <main class="main-content">
+    <div class="kanban-area">
+
+      <!-- KANBAN COLUMNS -->
+      <div class="kanban-wrapper">
+
+        <!-- ── DRAFTS ── -->
+        <div class="kanban-column">
+          <div class="column-header">
+            <div class="column-title">
+              <span class="column-emoji">&#128221;</span>
+              Drafts
+              <span class="column-count">3</span>
+            </div>
+            <button class="column-add">+</button>
+          </div>
+          <div class="column-cards">
+
+            <!-- Draft Card 1 -->
+            <div class="post-card">
+              <div class="card-platform-accent linkedin"></div>
+              <div class="card-drag-handle"><span class="drag-dot"></span><span class="drag-dot"></span><span class="drag-dot"></span></div>
+              <div class="card-header">
+                <div class="card-title">5 AI trends reshaping B2B marketing in 2026</div>
+                <div class="card-platform-icon">&#128101;</div>
+              </div>
+              <div class="card-meta">
+                <span class="card-badge badge-words">842 words</span>
+                <span class="card-badge badge-ai">&#10024; AI Generated</span>
+              </div>
+            </div>
+
+            <!-- Draft Card 2 -->
+            <div class="post-card">
+              <div class="card-platform-accent instagram"></div>
+              <div class="card-drag-handle"><span class="drag-dot"></span><span class="drag-dot"></span><span class="drag-dot"></span></div>
+              <div class="card-header">
+                <div class="card-title">Behind the scenes: Our creative process</div>
+                <div class="card-platform-icon">&#128247;</div>
+              </div>
+              <div class="card-meta">
+                <span class="card-badge badge-words">156 words</span>
+                <span class="card-badge badge-ai">&#10024; AI Generated</span>
+              </div>
+            </div>
+
+            <!-- Draft Card 3 -->
+            <div class="post-card">
+              <div class="card-platform-accent twitter"></div>
+              <div class="card-drag-handle"><span class="drag-dot"></span><span class="drag-dot"></span><span class="drag-dot"></span></div>
+              <div class="card-header">
+                <div class="card-title">Hot take: Why most content calendars fail</div>
+                <div class="card-platform-icon">&#120143;</div>
+              </div>
+              <div class="card-meta">
+                <span class="card-badge badge-words">280 chars</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── REVIEW ── -->
+        <div class="kanban-column">
+          <div class="column-header">
+            <div class="column-title">
+              <span class="column-emoji">&#128064;</span>
+              Review
+              <span class="column-count">2</span>
+            </div>
+            <button class="column-add">+</button>
+          </div>
+          <div class="column-cards">
+
+            <!-- Review Card 1 -->
+            <div class="post-card">
+              <div class="card-platform-accent linkedin"></div>
+              <div class="card-drag-handle"><span class="drag-dot"></span><span class="drag-dot"></span><span class="drag-dot"></span></div>
+              <div class="card-preview p-linkedin">
+                <div class="preview-overlay">
+                  <button class="preview-btn">Preview</button>
+                </div>
+              </div>
+              <div class="card-header">
+                <div class="card-title">Case study: How we scaled content 10x</div>
+                <div class="card-platform-icon">&#128101;</div>
+              </div>
+              <div class="card-meta">
+                <span class="card-badge badge-words">1,240 words</span>
+                <span class="card-badge badge-ai">&#10024; AI Generated</span>
+              </div>
+              <div class="card-actions">
+                <button class="action-btn approve">&#10003; Approve</button>
+                <button class="action-btn revise">&#9998; Revise</button>
+              </div>
+            </div>
+
+            <!-- Review Card 2 -->
+            <div class="post-card">
+              <div class="card-platform-accent instagram"></div>
+              <div class="card-drag-handle"><span class="drag-dot"></span><span class="drag-dot"></span><span class="drag-dot"></span></div>
+              <div class="card-preview p-instagram">
+                <div class="preview-overlay">
+                  <button class="preview-btn">Preview</button>
+                </div>
+              </div>
+              <div class="card-header">
+                <div class="card-title">Product launch carousel &mdash; Spring collection</div>
+                <div class="card-platform-icon">&#128247;</div>
+              </div>
+              <div class="card-meta">
+                <span class="card-badge badge-words">8 slides</span>
+              </div>
+              <div class="card-actions">
+                <button class="action-btn approve">&#10003; Approve</button>
+                <button class="action-btn revise">&#9998; Revise</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SCHEDULED ── -->
+        <div class="kanban-column">
+          <div class="column-header">
+            <div class="column-title">
+              <span class="column-emoji">&#128336;</span>
+              Scheduled
+              <span class="column-count">3</span>
+            </div>
+            <button class="column-add">+</button>
+          </div>
+          <div class="column-cards">
+
+            <!-- Scheduled Card 1 -->
+            <div class="post-card">
+              <div class="card-platform-accent linkedin"></div>
+              <div class="card-drag-handle"><span class="drag-dot"></span><span class="drag-dot"></span><span class="drag-dot"></span></div>
+              <div class="card-header">
+                <div class="card-title">The future of marketing automation</div>
+                <div class="card-platform-icon">&#128101;</div>
+              </div>
+              <div class="card-meta">
+                <span class="card-badge badge-words">920 words</span>
+                <span class="card-badge badge-ai">&#10024; AI Generated</span>
+              </div>
+              <div class="card-schedule">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Today, 2:00 PM
+                <span class="countdown-badge">in 2h</span>
+              </div>
+            </div>
+
+            <!-- Scheduled Card 2 -->
+            <div class="post-card">
+              <div class="card-platform-accent twitter"></div>
+              <div class="card-drag-handle"><span class="drag-dot"></span><span class="drag-dot"></span><span class="drag-dot"></span></div>
+              <div class="card-header">
+                <div class="card-title">Thread: 7 copywriting frameworks that convert</div>
+                <div class="card-platform-icon">&#120143;</div>
+              </div>
+              <div class="card-meta">
+                <span class="card-badge badge-words">7 tweets</span>
+              </div>
+              <div class="card-schedule">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Today, 6:00 PM
+                <span class="countdown-badge">in 6h</span>
+              </div>
+            </div>
+
+            <!-- Scheduled Card 3 -->
+            <div class="post-card">
+              <div class="card-platform-accent instagram"></div>
+              <div class="card-drag-handle"><span class="drag-dot"></span><span class="drag-dot"></span><span class="drag-dot"></span></div>
+              <div class="card-header">
+                <div class="card-title">Client testimonial reel &mdash; Q1 highlights</div>
+                <div class="card-platform-icon">&#128247;</div>
+              </div>
+              <div class="card-meta">
+                <span class="card-badge badge-words">45s video</span>
+              </div>
+              <div class="card-schedule">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Tomorrow, 10:00 AM
+                <span class="countdown-badge">tomorrow</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PUBLISHED ── -->
+        <div class="kanban-column">
+          <div class="column-header">
+            <div class="column-title">
+              <span class="column-emoji">&#9989;</span>
+              Published
+              <span class="column-count">2</span>
+            </div>
+            <button class="column-add">+</button>
+          </div>
+          <div class="column-cards">
+
+            <!-- Published Card 1 -->
+            <div class="post-card">
+              <div class="card-platform-accent linkedin"></div>
+              <div class="card-drag-handle"><span class="drag-dot"></span><span class="drag-dot"></span><span class="drag-dot"></span></div>
+              <div class="card-header">
+                <div class="card-title">Why we rebuilt our content pipeline from scratch</div>
+                <div class="card-platform-icon">&#128101;</div>
+              </div>
+              <div class="card-meta">
+                <span class="card-badge badge-live">&#9679; Live</span>
+                <span class="card-badge badge-words">Feb 14</span>
+              </div>
+              <div class="card-engagement">
+                <div class="engagement-metric">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  247
+                </div>
+                <div class="engagement-metric">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  38
+                </div>
+                <div class="engagement-metric">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                  64
+                </div>
+              </div>
+            </div>
+
+            <!-- Published Card 2 -->
+            <div class="post-card">
+              <div class="card-platform-accent twitter"></div>
+              <div class="card-drag-handle"><span class="drag-dot"></span><span class="drag-dot"></span><span class="drag-dot"></span></div>
+              <div class="card-header">
+                <div class="card-title">Unpopular opinion: AI won't replace marketers, but...</div>
+                <div class="card-platform-icon">&#120143;</div>
+              </div>
+              <div class="card-meta">
+                <span class="card-badge badge-live">&#9679; Live</span>
+                <span class="card-badge badge-words">Feb 13</span>
+              </div>
+              <div class="card-engagement">
+                <div class="engagement-metric">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  1.2k
+                </div>
+                <div class="engagement-metric">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  89
+                </div>
+                <div class="engagement-metric">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                  312
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /kanban-wrapper -->
+
+      <!-- QUICK STATS BAR -->
+      <div class="quick-stats">
+        <div class="stat-block">
+          <div class="stat-icon s1">&#128200;</div>
+          <div class="stat-info">
+            <div class="stat-value">8</div>
+            <div class="stat-label">Published this week</div>
+          </div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-icon s2">&#128203;</div>
+          <div class="stat-info">
+            <div class="stat-value">12</div>
+            <div class="stat-label">Queued</div>
+          </div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-icon s3">&#128293;</div>
+          <div class="stat-info">
+            <div class="stat-value">4.2%</div>
+            <div class="stat-label">Avg engagement</div>
+          </div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-icon s4">&#9200;</div>
+          <div class="stat-info">
+            <div class="stat-value">10am</div>
+            <div class="stat-label">Best time to post</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /kanban-area -->
+
+    <!-- ═══ AI ASSISTANT PANEL ═══ -->
+    <aside class="ai-panel">
+      <div class="ai-panel-header">
+        <div class="ai-avatar">
+          <div class="ai-pulse"></div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M16 16H8a4 4 0 0 0-4 4v1h16v-1a4 4 0 0 0-4-4z"/></svg>
+        </div>
+        <div>
+          <div class="ai-panel-title">AI Assistant</div>
+          <div class="ai-panel-status">Monitoring feeds</div>
+        </div>
+      </div>
+
+      <div class="ai-suggestions">
+
+        <!-- Suggestion 1 -->
+        <div class="ai-suggestion">
+          <div class="suggestion-header">
+            <span class="suggestion-type optimize">Optimize</span>
+            <span class="suggestion-time">2m ago</span>
+          </div>
+          <div class="suggestion-text">
+            Your Instagram audience is most active at <strong style="color: var(--text)">6:00 PM</strong> &mdash; the "Client testimonial reel" is scheduled for 10 AM tomorrow. Reschedule to 6 PM for <strong style="color: var(--electric)">+38% reach</strong>?
+          </div>
+          <div class="suggestion-actions">
+            <button class="suggestion-btn accept">Accept</button>
+            <button class="suggestion-btn dismiss">Dismiss</button>
+          </div>
+        </div>
+
+        <!-- Suggestion 2 -->
+        <div class="ai-suggestion">
+          <div class="suggestion-header">
+            <span class="suggestion-type insight">Insight</span>
+            <span class="suggestion-time">15m ago</span>
+          </div>
+          <div class="suggestion-text">
+            Your X post <strong style="color: var(--text)">"Unpopular opinion"</strong> is trending &mdash; <strong style="color: var(--tertiary)">1.2k likes</strong> in 3 days. Consider a follow-up thread to capitalize on momentum.
+          </div>
+          <div class="suggestion-actions">
+            <button class="suggestion-btn accept">Draft Thread</button>
+            <button class="suggestion-btn dismiss">Later</button>
+          </div>
+        </div>
+
+        <!-- Suggestion 3 -->
+        <div class="ai-suggestion">
+          <div class="suggestion-header">
+            <span class="suggestion-type warning-type">Alert</span>
+            <span class="suggestion-time">1h ago</span>
+          </div>
+          <div class="suggestion-text">
+            LinkedIn engagement dropped <strong style="color: var(--secondary)">12% this week</strong>. Posts with questions in the first line get 2x more comments. Want me to revise your upcoming LinkedIn drafts?
+          </div>
+          <div class="suggestion-actions">
+            <button class="suggestion-btn accept">Revise Drafts</button>
+            <button class="suggestion-btn dismiss">Skip</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="ai-input-area">
+        <div class="ai-input-wrapper">
+          <input class="ai-input" type="text" placeholder="Ask the AI assistant...">
+          <button class="ai-send" aria-label="Send">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+  </main>
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+}
+</script>
+</body>
+</html>

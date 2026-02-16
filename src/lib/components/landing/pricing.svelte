@@ -1,7 +1,6 @@
 <script lang="ts">
 	import * as m from '$lib/paraglide/messages.js';
 	import Badge from '$lib/components/ui/badge.svelte';
-	import Button from '$lib/components/ui/button.svelte';
 	import { Check, ArrowRight } from 'lucide-svelte';
 	import { inview } from 'svelte-inview';
 	import { scrollRevealConfig, staggerDelay, revealClasses } from '$lib/utils/animations';
@@ -56,18 +55,18 @@
 	];
 </script>
 
-<section id="pricing" class="relative bg-neutral-950 py-24 md:py-36 overflow-hidden">
+<section id="pricing" class="relative py-24 md:py-36 overflow-hidden" style="background: var(--bg-page); transition: background 0.4s;">
 	<!-- Ambient glow -->
-	<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-primary-500/[0.04] rounded-full blur-[150px] pointer-events-none"></div>
+	<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] rounded-full blur-[150px] pointer-events-none" style="background: var(--c-electric-glow);"></div>
 
 	<div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 		<!-- Section header -->
 		<div class="text-center max-w-3xl mx-auto mb-16 md:mb-20">
-			<p class="text-sm font-medium text-primary-400 tracking-wider uppercase mb-4">Pricing</p>
-			<h2 class="font-display font-bold text-3xl md:text-4xl lg:text-5xl tracking-tight text-white leading-tight">
+			<p class="font-mono text-[0.7rem] font-medium tracking-[0.15em] uppercase mb-3" style="color: var(--c-electric);">Pricing</p>
+			<h2 class="font-display font-extrabold text-3xl md:text-4xl lg:text-5xl tracking-[-0.03em]" style="line-height: 1.05; color: var(--headline-color);">
 				{m.landing_pricing_title()}
 			</h2>
-			<p class="mt-5 text-lg text-neutral-400 leading-relaxed">
+			<p class="mt-5 text-base leading-relaxed" style="color: var(--text-dim);">
 				{m.landing_pricing_subtitle()}
 			</p>
 		</div>
@@ -83,67 +82,68 @@
 					class="relative transition-all duration-700 ease-out {revealClasses(isVisible)}"
 					style="transition-delay: {staggerDelay(i)}ms"
 				>
-					<!-- Highlighted glow -->
 					{#if tier.highlighted}
 						<div class="absolute -inset-px bg-gradient-to-b from-primary-500/30 via-primary-500/10 to-transparent rounded-2xl blur-sm"></div>
 					{/if}
 
-					<div class="relative h-full rounded-2xl p-6 md:p-7 flex flex-col transition-all duration-300
-						{tier.highlighted
-						? 'bg-neutral-900/70 border border-primary-500/20 hover:border-primary-400/30'
-						: 'bg-neutral-900/40 border border-white/[0.06] hover:border-white/[0.12]'}"
+					<div class="relative h-full rounded-2xl p-6 md:p-7 flex flex-col transition-all duration-300 border"
+						style="background: var(--bg-surface); border-color: {tier.highlighted ? 'rgb(6 182 212 / 0.2)' : 'var(--border-subtle)'};"
 					>
-						<!-- Beta badge -->
 						<div class="mb-5">
-							<Badge variant={tier.highlighted ? 'accent' : 'default'} size="sm">
+							<Badge variant={tier.highlighted ? 'accent' : 'default'} size="sm" class="font-mono text-[0.6rem] px-2 py-0.5">
 								{m.landing_pricing_beta_badge()}
 							</Badge>
 						</div>
 
-						<!-- Tier name -->
-						<h3 class="font-display font-bold text-xl text-white">
+						<h3 class="font-display font-extrabold text-[1.15rem]" style="color: var(--text-main);">
 							{tier.name()}
 						</h3>
 
-						<!-- Price -->
 						<div class="mt-4 flex items-baseline gap-2">
-							<span class="text-4xl font-bold text-white font-display">$0</span>
+							<span class="font-extrabold text-[2.5rem] tracking-[-0.03em] font-display" style="color: var(--text-main);">$0</span>
 							{#if tier.futurePrice}
-								<span class="text-sm line-through text-neutral-500">
+								<span class="text-sm line-through opacity-60" style="color: var(--text-dim);">
 									{tier.futurePrice}
 								</span>
 							{/if}
 						</div>
 
-						<!-- Description -->
-						<p class="mt-2 text-sm text-neutral-400">
+						<p class="mt-2 text-sm" style="color: var(--text-dim);">
 							{tier.description()}
 						</p>
 
-						<!-- Divider -->
-						<div class="my-6 h-px {tier.highlighted ? 'bg-primary-500/15' : 'bg-white/[0.06]'}"></div>
+						<div class="my-6 h-px" style="background: {tier.highlighted ? 'rgb(6 182 212 / 0.15)' : 'var(--border-subtle)'};"></div>
 
-						<!-- Feature list -->
 						<ul class="space-y-3 flex-1">
 							{#each tier.features as feature}
-								<li class="flex items-start gap-3 text-sm text-neutral-300">
-									<Check class="w-4 h-4 mt-0.5 flex-shrink-0 {tier.highlighted ? 'text-primary-400' : 'text-neutral-500'}" />
+								<li class="flex items-start gap-3 text-sm" style="color: var(--text-main);">
+									<Check class="w-4 h-4 mt-0.5 flex-shrink-0 {tier.highlighted ? 'text-primary-500' : 'text-neutral-500'}" />
 									<span>{feature()}</span>
 								</li>
 							{/each}
 						</ul>
 
-						<!-- CTA -->
 						<div class="mt-8">
-							<Button
-								variant={tier.highlighted ? 'primary' : tier.buttonVariant}
-								size="md"
-								href="/signup"
-								class="w-full"
-							>
-								{m.landing_pricing_cta()}
-								<ArrowRight class="w-3.5 h-3.5" />
-							</Button>
+							{#if tier.highlighted}
+								<a
+									href="/signup"
+									class="flex items-center justify-center gap-2 w-full font-bold text-sm bg-primary-500 text-white rounded-[12px] py-3 px-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgb(6_182_212/0.25),0_0_0_1px_rgb(6_182_212)] cursor-pointer"
+								>
+									{m.landing_pricing_cta()}
+									<ArrowRight class="w-3.5 h-3.5" />
+								</a>
+							{:else}
+								<a
+									href="/signup"
+									class="flex items-center justify-center gap-2 w-full font-bold text-sm border rounded-[12px] py-3 px-6 transition-all duration-300 cursor-pointer"
+									style="border-color: var(--btn-outline-border); color: var(--text-dim);"
+									onmouseenter={(e) => { e.currentTarget.style.borderColor = 'var(--btn-outline-hover-border)'; e.currentTarget.style.color = 'var(--text-main)'; }}
+									onmouseleave={(e) => { e.currentTarget.style.borderColor = 'var(--btn-outline-border)'; e.currentTarget.style.color = 'var(--text-dim)'; }}
+								>
+									{m.landing_pricing_cta()}
+									<ArrowRight class="w-3.5 h-3.5" />
+								</a>
+							{/if}
 						</div>
 					</div>
 				</div>

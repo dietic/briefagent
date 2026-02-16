@@ -8,10 +8,10 @@
 	let isVisible = $state(false);
 </script>
 
-<section class="relative overflow-hidden py-24 md:py-36 bg-neutral-950">
+<section class="relative overflow-hidden py-24 md:py-36" style="background: var(--bg-page); transition: background 0.4s;">
 	<!-- Background: gradient wash -->
 	<div class="absolute inset-0 pointer-events-none">
-		<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-[radial-gradient(ellipse_at_center,rgb(6_182_212/0.08),rgb(249_115_22/0.03)_50%,transparent_70%)] rounded-full blur-[100px]"></div>
+		<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full blur-[100px]" style="background: radial-gradient(ellipse at center, var(--c-electric-glow), color-mix(in srgb, var(--c-secondary) 3%, transparent) 50%, transparent 70%);"></div>
 	</div>
 
 	<div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -20,16 +20,15 @@
 			use:inview={scrollRevealConfig}
 			oninview_enter={() => (isVisible = true)}
 		>
-			<!-- CTA card -->
-			<div class="relative rounded-3xl bg-neutral-900/50 border border-white/[0.06] backdrop-blur-sm p-10 md:p-16">
+			<div class="relative rounded-3xl border border-[var(--border-subtle)] p-10 md:px-12 md:py-14" style="background: var(--bg-surface);">
 				<!-- Inner glow -->
 				<div class="absolute inset-0 bg-gradient-to-b from-primary-500/[0.04] to-transparent rounded-3xl pointer-events-none"></div>
 
 				<div class="relative z-10">
-					<h2 class="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-white leading-tight tracking-tight">
+					<h2 class="font-display font-extrabold tracking-[-0.03em] leading-tight" style="font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: var(--headline-color);">
 						{m.landing_cta_title()}
 					</h2>
-					<p class="text-lg text-neutral-400 mt-5 max-w-2xl mx-auto leading-relaxed">
+					<p class="text-lg mt-5 max-w-[500px] mx-auto leading-relaxed" style="color: var(--text-dim);">
 						{m.landing_cta_description()}
 					</p>
 					<div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">

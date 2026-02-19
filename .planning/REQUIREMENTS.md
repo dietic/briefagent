@@ -1,7 +1,7 @@
 # Requirements: BriefAgent.ai
 
 **Defined:** 2026-02-15
-**Core Value:** A user with zero design or marketing skills can brief the AI and get professional, brand-consistent marketing content generated and published to their social accounts.
+**Core Value:** A user with zero design or marketing skills can brief the AI and get professional, brand-consistent marketing content generated, reviewed, and ready to download for manual publishing.
 
 ## v1 Requirements
 
@@ -33,12 +33,11 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **ASET-03**: User can add description to each asset to help AI understand what it shows
 - [ ] **ASET-04**: User can mark assets as primary (AI prioritizes these in generation)
 
-### LinkedIn Integration
+### Content Export
 
-- [ ] **LINK-01**: User can connect LinkedIn personal profile via OAuth
-- [ ] **LINK-02**: User can connect LinkedIn company page via OAuth
-- [ ] **LINK-03**: User can choose per product whether to post to personal profile or company page
-- [ ] **LINK-04**: System encrypts and manages OAuth tokens with refresh logic
+- [ ] **EXPT-01**: User can copy approved post text to clipboard with one click
+- [ ] **EXPT-02**: User can download generated images individually
+- [ ] **EXPT-03**: User can mark a post as "published" manually after uploading it themselves
 
 ### Content Plan Generation
 
@@ -84,19 +83,10 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **REVW-10**: User can regenerate both copy and image
 - [ ] **REVW-11**: User can edit and approve in one action
 
-### Publishing
-
-- [ ] **PUBL-01**: Approved posts automatically publish at their scheduled time
-- [ ] **PUBL-02**: System checks every minute for posts whose scheduled time has arrived
-- [ ] **PUBL-03**: On successful publish, system stores the live LinkedIn post URL
-- [ ] **PUBL-04**: On failure, system retries up to 3 times with backoff
-- [ ] **PUBL-05**: Failed posts surface errors clearly in the dashboard
-- [ ] **PUBL-06**: System supports LinkedIn text + single image posts
-
 ### Dashboard
 
-- [ ] **DASH-01**: Dashboard shows upcoming scheduled posts for the next 7 days
-- [ ] **DASH-02**: Dashboard shows quick stats (posts generated, published, pending review)
+- [ ] **DASH-01**: Dashboard shows upcoming posts for the next 7 days
+- [ ] **DASH-02**: Dashboard shows quick stats (posts generated, approved, pending review)
 - [ ] **DASH-03**: Dashboard has button to generate a new content plan
 
 ### Landing Page
@@ -111,6 +101,22 @@ Requirements for initial release. Each maps to roadmap phases.
 ## v2 Requirements
 
 Deferred to future releases. Tracked but not in current roadmap.
+
+### LinkedIn Integration (v2)
+
+- **LINK-01**: User can connect LinkedIn personal profile via OAuth
+- **LINK-02**: User can connect LinkedIn company page via OAuth
+- **LINK-03**: User can choose per product whether to post to personal profile or company page
+- **LINK-04**: System encrypts and manages OAuth tokens with refresh logic
+
+### Automated Publishing (v2)
+
+- **PUBL-01**: Approved posts automatically publish at their scheduled time
+- **PUBL-02**: System checks every minute for posts whose scheduled time has arrived
+- **PUBL-03**: On successful publish, system stores the live post URL
+- **PUBL-04**: On failure, system retries up to 3 times with backoff
+- **PUBL-05**: Failed posts surface errors clearly in the dashboard
+- **PUBL-06**: System supports LinkedIn text + single image posts
 
 ### Carousels (Phase 2)
 
@@ -203,10 +209,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ASET-02 | Phase 2 | Pending |
 | ASET-03 | Phase 2 | Pending |
 | ASET-04 | Phase 2 | Pending |
-| LINK-01 | Phase 2 | Pending |
-| LINK-02 | Phase 2 | Pending |
-| LINK-03 | Phase 2 | Pending |
-| LINK-04 | Phase 2 | Pending |
+| EXPT-01 | Phase 4 | Pending |
+| EXPT-02 | Phase 4 | Pending |
+| EXPT-03 | Phase 4 | Pending |
 | PLAN-01 | Phase 3 | Pending |
 | PLAN-02 | Phase 3 | Pending |
 | PLAN-03 | Phase 3 | Pending |
@@ -236,12 +241,6 @@ Which phases cover which requirements. Updated during roadmap creation.
 | REVW-09 | Phase 4 | Pending |
 | REVW-10 | Phase 4 | Pending |
 | REVW-11 | Phase 4 | Pending |
-| PUBL-01 | Phase 4 | Pending |
-| PUBL-02 | Phase 4 | Pending |
-| PUBL-03 | Phase 4 | Pending |
-| PUBL-04 | Phase 4 | Pending |
-| PUBL-05 | Phase 4 | Pending |
-| PUBL-06 | Phase 4 | Pending |
 | DASH-01 | Phase 4 | Pending |
 | DASH-02 | Phase 4 | Pending |
 | DASH-03 | Phase 4 | Pending |
@@ -253,10 +252,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | LAND-06 | Phase 1 | Pending |
 
 **Coverage:**
-- v1 requirements: 65 total
-- Mapped to phases: 65
+- v1 requirements: 55 total (10 moved to v2: LINK-01–04, PUBL-01–06; 3 added: EXPT-01–03)
+- Mapped to phases: 55
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-15*
-*Last updated: 2026-02-15 after roadmap creation*
+*Last updated: 2026-02-18 — MVP simplification: LinkedIn + auto-publishing moved to v2, content export added*

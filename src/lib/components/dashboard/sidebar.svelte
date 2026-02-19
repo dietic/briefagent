@@ -9,7 +9,8 @@
 		Send,
 		BarChart3,
 		Settings,
-		LogOut
+		LogOut,
+		Sparkles
 	} from 'lucide-svelte';
 
 	type NavItem = {
@@ -24,7 +25,7 @@
 		items: NavItem[];
 	};
 
-	let { user }: { user?: { email?: string } } = $props();
+	let { user, product }: { user?: { email?: string }; product?: { onboardingStep?: string | null } | null } = $props();
 
 	let userInitials = $derived(() => {
 		if (!user?.email) return '??';
@@ -36,6 +37,8 @@
 		if (!user?.email) return 'User';
 		return user.email.split('@')[0];
 	});
+
+	let onboardingIncomplete = $derived(!product || product.onboardingStep !== 'complete');
 
 	const sections: NavSection[] = [
 		{
@@ -89,6 +92,46 @@
 
 	<!-- Navigation -->
 	<nav class="flex-1 py-2 px-3 overflow-y-auto">
+		<!-- Onboarding item (conditional) -->
+		{#if onboardingIncomplete}
+			{@const onbActive = isActive($page.url.pathname, '/dashboard/onboarding')}
+			<div
+				class="text-[0.65rem] font-bold uppercase tracking-[0.1em] px-3 pt-5 pb-2"
+				style="color: var(--text-muted);"
+			>
+				Setup
+			</div>
+			<a
+				href="/dashboard/onboarding/quick-start"
+				class="flex items-center gap-3 px-3 py-2.5 rounded-[10px] text-[0.85rem] transition-all duration-150 relative mb-1"
+				style="
+					color: {onbActive ? 'var(--c-electric)' : 'var(--c-secondary)'};
+					background: {onbActive ? 'var(--bg-sidebar-active)' : 'transparent'};
+				"
+				onmouseenter={(e) => {
+					if (!onbActive) {
+						e.currentTarget.style.color = 'var(--text-main)';
+						e.currentTarget.style.background = 'var(--bg-sidebar-hover)';
+					}
+				}}
+				onmouseleave={(e) => {
+					if (!onbActive) {
+						e.currentTarget.style.color = 'var(--c-secondary)';
+						e.currentTarget.style.background = 'transparent';
+					}
+				}}
+			>
+				{#if onbActive}
+					<div
+						class="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-5 rounded-r"
+						style="background: var(--c-electric);"
+					></div>
+				{/if}
+				<Sparkles class="w-[18px] h-[18px]" />
+				<span class={onbActive ? 'font-semibold' : 'font-medium'}>{m.onb_nav_onboarding()}</span>
+			</a>
+		{/if}
+
 		{#each sections as section}
 			<div
 				class="text-[0.65rem] font-bold uppercase tracking-[0.1em] px-3 pt-5 pb-2"

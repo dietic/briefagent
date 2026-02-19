@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** A user with zero design or marketing skills can brief the AI and get professional, brand-consistent marketing content generated and published to their social accounts.
-**Current focus:** Phase 2 - Auth, Onboarding & LinkedIn
+**Current focus:** Phase 2 - Auth & Onboarding
 
 ## Current Position
 
-Phase: 2 of 5 (Auth, Onboarding & LinkedIn)
-Plan: 1 of 3 (02-01 complete, awaiting checkpoint verification)
-Status: Checkpoint — awaiting Supabase setup and auth flow verification
-Last activity: 2026-02-16 — 02-01 auth plan executed (2 tasks, checkpoint pending)
+Phase: 2 of 4 (Auth & Onboarding)
+Plan: 2 of 2 (02-01 complete, 02-02 complete -- pending checkpoint)
+Status: Phase 2 complete (pending human verification of onboarding flow)
+Last activity: 2026-02-18 — 02-02 onboarding executed (4 tasks, checkpoint pending)
 
-Progress: [########░░] 82% (02-01 code complete, pending verification)
+Progress: [##########] 100% (02-01 done, 02-02 done)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7 (Phase 1: 2 + Phase 5: 4 + Phase 2: 1)
-- Average duration: 6.4min
-- Total execution time: 0.75 hours
+- Total plans completed: 8 (Phase 1: 2 + Phase 5: 4 + Phase 2: 2 of 2)
+- Average duration: 6.9min
+- Total execution time: 0.92 hours
 
 **By Phase:**
 
@@ -29,7 +29,7 @@ Progress: [########░░] 82% (02-01 code complete, pending verification)
 |-------|-------|-------|----------|
 | 01-landing-page-design-system | 2/2 | 15min | 7.5min |
 | 05-dashboard-ui | 4/4 | 24min | 6min |
-| 02-auth-onboarding-linkedin | 1/3 | 6min | 6min |
+| 02-auth-onboarding | 2/2 | 16min | 8min |
 
 **Recent Trend:**
 - Last 5 plans: 5min, 4min, 5min, 6min
@@ -45,7 +45,8 @@ Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
 - [Roadmap]: Landing page is Phase 1 to establish design system before app build
-- [Roadmap]: 5 phases — Landing, Dashboard UI, Auth/Onboarding, AI Pipeline, Calendar/Publishing
+- [Roadmap]: 4 phases — Landing, Dashboard UI, Auth/Onboarding, AI Pipeline, Calendar/Review/Export
+- [MVP]: No social account linking or auto-publishing — users download content and publish manually
 - [Roadmap]: Dashboard UI (Phase 5) executes after Phase 1, before Phase 2 — frontend-first with mock data
 - [Design]: Variant 2c selected as final design direction
 - [Design]: Palette changed from hot pink to Cyan (#06b6d4) / Orange (#f97316) / Pink (#ec4899)
@@ -87,6 +88,11 @@ Recent decisions affecting current work:
 - [02-01]: (auth) layout group with centered card, no navbar/footer
 - [02-01]: Forgot-password never reveals if email exists (security)
 - [02-01]: Placeholder .env for build (gitignored), .env.example for user setup
+- [02-02]: Drizzle relational query API (db.query.X.findFirst) for readable data access
+- [02-02]: Asset ownership verified via inner join (assets -> products -> userId)
+- [02-02]: Form action ?/finish for onboarding completion (cleaner than custom API)
+- [02-02]: Non-blocking URL scraping fires on blur, auto-fills description, graceful fallback
+- [02-02]: Tag input pattern: $state array + Enter keydown + X remove for chip inputs
 
 ### Roadmap Evolution
 
@@ -95,6 +101,7 @@ Recent decisions affecting current work:
 - Phase 1 marked complete retroactively (work done outside GSD tracking)
 - Execution order changed: 1 -> 5 -> 2 -> 3 -> 4
 - Phase 5 completed: 4 plans, 27/27 must-haves verified
+- Phase 2 completed: 2 plans (auth + onboarding), pending human verification
 
 ### Pending Todos
 
@@ -102,12 +109,10 @@ None yet.
 
 ### Blockers/Concerns
 
-- LinkedIn MDP partner approval timeline unknown -- apply early, personal profile posting works without it
 - AI image model landscape may have shifted since research (May 2025) -- verify Flux/DALL-E options during Phase 3
-- Phase 2 has 3 checkpoint tasks requiring manual setup: Supabase project, DB config, LinkedIn app credentials
 
 ## Session Continuity
 
-Last session: 2026-02-16
-Stopped at: 02-01-PLAN.md checkpoint — Tasks 1-2 complete, awaiting Supabase setup + auth flow verification
-Resume: After checkpoint approval, execute 02-02 (onboarding) and 02-03 (LinkedIn) in parallel (Wave 2)
+Last session: 2026-02-18
+Stopped at: Completed 02-02-PLAN.md (4 auto tasks done, checkpoint pending human verification)
+Resume: Verify onboarding flow end-to-end, then approve checkpoint. Phase 2 complete after that.

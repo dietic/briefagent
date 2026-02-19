@@ -88,12 +88,13 @@ Plans:
   3. User can approve, reject (with reason), or regenerate (copy only, image only, or both) any post -- and can edit-and-approve in one action
   4. User can copy post text to clipboard and download generated images for manual publishing
   5. Dashboard shows content stats (generated/approved/pending), upcoming posts, and a button to generate a new content plan
+**Wave Structure**: Wave 1 = 04-01 (schema + API + calendar), Wave 2 = 04-02 + 04-03 (parallel: review dialog + dashboard)
 **Plans**: 3 plans
 
 Plans:
-- [ ] 04-01: Content calendar (monthly/weekly views, status indicators, post thumbnails, wire real data)
-- [ ] 04-02: Post review and approval workflow (preview, editing, approve/reject/regenerate actions)
-- [ ] 04-03: Content export and dashboard (copy-to-clipboard, image download, dashboard overview with real data)
+- [ ] 04-01-PLAN.md — Schema extensions (published status, rejectionReason, publishedAt), PATCH/regenerate API endpoints, calendar page data wiring with month navigation
+- [ ] 04-02-PLAN.md — Post review dialog (Bits UI) with editing, approval, regeneration, export; wire into calendar + publishing pages with real data
+- [ ] 04-03-PLAN.md — Dashboard overview wiring: real stats (generated/pending/approved/published), upcoming posts, generate plan CTA
 
 ## Progress
 
@@ -105,5 +106,5 @@ Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4
 | 1. Landing Page & Design System | 2/2 | Complete | 2026-02-16 |
 | 5. Dashboard UI | 4/4 | Complete | 2026-02-16 |
 | 2. Auth & Onboarding | 2/2 | Complete (pending checkpoint) | 2026-02-18 |
-| 3. AI Generation Pipeline | 1/3 | In progress | - |
+| 3. AI Generation Pipeline | 3/3 | Complete | 2026-02-19 |
 | 4. Calendar, Review & Export | 0/3 | Not started | - |

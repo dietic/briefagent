@@ -65,9 +65,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Content Calendar
 
-- [ ] **CALR-01**: User can view content calendar in monthly view
-- [ ] **CALR-02**: User can view content calendar in weekly view
-- [ ] **CALR-03**: Posts displayed as thumbnails color-coded by status (gray=draft, yellow=pending review, blue=approved, green=scheduled, dark green=published, red=failed)
+- [x] **CALR-01**: User can view content calendar in monthly view
+- [x] **CALR-02**: User can view content calendar in weekly view
+- [x] **CALR-03**: Posts displayed as thumbnails color-coded by status (gray=draft, yellow=pending review, blue=approved, green=scheduled, dark green=published, red=failed)
 
 ### Post Review & Approval
 
@@ -75,12 +75,12 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **REVW-02**: User can edit post copy with character count display
 - [ ] **REVW-03**: User can swap the visual asset
 - [ ] **REVW-04**: User can edit hashtags
-- [ ] **REVW-05**: User can change the scheduled time
-- [ ] **REVW-06**: User can approve a post (status becomes scheduled)
-- [ ] **REVW-07**: User can reject a post with a reason
-- [ ] **REVW-08**: User can regenerate copy only via separate button
-- [ ] **REVW-09**: User can regenerate image only via separate button
-- [ ] **REVW-10**: User can regenerate both copy and image
+- [x] **REVW-05**: User can change the scheduled time
+- [x] **REVW-06**: User can approve a post (status becomes scheduled)
+- [x] **REVW-07**: User can reject a post with a reason
+- [x] **REVW-08**: User can regenerate copy only via separate button
+- [x] **REVW-09**: User can regenerate image only via separate button
+- [x] **REVW-10**: User can regenerate both copy and image
 - [ ] **REVW-11**: User can edit and approve in one action
 
 ### Dashboard
@@ -227,19 +227,19 @@ Which phases cover which requirements. Updated during roadmap creation.
 | IMGN-02 | Phase 3 | Complete |
 | IMGN-03 | Phase 3 | Complete |
 | IMGN-04 | Phase 3 | Complete |
-| CALR-01 | Phase 4 | Pending |
-| CALR-02 | Phase 4 | Pending |
-| CALR-03 | Phase 4 | Pending |
+| CALR-01 | Phase 4 | Complete |
+| CALR-02 | Phase 4 | Complete |
+| CALR-03 | Phase 4 | Complete |
 | REVW-01 | Phase 4 | Pending |
 | REVW-02 | Phase 4 | Pending |
 | REVW-03 | Phase 4 | Pending |
 | REVW-04 | Phase 4 | Pending |
-| REVW-05 | Phase 4 | Pending |
-| REVW-06 | Phase 4 | Pending |
-| REVW-07 | Phase 4 | Pending |
-| REVW-08 | Phase 4 | Pending |
-| REVW-09 | Phase 4 | Pending |
-| REVW-10 | Phase 4 | Pending |
+| REVW-05 | Phase 4 | Complete |
+| REVW-06 | Phase 4 | Complete |
+| REVW-07 | Phase 4 | Complete |
+| REVW-08 | Phase 4 | Complete |
+| REVW-09 | Phase 4 | Complete |
+| REVW-10 | Phase 4 | Complete |
 | REVW-11 | Phase 4 | Pending |
 | DASH-01 | Phase 4 | Pending |
 | DASH-02 | Phase 4 | Pending |

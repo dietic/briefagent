@@ -73,7 +73,8 @@ export const postStatusEnum = pgEnum('post_status', [
 	'pending_review',
 	'approved',
 	'rejected',
-	'scheduled'
+	'scheduled',
+	'published'
 ]);
 
 // ── Generation Pipeline Tables ──────────────────────────────────────
@@ -117,6 +118,8 @@ export const posts = pgTable('posts', {
 	hashtags: text('hashtags').array(),
 	imageUrl: text('image_url'),
 	imagePrompt: text('image_prompt'),
+	rejectionReason: text('rejection_reason'),
+	publishedAt: timestamp('published_at', { withTimezone: true }),
 	status: postStatusEnum('status').default('draft').notNull(),
 	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
 	updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow()

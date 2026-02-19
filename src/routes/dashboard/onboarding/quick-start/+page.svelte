@@ -221,12 +221,12 @@
 			></textarea>
 		</div>
 
-		<!-- Logo upload (only if product exists) -->
-		{#if data.product?.id}
-			<div class="space-y-1.5">
-				<label class="block text-[0.8rem] font-semibold" style="color: var(--text-main);">
-					{m.onb_quick_logo()}
-				</label>
+		<!-- Logo upload -->
+		<div class="space-y-1.5">
+			<label class="block text-[0.8rem] font-semibold" style="color: var(--text-main);">
+				{m.onb_quick_logo()}
+			</label>
+			{#if data.product?.id}
 				<div
 					class="relative flex items-center gap-4 px-4 py-4 rounded-xl border-2 border-dashed transition-colors duration-200"
 					style="border-color: var(--border-subtle); background: var(--input-bg);"
@@ -260,8 +260,12 @@
 						onchange={handleLogoUpload}
 					/>
 				</div>
-			</div>
-		{/if}
+			{:else}
+				<p class="text-[0.7rem] italic" style="color: var(--text-muted);">
+					Save your product details first, then upload a logo.
+				</p>
+			{/if}
+		</div>
 
 		<!-- Actions -->
 		<div class="flex items-center justify-between pt-4">

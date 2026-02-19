@@ -1,4 +1,4 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
+import { supabaseAdmin } from '$lib/server/supabase-admin';
 
 export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -14,13 +14,12 @@ export function validateUpload(file: File): { valid: boolean; error?: string } {
 }
 
 export async function uploadAssetToStorage(
-	supabase: SupabaseClient,
 	file: File,
 	userId: string,
 	productId: string
 ): Promise<string> {
 	const filePath = `${userId}/${productId}/${crypto.randomUUID()}-${file.name}`;
-	const { error: uploadError } = await supabase.storage.from('assets').upload(filePath, file, {
+	const { error: uploadError } = await supabaseAdmin.storage.from('assets').upload(filePath, file, {
 		contentType: file.type,
 		upsert: false
 	});
@@ -31,7 +30,7 @@ export async function uploadAssetToStorage(
 
 	const {
 		data: { publicUrl }
-	} = supabase.storage.from('assets').getPublicUrl(filePath);
+	} = supabaseAdmin.storage.from('assets').getPublicUrl(filePath);
 
 	return publicUrl;
 }

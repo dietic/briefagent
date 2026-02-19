@@ -1,6 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
-import { assets } from '$lib/server/db/schema';
+import { assets, products } from '$lib/server/db/schema';
+import { eq } from 'drizzle-orm';
 import { validateUpload, uploadAssetToStorage } from '$lib/server/storage';
 import type { RequestHandler } from './$types';
 
@@ -19,7 +20,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const validation = validateUpload(file);
 	if (!validation.valid) throw error(400, validation.error!);
 
-	const publicUrl = await uploadAssetToStorage(locals.supabase, file, user.id, productId);
+	const publicUrl = await uploadAssetToStorage(file, user.id, productId);
 
 	const [asset] = await db
 		.insert(assets)
@@ -33,6 +34,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			description
 		})
 		.returning();
+
+	if (tag === 'logo') {
+		await db.update(products).set({ logoUrl: publicUrl }).where(eq(products.id, productId));
+	}
 
 	return json(asset);
 };

@@ -1,6 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
 import { assets, products } from '$lib/server/db/schema';
+import { supabaseAdmin } from '$lib/server/supabase-admin';
 import { eq, and } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
 
@@ -61,7 +62,7 @@ export const DELETE: RequestHandler = async ({ params, locals }) => {
 	if (pathIndex !== -1) {
 		const storagePath = url.substring(pathIndex + storagePrefix.length);
 		try {
-			await locals.supabase.storage.from('assets').remove([storagePath]);
+			await supabaseAdmin.storage.from('assets').remove([storagePath]);
 		} catch {
 			// Storage removal failed -- still delete DB record
 		}

@@ -352,5 +352,26 @@
   "onb_complete_explore": "Explore dashboard",
   "onb_banner_incomplete": "Complete your product setup for better AI results",
   "onb_banner_resume": "Resume setup",
-  "onb_nav_onboarding": "Onboarding"
+  "onb_nav_onboarding": "Onboarding",
+
+  "gen_title": "Generate Content",
+  "gen_subtitle": "Create AI-powered content plans for your product",
+  "gen_button": "Generate New Plan",
+  "gen_button_generating": "Generating...",
+  "gen_progress_assembling": "Assembling your brief...",
+  "gen_progress_generating": "Generating content plan...",
+  "gen_progress_saving": "Saving content plan...",
+  "gen_progress_step": "Step {current} of {total}",
+  "gen_completed": "Content plan generated successfully!",
+  "gen_failed": "Generation failed. Please try again.",
+  "gen_view_plan": "View Plan",
+  "gen_retry": "Try Again",
+  "gen_no_product": "Complete your product setup first",
+  "gen_no_product_cta": "Go to onboarding",
+  "gen_existing_plans": "Previous Plans",
+  "gen_no_plans": "No content plans yet. Generate your first one!",
+  "gen_plan_themes": "Themes",
+  "gen_plan_posts": "{count} posts",
+  "gen_plan_created": "Created {date}",
+  "dash_nav_generate": "Generate"
 }

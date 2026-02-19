@@ -352,5 +352,26 @@
   "onb_complete_explore": "Explorar panel",
   "onb_banner_incomplete": "Completa la configuraci\u00f3n de tu producto para mejores resultados con IA",
   "onb_banner_resume": "Continuar configuraci\u00f3n",
-  "onb_nav_onboarding": "Onboarding"
+  "onb_nav_onboarding": "Onboarding",
+
+  "gen_title": "Generar Contenido",
+  "gen_subtitle": "Crea planes de contenido con IA para tu producto",
+  "gen_button": "Generar Nuevo Plan",
+  "gen_button_generating": "Generando...",
+  "gen_progress_assembling": "Armando tu brief...",
+  "gen_progress_generating": "Generando plan de contenido...",
+  "gen_progress_saving": "Guardando plan de contenido...",
+  "gen_progress_step": "Paso {current} de {total}",
+  "gen_completed": "Plan de contenido generado exitosamente!",
+  "gen_failed": "La generaci\u00f3n fall\u00f3. Int\u00e9ntalo de nuevo.",
+  "gen_view_plan": "Ver Plan",
+  "gen_retry": "Intentar de Nuevo",
+  "gen_no_product": "Completa la configuraci\u00f3n de tu producto primero",
+  "gen_no_product_cta": "Ir al onboarding",
+  "gen_existing_plans": "Planes Anteriores",
+  "gen_no_plans": "A\u00fan no hay planes de contenido. Genera el primero!",
+  "gen_plan_themes": "Temas",
+  "gen_plan_posts": "{count} publicaciones",
+  "gen_plan_created": "Creado {date}",
+  "dash_nav_generate": "Generar"
 }

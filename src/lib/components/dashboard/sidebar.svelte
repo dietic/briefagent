@@ -10,7 +10,8 @@
 		BarChart3,
 		Settings,
 		LogOut,
-		Sparkles
+		Sparkles,
+		Wand2
 	} from 'lucide-svelte';
 
 	type NavItem = {
@@ -54,6 +55,7 @@
 		{
 			label: () => m.dash_nav_section_tools(),
 			items: [
+				{ href: '/dashboard/generate', label: () => m.dash_nav_generate(), icon: Wand2 },
 				{ href: '#', label: () => 'Analytics', icon: BarChart3, disabled: true }
 			]
 		},

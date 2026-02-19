@@ -74,7 +74,7 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — AI foundation: AI SDK install, DB schema extensions (generationJobs, contentPlans, posts tables + enums), AI provider config, brief assembler
+- [x] 03-01-PLAN.md — AI foundation: AI SDK install, DB schema extensions (generationJobs, contentPlans, posts tables + enums), AI provider config, brief assembler
 - [ ] 03-02-PLAN.md — Content plan generation: Zod schemas, LLM structured output with GPT-4.1, 30% promo cap validation, background job + SSE progress, generate page UI
 - [ ] 03-03-PLAN.md — Post generation: brand asset analysis (vision), per-post copy generation, per-post image generation, post orchestrator with batching
 
@@ -105,5 +105,5 @@ Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4
 | 1. Landing Page & Design System | 2/2 | Complete | 2026-02-16 |
 | 5. Dashboard UI | 4/4 | Complete | 2026-02-16 |
 | 2. Auth & Onboarding | 2/2 | Complete (pending checkpoint) | 2026-02-18 |
-| 3. AI Generation Pipeline | 0/3 | Not started | - |
+| 3. AI Generation Pipeline | 1/3 | In progress | - |
 | 4. Calendar, Review & Export | 0/3 | Not started | - |

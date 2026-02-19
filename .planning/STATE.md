@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** A user with zero design or marketing skills can brief the AI and get professional, brand-consistent marketing content generated and published to their social accounts.
-**Current focus:** Phase 2 - Auth & Onboarding
+**Current focus:** Phase 3 - AI Generation Pipeline
 
 ## Current Position
 
-Phase: 2 of 4 (Auth & Onboarding)
-Plan: 2 of 2 (02-01 complete, 02-02 complete -- pending checkpoint)
-Status: Phase 2 complete (pending human verification of onboarding flow)
-Last activity: 2026-02-18 — 02-02 onboarding executed (4 tasks, checkpoint pending)
+Phase: 3 of 4 (AI Generation Pipeline)
+Plan: 1 of 3 (03-01 complete)
+Status: Executing Phase 3
+Last activity: 2026-02-19 — 03-01 AI foundation executed (2 tasks, schema + providers + assembler)
 
-Progress: [##########] 100% (02-01 done, 02-02 done)
+Progress: [###-------] 33% (03-01 done, 03-02 pending, 03-03 pending)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8 (Phase 1: 2 + Phase 5: 4 + Phase 2: 2 of 2)
-- Average duration: 6.9min
-- Total execution time: 0.92 hours
+- Total plans completed: 9 (Phase 1: 2 + Phase 5: 4 + Phase 2: 2 + Phase 3: 1 of 3)
+- Average duration: 6.3min
+- Total execution time: 0.95 hours
 
 **By Phase:**
 
@@ -30,10 +30,11 @@ Progress: [##########] 100% (02-01 done, 02-02 done)
 | 01-landing-page-design-system | 2/2 | 15min | 7.5min |
 | 05-dashboard-ui | 4/4 | 24min | 6min |
 | 02-auth-onboarding | 2/2 | 16min | 8min |
+| 03-ai-generation-pipeline | 1/3 | 2min | 2min |
 
 **Recent Trend:**
-- Last 5 plans: 5min, 4min, 5min, 6min
-- Trend: Consistent (~5min)
+- Last 5 plans: 4min, 5min, 6min, 2min
+- Trend: Consistent (~4min)
 
 *Updated after each plan completion*
 
@@ -93,6 +94,11 @@ Recent decisions affecting current work:
 - [02-02]: Form action ?/finish for onboarding completion (cleaner than custom API)
 - [02-02]: Non-blocking URL scraping fires on blur, auto-fills description, graceful fallback
 - [02-02]: Tag input pattern: $state array + Enter keydown + X remove for chip inputs
+- [03-01]: AI SDK v6 with @ai-sdk/openai for unified text + image provider interface
+- [03-01]: gpt-4.1 for strategic planning, gpt-4.1-mini for per-post copy and analysis
+- [03-01]: gpt-image-1 for image generation via AI SDK image provider
+- [03-01]: Drizzle relations for all 6 tables enabling relational queries throughout the app
+- [03-01]: Centralized AI provider config in providers.ts, brief assembler pattern for prompt context
 
 ### Roadmap Evolution
 
@@ -102,6 +108,7 @@ Recent decisions affecting current work:
 - Execution order changed: 1 -> 5 -> 2 -> 3 -> 4
 - Phase 5 completed: 4 plans, 27/27 must-haves verified
 - Phase 2 completed: 2 plans (auth + onboarding), pending human verification
+- Phase 3 started: 03-01 AI foundation complete (AI SDK, schema, providers, brief assembler)
 
 ### Pending Todos
 
@@ -113,6 +120,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-18
-Stopped at: Completed 02-02-PLAN.md (4 auto tasks done, checkpoint pending human verification)
-Resume: Verify onboarding flow end-to-end, then approve checkpoint. Phase 2 complete after that.
+Last session: 2026-02-19
+Stopped at: Completed 03-01-PLAN.md (AI foundation). Next: 03-02 (content plan generation)
+Resume: Continue /gsd:execute-phase 03 — 03-02 and 03-03 remain. User needs OPENAI_API_KEY in .env before executing 03-02/03-03. DB migration needed: pnpm drizzle-kit push.

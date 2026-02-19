@@ -41,12 +41,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Content Plan Generation
 
-- [ ] **PLAN-01**: User can generate a 2-week content plan based on their full product brief
-- [ ] **PLAN-02**: Content plan includes strategy overview, content themes, and individual post slots
-- [ ] **PLAN-03**: Each post slot specifies date/time, platform, post type (static image or text-only), topic/angle, content category, key message, and which assets to reference
-- [ ] **PLAN-04**: Content categories include educational, promotional, social proof, behind-the-scenes, engagement, tips, announcement, and storytelling
+- [x] **PLAN-01**: User can generate a 2-week content plan based on their full product brief
+- [x] **PLAN-02**: Content plan includes strategy overview, content themes, and individual post slots
+- [x] **PLAN-03**: Each post slot specifies date/time, platform, post type (static image or text-only), topic/angle, content category, key message, and which assets to reference
+- [x] **PLAN-04**: Content categories include educational, promotional, social proof, behind-the-scenes, engagement, tips, announcement, and storytelling
 - [ ] **PLAN-05**: Promotional content never exceeds 30% of the plan
-- [ ] **PLAN-06**: Plan generation considers summaries of previous plans to avoid repetition
+- [x] **PLAN-06**: Plan generation considers summaries of previous plans to avoid repetition
 - [ ] **PLAN-07**: User sees progress indicator during plan generation (background job)
 
 ### AI Copy Generation
@@ -212,12 +212,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | EXPT-01 | Phase 4 | Pending |
 | EXPT-02 | Phase 4 | Pending |
 | EXPT-03 | Phase 4 | Pending |
-| PLAN-01 | Phase 3 | Pending |
-| PLAN-02 | Phase 3 | Pending |
-| PLAN-03 | Phase 3 | Pending |
-| PLAN-04 | Phase 3 | Pending |
+| PLAN-01 | Phase 3 | Complete |
+| PLAN-02 | Phase 3 | Complete |
+| PLAN-03 | Phase 3 | Complete |
+| PLAN-04 | Phase 3 | Complete |
 | PLAN-05 | Phase 3 | Pending |
-| PLAN-06 | Phase 3 | Pending |
+| PLAN-06 | Phase 3 | Complete |
 | PLAN-07 | Phase 3 | Pending |
 | COPY-01 | Phase 3 | Pending |
 | COPY-02 | Phase 3 | Pending |

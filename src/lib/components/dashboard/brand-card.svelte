@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { BrandProfile } from '$lib/data/mock-brand';
+	import type { BrandProfile } from '$lib/types/dashboard';
 	import RadialChart from './radial-chart.svelte';
 	import * as m from '$lib/paraglide/messages.js';
 

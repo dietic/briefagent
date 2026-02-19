@@ -175,6 +175,8 @@
   "dash_editor_content_type": "Content Type",
   "dash_editor_tags": "Tags",
   "dash_editor_selected": "Selected",
+  "dash_editor_no_post": "No posts to edit yet. Generate a content plan first.",
+  "dash_editor_no_post_cta": "Generate Content",
 
   "dash_calendar_title": "Content Calendar",
   "dash_calendar_month": "Month",
@@ -224,6 +226,9 @@
   "dash_brand_status_paused": "Paused",
   "dash_brand_status_completed": "Completed",
   "dash_brand_status_draft": "Draft",
+  "dash_brand_empty": "Complete onboarding to see your brand profile here.",
+  "dash_brand_no_voice": "Set personality traits during onboarding to see your brand voice.",
+  "dash_brand_no_campaigns": "Generate a content plan to see your campaigns here.",
 
   "auth_login_title": "Welcome back",
   "auth_login_subtitle": "Sign in to your BriefAgent dashboard",

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ChartDataPoint } from '$lib/data/mock-overview.js';
+	import type { ChartDataPoint } from '$lib/types/dashboard';
 	import * as m from '$lib/paraglide/messages.js';
 
 	interface Props {

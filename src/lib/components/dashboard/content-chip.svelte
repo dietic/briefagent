@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ContentType, ContentStatus } from '$lib/data/mock-calendar';
+	import type { ContentType, ContentStatus } from '$lib/types/dashboard';
 
 	let { title, type, status }: { title: string; type: ContentType; status?: ContentStatus } =
 		$props();

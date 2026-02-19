@@ -175,6 +175,8 @@
   "dash_editor_content_type": "Tipo de Contenido",
   "dash_editor_tags": "Etiquetas",
   "dash_editor_selected": "Seleccionado",
+  "dash_editor_no_post": "Aun no hay posts para editar. Genera un plan de contenido primero.",
+  "dash_editor_no_post_cta": "Generar Contenido",
 
   "dash_calendar_title": "Calendario de Contenido",
   "dash_calendar_month": "Mes",
@@ -224,6 +226,9 @@
   "dash_brand_status_paused": "Pausada",
   "dash_brand_status_completed": "Completada",
   "dash_brand_status_draft": "Borrador",
+  "dash_brand_empty": "Completa el onboarding para ver tu perfil de marca aqui.",
+  "dash_brand_no_voice": "Define rasgos de personalidad durante el onboarding para ver tu voz de marca.",
+  "dash_brand_no_campaigns": "Genera un plan de contenido para ver tus campanas aqui.",
 
   "auth_login_title": "Bienvenido de vuelta",
   "auth_login_subtitle": "Inicia sesi\u00f3n en tu panel de BriefAgent",

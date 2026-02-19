@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Sparkles, Zap, Clock, FileText, AlertTriangle, Send } from 'lucide-svelte';
 	import * as m from '$lib/paraglide/messages.js';
-	import type { AiSuggestion, PublishingStat } from '$lib/data/mock-publishing.js';
+	import type { AiSuggestion, PublishingStat } from '$lib/types/dashboard';
 
 	let { suggestions, stats }: { suggestions: AiSuggestion[]; stats: PublishingStat[] } = $props();
 

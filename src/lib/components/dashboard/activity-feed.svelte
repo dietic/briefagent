@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ActivityItem } from '$lib/data/mock-overview.js';
+	import type { ActivityItem } from '$lib/types/dashboard';
 	import * as m from '$lib/paraglide/messages.js';
 
 	interface Props {

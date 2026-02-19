@@ -51,17 +51,17 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### AI Copy Generation
 
-- [ ] **COPY-01**: AI generates platform-optimized copy for each post slot
-- [ ] **COPY-02**: Copy includes scroll-stopping hook in first line, value-driven body, and goal-aligned CTA
-- [ ] **COPY-03**: LinkedIn copy is longer, professional but human, with up to 5 hashtags
-- [ ] **COPY-04**: Hashtags mix popular and niche tags relevant to the user's industry
+- [x] **COPY-01**: AI generates platform-optimized copy for each post slot
+- [x] **COPY-02**: Copy includes scroll-stopping hook in first line, value-driven body, and goal-aligned CTA
+- [x] **COPY-03**: LinkedIn copy is longer, professional but human, with up to 5 hashtags
+- [x] **COPY-04**: Hashtags mix popular and niche tags relevant to the user's industry
 
 ### AI Image Generation
 
-- [ ] **IMGN-01**: AI analyzes user's uploaded assets to understand brand visual identity (colors, style, aesthetic)
-- [ ] **IMGN-02**: AI generates original images informed by brand analysis — not templates, not stock photos with overlays
-- [ ] **IMGN-03**: Generated images are visually coherent with the user's brand
-- [ ] **IMGN-04**: Images are optimized for LinkedIn post dimensions
+- [x] **IMGN-01**: AI analyzes user's uploaded assets to understand brand visual identity (colors, style, aesthetic)
+- [x] **IMGN-02**: AI generates original images informed by brand analysis — not templates, not stock photos with overlays
+- [x] **IMGN-03**: Generated images are visually coherent with the user's brand
+- [x] **IMGN-04**: Images are optimized for LinkedIn post dimensions
 
 ### Content Calendar
 
@@ -219,14 +219,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLAN-05 | Phase 3 | Complete |
 | PLAN-06 | Phase 3 | Complete |
 | PLAN-07 | Phase 3 | Complete |
-| COPY-01 | Phase 3 | Pending |
-| COPY-02 | Phase 3 | Pending |
-| COPY-03 | Phase 3 | Pending |
-| COPY-04 | Phase 3 | Pending |
-| IMGN-01 | Phase 3 | Pending |
-| IMGN-02 | Phase 3 | Pending |
-| IMGN-03 | Phase 3 | Pending |
-| IMGN-04 | Phase 3 | Pending |
+| COPY-01 | Phase 3 | Complete |
+| COPY-02 | Phase 3 | Complete |
+| COPY-03 | Phase 3 | Complete |
+| COPY-04 | Phase 3 | Complete |
+| IMGN-01 | Phase 3 | Complete |
+| IMGN-02 | Phase 3 | Complete |
+| IMGN-03 | Phase 3 | Complete |
+| IMGN-04 | Phase 3 | Complete |
 | CALR-01 | Phase 4 | Pending |
 | CALR-02 | Phase 4 | Pending |
 | CALR-03 | Phase 4 | Pending |

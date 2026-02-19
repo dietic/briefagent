@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** A user with zero design or marketing skills can brief the AI and get professional, brand-consistent marketing content generated and published to their social accounts.
-**Current focus:** Phase 3 - AI Generation Pipeline
+**Current focus:** Phase 3 COMPLETE - ready for Phase 4
 
 ## Current Position
 
-Phase: 3 of 4 (AI Generation Pipeline)
-Plan: 2 of 3 (03-02 complete)
-Status: Executing Phase 3
-Last activity: 2026-02-19 — 03-02 Content plan generation pipeline (3 tasks, schemas + API + UI)
+Phase: 3 of 4 (AI Generation Pipeline) -- COMPLETE
+Plan: 3 of 3 (03-03 complete)
+Status: Phase 3 complete, ready for Phase 4
+Last activity: 2026-02-19 — 03-03 Post generation pipeline (2 tasks, brand analysis + copy + image generation)
 
-Progress: [######----] 67% (03-01 done, 03-02 done, 03-03 pending)
+Progress: [##########] 100% (03-01 done, 03-02 done, 03-03 done)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10 (Phase 1: 2 + Phase 5: 4 + Phase 2: 2 + Phase 3: 2 of 3)
-- Average duration: 6.4min
-- Total execution time: 1.07 hours
+- Total plans completed: 11 (Phase 1: 2 + Phase 5: 4 + Phase 2: 2 + Phase 3: 3/3)
+- Average duration: 6.0min
+- Total execution time: 1.14 hours
 
 **By Phase:**
 
@@ -30,10 +30,10 @@ Progress: [######----] 67% (03-01 done, 03-02 done, 03-03 pending)
 | 01-landing-page-design-system | 2/2 | 15min | 7.5min |
 | 05-dashboard-ui | 4/4 | 24min | 6min |
 | 02-auth-onboarding | 2/2 | 16min | 8min |
-| 03-ai-generation-pipeline | 2/3 | 11min | 5.5min |
+| 03-ai-generation-pipeline | 3/3 | 15min | 5min |
 
 **Recent Trend:**
-- Last 5 plans: 4min, 5min, 6min, 2min, 9min
+- Last 5 plans: 5min, 6min, 2min, 9min, 4min
 - Trend: Consistent (~5min)
 
 *Updated after each plan completion*
@@ -103,6 +103,12 @@ Recent decisions affecting current work:
 - [03-02]: Fire-and-forget pattern for background generation to return jobId immediately
 - [03-02]: SSE streaming with polling fallback for robust progress reporting
 - [03-02]: 30% promotional cap with retry + manual reassignment fallback
+- [03-03]: generateText with Output.object for brand analysis (vision + structured output in one call)
+- [03-03]: Per-product brandAnalysis jsonb caching to avoid repeated vision API calls
+- [03-03]: Copy generation via AI SDK structured output with LinkedIn-specific rules in system prompt
+- [03-03]: Image generation with gpt-image-1 at 1024x1024, resized to 1200x1200 via Sharp for LinkedIn
+- [03-03]: Separate 'generated-images' Supabase Storage bucket from user 'assets' bucket
+- [03-03]: Batched copy (3 concurrent, 200ms delay) and sequential images (1 at a time, 500ms delay) for rate limiting
 
 ### Roadmap Evolution
 
@@ -112,7 +118,7 @@ Recent decisions affecting current work:
 - Execution order changed: 1 -> 5 -> 2 -> 3 -> 4
 - Phase 5 completed: 4 plans, 27/27 must-haves verified
 - Phase 2 completed: 2 plans (auth + onboarding), pending human verification
-- Phase 3 progress: 03-01 AI foundation + 03-02 content plan generation complete (schemas, API, SSE, generate page)
+- Phase 3 COMPLETE: 03-01 AI foundation + 03-02 content plan generation + 03-03 post generation pipeline (brand analysis, copy, images)
 
 ### Pending Todos
 
@@ -120,10 +126,10 @@ None yet.
 
 ### Blockers/Concerns
 
-- AI image model landscape may have shifted since research (May 2025) -- verify Flux/DALL-E options during Phase 3
+- (Resolved) AI image model: using gpt-image-1 via AI SDK, confirmed working
 
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 03-02-PLAN.md (content plan generation pipeline). Next: 03-03 (post copy + image generation)
-Resume: Continue /gsd:execute-phase 03 -- 03-03 remains. User needs OPENAI_API_KEY in .env. DB migration needed: pnpm drizzle-kit push.
+Stopped at: Completed 03-03-PLAN.md (post generation pipeline). Phase 3 COMPLETE. Next: Phase 4 (Calendar, Review & Export)
+Resume: Plan and execute Phase 4. User needs OPENAI_API_KEY in .env and DB migration (pnpm drizzle-kit push) before testing AI features.

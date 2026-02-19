@@ -382,5 +382,11 @@
   "gen_posts_progress_image": "Generando imagen {current}/{total}...",
   "gen_posts_completed": "Todos los posts generados exitosamente!",
   "gen_posts_generated_badge": "Posts generados",
-  "gen_posts_count": "{count} posts listos"
+  "gen_posts_count": "{count} posts listos",
+
+  "cal_prev_month": "Anterior",
+  "cal_next_month": "Siguiente",
+  "cal_no_posts": "Sin publicaciones programadas",
+  "cal_posts_for_day": "Publicaciones para {date}",
+  "cal_select_day": "Haz clic en un dia para ver publicaciones"
 }

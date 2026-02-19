@@ -1,10 +1,31 @@
 <script lang="ts">
-	import type { CalendarEvent } from '$lib/data/mock-calendar';
-	import ContentChip from './content-chip.svelte';
+	import { postStatusColors, type PostStatus } from '$lib/utils/post-status';
 	import * as m from '$lib/paraglide/messages.js';
 
-	let { events, viewMode = 'month' }: { events: CalendarEvent[]; viewMode?: 'month' | 'week' } =
-		$props();
+	interface CalendarPost {
+		id: string;
+		topic: string;
+		status: string;
+		scheduledAt: string | null;
+		platform: string;
+		postType: string;
+		imageUrl: string | null;
+		contentCategory: string;
+	}
+
+	let {
+		posts,
+		viewMode = 'month',
+		year,
+		month,
+		onpostclick
+	}: {
+		posts: CalendarPost[];
+		viewMode?: 'month' | 'week';
+		year: number;
+		month: number;
+		onpostclick?: (post: CalendarPost) => void;
+	} = $props();
 
 	const dayLabels = [
 		() => m.dash_calendar_mon(),
@@ -21,13 +42,11 @@
 		dateStr: string;
 		isCurrentMonth: boolean;
 		isToday: boolean;
-		events: CalendarEvent[];
+		posts: CalendarPost[];
 	}
 
 	const today = new Date();
 	const todayStr = today.toISOString().slice(0, 10);
-	const year = today.getFullYear();
-	const month = today.getMonth();
 
 	let gridCells = $derived.by(() => {
 		const cells: GridCell[] = [];
@@ -50,7 +69,7 @@
 				dateStr,
 				isCurrentMonth: false,
 				isToday: false,
-				events: events.filter((e) => e.date === dateStr)
+				posts: posts.filter((p) => p.scheduledAt?.slice(0, 10) === dateStr)
 			});
 		}
 
@@ -62,7 +81,7 @@
 				dateStr,
 				isCurrentMonth: true,
 				isToday: dateStr === todayStr,
-				events: events.filter((e) => e.date === dateStr)
+				posts: posts.filter((p) => p.scheduledAt?.slice(0, 10) === dateStr)
 			});
 		}
 
@@ -77,7 +96,7 @@
 				dateStr,
 				isCurrentMonth: false,
 				isToday: false,
-				events: events.filter((e) => e.date === dateStr)
+				posts: posts.filter((p) => p.scheduledAt?.slice(0, 10) === dateStr)
 			});
 		}
 
@@ -94,6 +113,15 @@
 	});
 
 	const maxChips = $derived(viewMode === 'month' ? 3 : 6);
+
+	function truncate(text: string, max: number): string {
+		return text.length > max ? text.slice(0, max - 2) + '..' : text;
+	}
+
+	function statusColor(status: string): { color: string; bg: string } {
+		const entry = postStatusColors[status as PostStatus];
+		return entry ?? { color: 'var(--text-muted)', bg: 'rgba(156,163,175,0.1)' };
+	}
 </script>
 
 <div class="flex flex-col flex-1 min-h-0">
@@ -157,18 +185,30 @@
 					{cell.day}
 				</div>
 
-				<!-- Content chips -->
-				{#if cell.events.length > 0}
+				<!-- Post chips -->
+				{#if cell.posts.length > 0}
 					<div class="flex flex-col gap-0.5 overflow-hidden flex-1">
-						{#each cell.events.slice(0, maxChips) as ev}
-							<ContentChip title={ev.title} type={ev.type} status={ev.status} />
+						{#each cell.posts.slice(0, maxChips) as post}
+							{@const sc = statusColor(post.status)}
+							<button
+								class="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[0.62rem] font-medium border max-w-full cursor-pointer transition-transform duration-150 hover:-translate-y-px text-left"
+								style="background: {sc.bg}; border-color: transparent; color: var(--text-main);"
+								title={post.topic}
+								onclick={() => onpostclick?.(post)}
+							>
+								<span
+									class="w-1.5 h-1.5 rounded-full shrink-0"
+									style="background: {sc.color};"
+								></span>
+								<span class="truncate">{truncate(post.topic, 20)}</span>
+							</button>
 						{/each}
-						{#if cell.events.length > maxChips}
+						{#if cell.posts.length > maxChips}
 							<div
 								class="text-[0.6rem] text-center py-0.5 cursor-pointer"
 								style="font-family: var(--font-mono); color: var(--text-muted);"
 							>
-								+{cell.events.length - maxChips} more
+								+{cell.posts.length - maxChips} more
 							</div>
 						{/if}
 					</div>

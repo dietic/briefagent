@@ -9,6 +9,7 @@ export const products = pgTable('products', {
 	description: text('description'),
 	logoUrl: text('logo_url'),
 	scrapedData: jsonb('scraped_data'),
+	brandAnalysis: jsonb('brand_analysis'),
 	onboardingStep: text('onboarding_step').default('quick_start'),
 	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
 	updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow()

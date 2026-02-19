@@ -35,9 +35,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Content Export
 
-- [ ] **EXPT-01**: User can copy approved post text to clipboard with one click
-- [ ] **EXPT-02**: User can download generated images individually
-- [ ] **EXPT-03**: User can mark a post as "published" manually after uploading it themselves
+- [x] **EXPT-01**: User can copy approved post text to clipboard with one click
+- [x] **EXPT-02**: User can download generated images individually
+- [x] **EXPT-03**: User can mark a post as "published" manually after uploading it themselves
 
 ### Content Plan Generation
 
@@ -71,17 +71,17 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Post Review & Approval
 
-- [ ] **REVW-01**: User can click any post to see full preview of how it will look on the platform
-- [ ] **REVW-02**: User can edit post copy with character count display
-- [ ] **REVW-03**: User can swap the visual asset
-- [ ] **REVW-04**: User can edit hashtags
+- [x] **REVW-01**: User can click any post to see full preview of how it will look on the platform
+- [x] **REVW-02**: User can edit post copy with character count display
+- [x] **REVW-03**: User can swap the visual asset
+- [x] **REVW-04**: User can edit hashtags
 - [x] **REVW-05**: User can change the scheduled time
 - [x] **REVW-06**: User can approve a post (status becomes scheduled)
 - [x] **REVW-07**: User can reject a post with a reason
 - [x] **REVW-08**: User can regenerate copy only via separate button
 - [x] **REVW-09**: User can regenerate image only via separate button
 - [x] **REVW-10**: User can regenerate both copy and image
-- [ ] **REVW-11**: User can edit and approve in one action
+- [x] **REVW-11**: User can edit and approve in one action
 
 ### Dashboard
 
@@ -209,9 +209,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ASET-02 | Phase 2 | Pending |
 | ASET-03 | Phase 2 | Pending |
 | ASET-04 | Phase 2 | Pending |
-| EXPT-01 | Phase 4 | Pending |
-| EXPT-02 | Phase 4 | Pending |
-| EXPT-03 | Phase 4 | Pending |
+| EXPT-01 | Phase 4 | Complete |
+| EXPT-02 | Phase 4 | Complete |
+| EXPT-03 | Phase 4 | Complete |
 | PLAN-01 | Phase 3 | Complete |
 | PLAN-02 | Phase 3 | Complete |
 | PLAN-03 | Phase 3 | Complete |
@@ -230,17 +230,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CALR-01 | Phase 4 | Complete |
 | CALR-02 | Phase 4 | Complete |
 | CALR-03 | Phase 4 | Complete |
-| REVW-01 | Phase 4 | Pending |
-| REVW-02 | Phase 4 | Pending |
-| REVW-03 | Phase 4 | Pending |
-| REVW-04 | Phase 4 | Pending |
+| REVW-01 | Phase 4 | Complete |
+| REVW-02 | Phase 4 | Complete |
+| REVW-03 | Phase 4 | Complete |
+| REVW-04 | Phase 4 | Complete |
 | REVW-05 | Phase 4 | Complete |
 | REVW-06 | Phase 4 | Complete |
 | REVW-07 | Phase 4 | Complete |
 | REVW-08 | Phase 4 | Complete |
 | REVW-09 | Phase 4 | Complete |
 | REVW-10 | Phase 4 | Complete |
-| REVW-11 | Phase 4 | Pending |
+| REVW-11 | Phase 4 | Complete |
 | DASH-01 | Phase 4 | Complete |
 | DASH-02 | Phase 4 | Complete |
 | DASH-03 | Phase 4 | Complete |

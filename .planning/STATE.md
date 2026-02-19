@@ -113,6 +113,10 @@ Recent decisions affecting current work:
 - [04-01]: RequestEvent type instead of generated $types for API endpoint handlers
 - [04-01]: URL search params (?month=YYYY-MM) for calendar month navigation enabling shareable links
 - [04-01]: Shared post-status color map centralized in post-status.ts for all dashboard components
+- [04-02]: Bits UI Dialog with Portal for review dialog z-index layering and escape/click-outside dismissal
+- [04-02]: Rejected posts grouped into Draft kanban column for rework visibility
+- [04-02]: Inline typed parent() instead of $types import for publishing server load
+- [04-02]: PostCard rewritten as button element for accessibility (entire card clickable)
 - [04-03]: Inline stat cards instead of KpiCard for count-only display (no sparklines needed)
 - [04-03]: Removed ChartSection/ActivityFeed/QuickStats -- no real engagement analytics in MVP
 - [04-03]: CTA gradient border using color-mix() for subtle electric-to-secondary accent
@@ -139,5 +143,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 04-03-PLAN.md (dashboard overview data wiring). Phase 4 complete. All phases done.
+Stopped at: Completed 04-02-PLAN.md (post review dialog + publishing wiring). All Phase 4 plans done.
 Resume: All 4 phases complete. MVP is feature-complete. User may want to run `pnpm drizzle-kit push` for any pending DB migrations, then test the full flow.

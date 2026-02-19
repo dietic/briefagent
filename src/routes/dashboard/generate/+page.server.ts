@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import { contentPlans, posts } from '$lib/server/db/schema';
-import { eq, desc, sql } from 'drizzle-orm';
+import { eq, desc, isNotNull, and } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ parent }) => {
@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ parent }) => {
 		limit: 5,
 		with: {
 			posts: {
-				columns: { id: true }
+				columns: { id: true, copyText: true, postType: true }
 			}
 		}
 	});
@@ -26,7 +26,9 @@ export const load: PageServerLoad = async ({ parent }) => {
 		strategyOverview: plan.strategyOverview,
 		contentThemes: plan.contentThemes,
 		createdAt: plan.createdAt?.toISOString() ?? null,
-		postCount: plan.posts.length
+		postCount: plan.posts.length,
+		postsGenerated: plan.posts.some((p) => p.copyText !== null),
+		generatedPostCount: plan.posts.filter((p) => p.copyText !== null).length
 	}));
 
 	return { product, existingPlans };

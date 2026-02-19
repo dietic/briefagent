@@ -373,5 +373,14 @@
   "gen_plan_themes": "Themes",
   "gen_plan_posts": "{count} posts",
   "gen_plan_created": "Created {date}",
-  "dash_nav_generate": "Generate"
+  "dash_nav_generate": "Generate",
+
+  "gen_posts_button": "Generate Posts",
+  "gen_posts_generating": "Generating posts...",
+  "gen_posts_progress_brand": "Analyzing brand assets...",
+  "gen_posts_progress_copy": "Generating copy {current}/{total}...",
+  "gen_posts_progress_image": "Generating image {current}/{total}...",
+  "gen_posts_completed": "All posts generated successfully!",
+  "gen_posts_generated_badge": "Posts generated",
+  "gen_posts_count": "{count} posts ready"
 }

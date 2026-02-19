@@ -1,6 +1,16 @@
 <script lang="ts">
 	import * as m from '$lib/paraglide/messages.js';
-	import { Sparkles, Loader2, CheckCircle2, AlertCircle, RotateCcw, Calendar, Tag } from 'lucide-svelte';
+	import {
+		Sparkles,
+		Loader2,
+		CheckCircle2,
+		AlertCircle,
+		RotateCcw,
+		Calendar,
+		Tag,
+		FileText,
+		ImageIcon
+	} from 'lucide-svelte';
 
 	let { data } = $props();
 
@@ -13,6 +23,9 @@
 	let errorMsg = $state<string | null>(null);
 	let resultId = $state<string | null>(null);
 
+	// Track which job type is active
+	let activeJobType = $state<'plan' | 'posts' | null>(null);
+
 	let isGenerating = $derived(status === 'starting' || status === 'running');
 	let progressPercent = $derived(totalSteps > 0 ? (currentStep / totalSteps) * 100 : 0);
 
@@ -22,6 +35,7 @@
 		if (!data.product) return;
 
 		status = 'starting';
+		activeJobType = 'plan';
 		errorMsg = null;
 		resultId = null;
 
@@ -30,6 +44,34 @@
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ productId: data.product.id })
+			});
+
+			if (!res.ok) {
+				const err = await res.json().catch(() => ({ message: 'Request failed' }));
+				throw new Error(err.message ?? 'Request failed');
+			}
+
+			const { jobId: newJobId } = await res.json();
+			jobId = newJobId;
+			status = 'running';
+			connectSSE(newJobId);
+		} catch (err) {
+			status = 'failed';
+			errorMsg = err instanceof Error ? err.message : 'Unknown error';
+		}
+	}
+
+	async function startPostGeneration(contentPlanId: string) {
+		status = 'starting';
+		activeJobType = 'posts';
+		errorMsg = null;
+		resultId = null;
+
+		try {
+			const res = await fetch('/api/generate/posts', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ contentPlanId })
 			});
 
 			if (!res.ok) {
@@ -117,10 +159,19 @@
 
 	function retry() {
 		status = 'idle';
+		activeJobType = null;
 		errorMsg = null;
 		jobId = null;
 		resultId = null;
 		startGeneration();
+	}
+
+	function resetStatus() {
+		status = 'idle';
+		activeJobType = null;
+		errorMsg = null;
+		jobId = null;
+		resultId = null;
 	}
 
 	function formatDate(iso: string | null): string {
@@ -171,7 +222,7 @@
 					e.currentTarget.style.opacity = '1';
 				}}
 			>
-				{#if isGenerating}
+				{#if isGenerating && activeJobType === 'plan'}
 					<Loader2 class="w-4 h-4 animate-spin" />
 					{m.gen_button_generating()}
 				{:else}
@@ -225,7 +276,11 @@
 					</div>
 					<div>
 						<p class="text-[0.9rem] font-semibold" style="color: var(--text-main);">
-							{progress || m.gen_progress_assembling()}
+							{#if activeJobType === 'posts'}
+								{progress || m.gen_posts_generating()}
+							{:else}
+								{progress || m.gen_progress_assembling()}
+							{/if}
 						</p>
 						{#if totalSteps > 0}
 							<p class="text-[0.75rem] mt-0.5" style="color: var(--text-muted);">
@@ -254,18 +309,22 @@
 					</div>
 					<div class="flex-1">
 						<p class="text-[0.9rem] font-semibold" style="color: var(--positive, #22c55e);">
-							{m.gen_completed()}
+							{#if activeJobType === 'posts'}
+								{m.gen_posts_completed()}
+							{:else}
+								{m.gen_completed()}
+							{/if}
 						</p>
 					</div>
-					<a
-						href="/dashboard/publishing"
-						class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[0.8rem] font-semibold transition-opacity"
+					<button
+						onclick={resetStatus}
+						class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[0.8rem] font-semibold transition-opacity cursor-pointer"
 						style="background: var(--c-electric); color: var(--bg-page);"
 						onmouseenter={(e) => (e.currentTarget.style.opacity = '0.85')}
 						onmouseleave={(e) => (e.currentTarget.style.opacity = '1')}
 					>
 						{m.gen_view_plan()}
-					</a>
+					</button>
 				</div>
 			{:else if status === 'failed'}
 				<div class="flex items-center gap-4">
@@ -350,17 +409,51 @@
 									{/if}
 								</div>
 
-								<!-- Meta -->
-								<div class="text-right shrink-0">
+								<!-- Meta + Generate Posts -->
+								<div class="text-right shrink-0 flex flex-col items-end gap-2">
 									<span class="block text-[0.75rem] font-medium" style="color: var(--text-muted);">
 										{m.gen_plan_created({ date: formatDate(plan.createdAt) })}
 									</span>
 									<span
-										class="block text-[0.75rem] font-semibold mt-0.5"
+										class="block text-[0.75rem] font-semibold"
 										style="color: var(--c-electric);"
 									>
 										{m.gen_plan_posts({ count: String(plan.postCount) })}
 									</span>
+
+									{#if plan.postsGenerated}
+										<span
+											class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[0.7rem] font-semibold"
+											style="background: rgba(34, 197, 94, 0.1); color: var(--positive, #22c55e);"
+										>
+											<CheckCircle2 class="w-3 h-3" />
+											{m.gen_posts_generated_badge()}
+											<span style="color: var(--text-muted);">
+												({m.gen_posts_count({ count: String(plan.generatedPostCount) })})
+											</span>
+										</span>
+									{:else}
+										<button
+											onclick={() => startPostGeneration(plan.id)}
+											disabled={isGenerating}
+											class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[0.75rem] font-semibold transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+											style="background: var(--c-flame); color: white;"
+											onmouseenter={(e) => {
+												if (!isGenerating) e.currentTarget.style.opacity = '0.85';
+											}}
+											onmouseleave={(e) => {
+												e.currentTarget.style.opacity = '1';
+											}}
+										>
+											{#if isGenerating && activeJobType === 'posts'}
+												<Loader2 class="w-3 h-3 animate-spin" />
+												{m.gen_posts_generating()}
+											{:else}
+												<ImageIcon class="w-3 h-3" />
+												{m.gen_posts_button()}
+											{/if}
+										</button>
+									{/if}
 								</div>
 							</div>
 						</div>

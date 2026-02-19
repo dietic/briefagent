@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: Dashboard UI** - Build all 5 dashboard views as SvelteKit pages with shared layout and mock data *(COMPLETE)*
 - [ ] **Phase 2: Auth & Onboarding** - User journey from signup through completed brief and asset uploads
 - [ ] **Phase 3: AI Generation Pipeline** - Content plan, copy, and image generation from product brief
-- [ ] **Phase 4: Calendar, Review & Export** - Content calendar, approval workflow, content download/export, wire real data into dashboard
+- [x] **Phase 4: Calendar, Review & Export** - Content calendar, approval workflow, content download/export, wire real data into dashboard *(COMPLETE)*
 
 ## Phase Details
 
@@ -92,9 +92,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Schema extensions (published status, rejectionReason, publishedAt), PATCH/regenerate API endpoints, calendar page data wiring with month navigation
-- [ ] 04-02-PLAN.md — Post review dialog (Bits UI) with editing, approval, regeneration, export; wire into calendar + publishing pages with real data
-- [ ] 04-03-PLAN.md — Dashboard overview wiring: real stats (generated/pending/approved/published), upcoming posts, generate plan CTA
+- [x] 04-01-PLAN.md — Schema extensions (published status, rejectionReason, publishedAt), PATCH/regenerate API endpoints, calendar page data wiring with month navigation
+- [x] 04-02-PLAN.md — Post review dialog (Bits UI) with editing, approval, regeneration, export; wire into calendar + publishing pages with real data
+- [x] 04-03-PLAN.md — Dashboard overview wiring: real stats (generated/pending/approved/published), upcoming posts, generate plan CTA
 
 ## Progress
 
@@ -107,4 +107,4 @@ Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4
 | 5. Dashboard UI | 4/4 | Complete | 2026-02-16 |
 | 2. Auth & Onboarding | 2/2 | Complete (pending checkpoint) | 2026-02-18 |
 | 3. AI Generation Pipeline | 3/3 | Complete | 2026-02-19 |
-| 4. Calendar, Review & Export | 0/3 | Not started | - |
+| 4. Calendar, Review & Export | 3/3 | Complete | 2026-02-19 |

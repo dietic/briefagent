@@ -85,9 +85,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Dashboard
 
-- [ ] **DASH-01**: Dashboard shows upcoming posts for the next 7 days
-- [ ] **DASH-02**: Dashboard shows quick stats (posts generated, approved, pending review)
-- [ ] **DASH-03**: Dashboard has button to generate a new content plan
+- [x] **DASH-01**: Dashboard shows upcoming posts for the next 7 days
+- [x] **DASH-02**: Dashboard shows quick stats (posts generated, approved, pending review)
+- [x] **DASH-03**: Dashboard has button to generate a new content plan
 
 ### Landing Page
 
@@ -241,9 +241,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | REVW-09 | Phase 4 | Complete |
 | REVW-10 | Phase 4 | Complete |
 | REVW-11 | Phase 4 | Pending |
-| DASH-01 | Phase 4 | Pending |
-| DASH-02 | Phase 4 | Pending |
-| DASH-03 | Phase 4 | Pending |
+| DASH-01 | Phase 4 | Complete |
+| DASH-02 | Phase 4 | Complete |
+| DASH-03 | Phase 4 | Complete |
 | LAND-01 | Phase 1 | Pending |
 | LAND-02 | Phase 1 | Pending |
 | LAND-03 | Phase 1 | Pending |

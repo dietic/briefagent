@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** A user with zero design or marketing skills can brief the AI and get professional, brand-consistent marketing content generated and published to their social accounts.
-**Current focus:** Phase 4 in progress - Calendar, Review & Export
+**Current focus:** Phase 4 COMPLETE - All phases done. MVP feature-complete.
 
 ## Current Position
 
 Phase: 4 of 4 (Calendar, Review & Export)
-Plan: 1 of 3 (04-01 complete)
-Status: 04-01 complete, continuing to 04-02
-Last activity: 2026-02-19 — 04-01 Post API + Calendar data layer (2 tasks, schema + API + calendar wiring)
+Plan: 3 of 3 (04-03 complete)
+Status: Phase 4 COMPLETE (04-01 + 04-02 + 04-03 done)
+Last activity: 2026-02-19 — 04-03 Dashboard overview data wiring (2 tasks, server load + page rewrite)
 
-Progress: [###-------] 33% (04-01 done, 04-02 pending, 04-03 pending)
+Progress: [##########] 100% (04-01 done, 04-02 done, 04-03 done)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 12 (Phase 1: 2 + Phase 5: 4 + Phase 2: 2 + Phase 3: 3/3 + Phase 4: 1/3)
-- Average duration: 6.1min
-- Total execution time: 1.25 hours
+- Total plans completed: 14 (Phase 1: 2 + Phase 5: 4 + Phase 2: 2 + Phase 3: 3/3 + Phase 4: 3/3)
+- Average duration: 5.6min
+- Total execution time: 1.32 hours
 
 **By Phase:**
 
@@ -31,11 +31,11 @@ Progress: [###-------] 33% (04-01 done, 04-02 pending, 04-03 pending)
 | 05-dashboard-ui | 4/4 | 24min | 6min |
 | 02-auth-onboarding | 2/2 | 16min | 8min |
 | 03-ai-generation-pipeline | 3/3 | 15min | 5min |
-| 04-calendar-review-export | 1/3 | 7min | 7min |
+| 04-calendar-review-export | 3/3 | 14min | 4.7min |
 
 **Recent Trend:**
-- Last 5 plans: 6min, 2min, 9min, 4min, 7min
-- Trend: Consistent (~5-7min)
+- Last 5 plans: 9min, 4min, 7min, 4min, 3min
+- Trend: Accelerating (~3-7min)
 
 *Updated after each plan completion*
 
@@ -113,6 +113,9 @@ Recent decisions affecting current work:
 - [04-01]: RequestEvent type instead of generated $types for API endpoint handlers
 - [04-01]: URL search params (?month=YYYY-MM) for calendar month navigation enabling shareable links
 - [04-01]: Shared post-status color map centralized in post-status.ts for all dashboard components
+- [04-03]: Inline stat cards instead of KpiCard for count-only display (no sparklines needed)
+- [04-03]: Removed ChartSection/ActivityFeed/QuickStats -- no real engagement analytics in MVP
+- [04-03]: CTA gradient border using color-mix() for subtle electric-to-secondary accent
 
 ### Roadmap Evolution
 
@@ -123,7 +126,7 @@ Recent decisions affecting current work:
 - Phase 5 completed: 4 plans, 27/27 must-haves verified
 - Phase 2 completed: 2 plans (auth + onboarding), pending human verification
 - Phase 3 COMPLETE: 03-01 AI foundation + 03-02 content plan generation + 03-03 post generation pipeline (brand analysis, copy, images)
-- Phase 4 in progress: 04-01 complete (post API + calendar data layer)
+- Phase 4 COMPLETE: 04-01 post API + calendar, 04-02 review dialog, 04-03 dashboard data wiring
 
 ### Pending Todos
 
@@ -136,5 +139,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 04-01-PLAN.md (post API + calendar data layer). Continuing Phase 4.
-Resume: Execute 04-02-PLAN.md (review dialog). User needs DB migration (pnpm drizzle-kit push) for new schema columns (rejectionReason, publishedAt, published status).
+Stopped at: Completed 04-03-PLAN.md (dashboard overview data wiring). Phase 4 complete. All phases done.
+Resume: All 4 phases complete. MVP is feature-complete. User may want to run `pnpm drizzle-kit push` for any pending DB migrations, then test the full flow.

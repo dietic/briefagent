@@ -70,11 +70,13 @@ Plans:
   3. Subsequent plans avoid repeating themes from previous plans
   4. For each post slot, AI generates LinkedIn-optimized copy with a scroll-stopping hook, value-driven body, goal-aligned CTA, and a mix of popular/niche hashtags (up to 5)
   5. For each post slot, AI generates an original image informed by analysis of the user's uploaded brand assets -- visually coherent with the brand, optimized for LinkedIn dimensions
-**Plans**: 2 plans
+**Wave Structure**: Wave 1 = 03-01 (foundation + schema), Wave 2 = 03-02 (plan generation), Wave 3 = 03-03 (post generation)
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: Content plan generation (brief assembly, LLM strategy generation, post slot creation, progress tracking)
-- [ ] 03-02: Post generation (copy generation, brand asset analysis, image generation, parallel execution)
+- [ ] 03-01-PLAN.md — AI foundation: AI SDK install, DB schema extensions (generationJobs, contentPlans, posts tables + enums), AI provider config, brief assembler
+- [ ] 03-02-PLAN.md — Content plan generation: Zod schemas, LLM structured output with GPT-4.1, 30% promo cap validation, background job + SSE progress, generate page UI
+- [ ] 03-03-PLAN.md — Post generation: brand asset analysis (vision), per-post copy generation, per-post image generation, post orchestrator with batching
 
 ### Phase 4: Calendar, Review & Export
 **Goal**: The user can view their content on a calendar, review and approve each post with full editing and regeneration controls, download/export approved content (copy text + images) for manual publishing, and see everything tied together in the dashboard
@@ -102,6 +104,6 @@ Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4
 |-------|---------------|--------|-----------|
 | 1. Landing Page & Design System | 2/2 | Complete | 2026-02-16 |
 | 5. Dashboard UI | 4/4 | Complete | 2026-02-16 |
-| 2. Auth & Onboarding | 1/2 | In progress (02-01 done, 02-02 next) | - |
-| 3. AI Generation Pipeline | 0/2 | Not started | - |
+| 2. Auth & Onboarding | 2/2 | Complete (pending checkpoint) | 2026-02-18 |
+| 3. AI Generation Pipeline | 0/3 | Not started | - |
 | 4. Calendar, Review & Export | 0/3 | Not started | - |

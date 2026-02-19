@@ -11,6 +11,9 @@
 		postType: string;
 		imageUrl: string | null;
 		contentCategory: string;
+		copyText?: string | null;
+		hashtags?: string[] | null;
+		keyMessage?: string;
 	}
 
 	let {

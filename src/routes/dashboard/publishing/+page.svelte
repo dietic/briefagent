@@ -1,24 +1,40 @@
 <script lang="ts">
 	import * as m from '$lib/paraglide/messages.js';
 	import { Plus } from 'lucide-svelte';
-	import { kanbanColumns, aiSuggestions, publishingStats } from '$lib/data/mock-publishing.js';
+	import { invalidateAll } from '$app/navigation';
 	import KanbanColumn from '$lib/components/dashboard/kanban-column.svelte';
 	import PostCard from '$lib/components/dashboard/post-card.svelte';
-	import AiPanel from '$lib/components/dashboard/ai-panel.svelte';
+	import PostReviewDialog from '$lib/components/dashboard/post-review-dialog.svelte';
 
-	const filters = [
-		{ label: () => m.dash_publishing_filter_all(), active: true },
-		{ label: () => 'LinkedIn', active: false },
-		{ label: () => 'Instagram', active: false },
-		{ label: () => 'Twitter/X', active: false }
-	];
+	let { data } = $props();
+
+	let selectedPost = $state<(typeof data.allPosts)[number] | null>(null);
+	let dialogOpen = $state(false);
 
 	const columnLabels: Record<string, () => string> = {
-		draft: () => m.dash_publishing_col_drafts(),
-		review: () => m.dash_publishing_col_review(),
-		scheduled: () => m.dash_publishing_col_scheduled(),
-		published: () => m.dash_publishing_col_published()
+		draft: () => m.pub_col_draft(),
+		pending_review: () => m.pub_col_pending(),
+		scheduled: () => m.pub_col_scheduled(),
+		published: () => m.pub_col_published()
 	};
+
+	function openReview(post: (typeof data.allPosts)[number]) {
+		selectedPost = post;
+		dialogOpen = true;
+	}
+
+	// Compute stats from real data
+	let totalPosts = $derived(data.allPosts.length);
+	let pendingCount = $derived(data.columns.find((c: { id: string }) => c.id === 'pending_review')?.count ?? 0);
+	let scheduledCount = $derived(data.columns.find((c: { id: string }) => c.id === 'scheduled')?.count ?? 0);
+	let publishedCount = $derived(data.columns.find((c: { id: string }) => c.id === 'published')?.count ?? 0);
+
+	let sidebarStats = $derived([
+		{ label: 'Total', value: totalPosts, color: 'var(--text-main)' },
+		{ label: 'Pending', value: pendingCount, color: 'var(--c-secondary)' },
+		{ label: 'Scheduled', value: scheduledCount, color: 'var(--c-electric)' },
+		{ label: 'Published', value: publishedCount, color: 'var(--positive)' }
+	]);
 </script>
 
 <svelte:head>
@@ -37,17 +53,6 @@
 				<h1 class="text-lg font-extrabold tracking-tight" style="color: var(--text-main);">
 					{m.dash_publishing_title()}
 				</h1>
-				<div class="flex items-center gap-1">
-					{#each filters as f}
-						<button
-							class="px-3 py-1.5 rounded-full text-xs font-semibold transition-colors"
-							style="
-								background: {f.active ? 'var(--c-electric)' : 'transparent'};
-								color: {f.active ? 'white' : 'var(--text-dim)'};
-							"
-						>{f.label()}</button>
-					{/each}
-				</div>
 			</div>
 			<button
 				class="flex items-center gap-2 px-4 py-2 rounded-lg text-white text-sm font-bold transition-transform hover:-translate-y-px"
@@ -61,10 +66,10 @@
 		<!-- Kanban board -->
 		<div class="flex-1 overflow-x-auto overflow-y-hidden px-6 pb-4 pt-4">
 			<div class="flex gap-4 h-full min-w-max">
-				{#each kanbanColumns as col}
+				{#each data.columns as col}
 					<KanbanColumn label={columnLabels[col.id]?.()} count={col.count} status={col.id}>
 						{#each col.posts as post}
-							<PostCard {post} />
+							<PostCard {post} onclick={() => openReview(post)} />
 						{/each}
 					</KanbanColumn>
 				{/each}
@@ -72,6 +77,28 @@
 		</div>
 	</div>
 
-	<!-- AI Panel -->
-	<AiPanel suggestions={aiSuggestions} stats={publishingStats} />
+	<!-- Stats sidebar -->
+	<aside
+		class="w-[280px] shrink-0 flex flex-col"
+		style="background: var(--bg-surface); border-left: 1px solid var(--border-subtle);"
+	>
+		<div class="px-5 py-4 shrink-0" style="border-bottom: 1px solid var(--border-subtle);">
+			<h3 class="text-sm font-bold" style="color: var(--text-main);">Stats</h3>
+		</div>
+		<div>
+			{#each sidebarStats as stat, i}
+				<div
+					class="px-5 py-3"
+					style={i < sidebarStats.length - 1 ? 'border-bottom: 1px solid var(--border-subtle);' : ''}
+				>
+					<div class="text-xs" style="color: var(--text-dim);">{stat.label}</div>
+					<div class="text-lg font-extrabold" style="color: {stat.color};">{stat.value}</div>
+				</div>
+			{/each}
+		</div>
+	</aside>
 </div>
+
+{#if selectedPost}
+	<PostReviewDialog post={selectedPost} bind:open={dialogOpen} onupdate={() => invalidateAll()} />
+{/if}

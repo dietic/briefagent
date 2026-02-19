@@ -1,14 +1,19 @@
 <script lang="ts">
 	import * as m from '$lib/paraglide/messages.js';
 	import CalendarGrid from '$lib/components/dashboard/calendar-grid.svelte';
+	import PostReviewDialog from '$lib/components/dashboard/post-review-dialog.svelte';
 	import { postStatusColors, type PostStatus } from '$lib/utils/post-status';
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { format } from 'date-fns';
 
 	let { data } = $props();
 
 	let viewMode = $state<'month' | 'week'>('month');
 	let selectedDay = $state<string | null>(null);
+
+	// Review dialog state
+	let selectedPost = $state<(typeof data.posts)[number] | null>(null);
+	let dialogOpen = $state(false);
 
 	const monthNames = [
 		'January', 'February', 'March', 'April', 'May', 'June',
@@ -37,10 +42,15 @@
 		goto(`?month=${param}`, { keepFocus: true, noScroll: true });
 	}
 
-	function handlePostClick(post: { scheduledAt: string | null }) {
+	function handlePostClick(post: { scheduledAt: string | null; id?: string }) {
 		if (post.scheduledAt) {
 			selectedDay = post.scheduledAt.slice(0, 10);
 		}
+	}
+
+	function openReview(post: (typeof data.posts)[number]) {
+		selectedPost = post;
+		dialogOpen = true;
 	}
 
 	function formatSelectedDay(dateStr: string): string {
@@ -139,9 +149,10 @@
 				<div class="flex flex-col gap-2">
 					{#each postsForDay as post}
 						{@const ss = postStatusColors[post.status as PostStatus] ?? postStatusColors.draft}
-						<div
-							class="flex gap-3 p-3 rounded-xl border transition-all duration-200 cursor-pointer hover:-translate-x-0.5"
+						<button
+							class="flex gap-3 p-3 rounded-xl border transition-all duration-200 cursor-pointer hover:-translate-x-0.5 w-full text-left"
 							style="border-color: var(--border-subtle); background: var(--bg-surface-alt, var(--surface-raised));"
+							onclick={() => openReview(post)}
 						>
 							{#if post.imageUrl}
 								<div
@@ -169,7 +180,7 @@
 							>
 								{ss.label}
 							</div>
-						</div>
+						</button>
 					{/each}
 				</div>
 			</div>
@@ -195,3 +206,7 @@
 		{/if}
 	</aside>
 </div>
+
+{#if selectedPost}
+	<PostReviewDialog post={selectedPost} bind:open={dialogOpen} onupdate={() => invalidateAll()} />
+{/if}

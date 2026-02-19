@@ -1,18 +1,18 @@
 <script lang="ts">
 	import { Plus } from 'lucide-svelte';
-	import type { PostStatus } from '$lib/data/mock-publishing.js';
 	import type { Snippet } from 'svelte';
+	import * as m from '$lib/paraglide/messages.js';
 
 	let { label, count, status, children }: {
 		label: string;
 		count: number;
-		status: PostStatus;
+		status: string;
 		children: Snippet;
 	} = $props();
 
-	const statusColors: Record<PostStatus, string> = {
+	const statusColors: Record<string, string> = {
 		draft: 'var(--text-muted)',
-		review: 'var(--c-secondary)',
+		pending_review: 'var(--c-secondary)',
 		scheduled: 'var(--c-electric)',
 		published: 'var(--positive)'
 	};
@@ -23,7 +23,7 @@
 	style="background: var(--bg-surface-alt); border: 1px solid var(--border-subtle);"
 >
 	<!-- Colored top border -->
-	<div class="h-[3px] shrink-0" style="background: {statusColors[status]};"></div>
+	<div class="h-[3px] shrink-0" style="background: {statusColors[status] ?? 'var(--text-muted)'};"></div>
 
 	<!-- Header -->
 	<div
@@ -31,7 +31,7 @@
 		style="border-bottom: 1px solid var(--border-subtle);"
 	>
 		<div class="flex items-center gap-2">
-			<div class="w-2 h-2 rounded-full" style="background: {statusColors[status]};"></div>
+			<div class="w-2 h-2 rounded-full" style="background: {statusColors[status] ?? 'var(--text-muted)'};"></div>
 			<span class="text-sm font-bold" style="color: var(--text-main);">{label}</span>
 			<span
 				class="text-xs px-2 py-0.5 rounded-full mono"
@@ -49,5 +49,10 @@
 	<!-- Card body -->
 	<div class="flex-1 overflow-y-auto px-3 pb-3 pt-2 flex flex-col gap-2.5">
 		{@render children()}
+		{#if count === 0}
+			<div class="flex items-center justify-center py-6 text-xs" style="color: var(--text-muted);">
+				{m.pub_no_posts()}
+			</div>
+		{/if}
 	</div>
 </div>

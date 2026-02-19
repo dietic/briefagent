@@ -44,7 +44,8 @@ export const load: PageServerLoad = async ({ parent, url }) => {
 			imageUrl: true,
 			contentCategory: true,
 			copyText: true,
-			hashtags: true
+			hashtags: true,
+			keyMessage: true
 		},
 		orderBy: posts.scheduledAt
 	});

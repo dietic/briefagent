@@ -45,9 +45,9 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **PLAN-02**: Content plan includes strategy overview, content themes, and individual post slots
 - [x] **PLAN-03**: Each post slot specifies date/time, platform, post type (static image or text-only), topic/angle, content category, key message, and which assets to reference
 - [x] **PLAN-04**: Content categories include educational, promotional, social proof, behind-the-scenes, engagement, tips, announcement, and storytelling
-- [ ] **PLAN-05**: Promotional content never exceeds 30% of the plan
+- [x] **PLAN-05**: Promotional content never exceeds 30% of the plan
 - [x] **PLAN-06**: Plan generation considers summaries of previous plans to avoid repetition
-- [ ] **PLAN-07**: User sees progress indicator during plan generation (background job)
+- [x] **PLAN-07**: User sees progress indicator during plan generation (background job)
 
 ### AI Copy Generation
 
@@ -216,9 +216,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLAN-02 | Phase 3 | Complete |
 | PLAN-03 | Phase 3 | Complete |
 | PLAN-04 | Phase 3 | Complete |
-| PLAN-05 | Phase 3 | Pending |
+| PLAN-05 | Phase 3 | Complete |
 | PLAN-06 | Phase 3 | Complete |
-| PLAN-07 | Phase 3 | Pending |
+| PLAN-07 | Phase 3 | Complete |
 | COPY-01 | Phase 3 | Pending |
 | COPY-02 | Phase 3 | Pending |
 | COPY-03 | Phase 3 | Pending |

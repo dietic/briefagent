@@ -418,5 +418,12 @@
   "dash_cta_onboarding_btn": "Iniciar Configuracion",
   "dash_upcoming_title": "Proximas Publicaciones",
   "dash_upcoming_empty": "Sin publicaciones proximas. Genera un plan de contenido para empezar.",
-  "dash_upcoming_next_7": "Proximos 7 Dias"
+  "dash_upcoming_next_7": "Proximos 7 Dias",
+
+  "pub_col_draft": "Borrador",
+  "pub_col_pending": "Revision Pendiente",
+  "pub_col_scheduled": "Programado",
+  "pub_col_published": "Publicado",
+  "pub_no_posts": "Sin publicaciones en esta columna",
+  "pub_total_posts": "Total de Posts"
 }

@@ -418,5 +418,12 @@
   "dash_cta_onboarding_btn": "Start Setup",
   "dash_upcoming_title": "Upcoming Posts",
   "dash_upcoming_empty": "No upcoming posts. Generate a content plan to get started.",
-  "dash_upcoming_next_7": "Next 7 Days"
+  "dash_upcoming_next_7": "Next 7 Days",
+
+  "pub_col_draft": "Draft",
+  "pub_col_pending": "Pending Review",
+  "pub_col_scheduled": "Scheduled",
+  "pub_col_published": "Published",
+  "pub_no_posts": "No posts in this column",
+  "pub_total_posts": "Total Posts"
 }

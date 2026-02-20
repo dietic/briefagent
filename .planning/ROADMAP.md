@@ -19,6 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Calendar, Review & Export** - Content calendar, approval workflow, content download/export, wire real data into dashboard *(COMPLETE)*
 - [ ] **Phase 6: Onboarding Enhancement** - Product type selection + social media accounts in onboarding
 - [ ] **Phase 7: Content Pillars** - Conditional Deep Brief for personal brands with content pillars (topics) and AI prompt integration
+- [ ] **Phase 8: Platform Selection per Pillar** - Target platform per pillar (LinkedIn/X active, Instagram/YouTube/TikTok coming soon), platform-aware content generation
 
 ## Phase Details
 
@@ -134,7 +135,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4 -> 6 -> 7
+Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4 -> 6 -> 7 -> 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|---------------|--------|-----------|
@@ -145,3 +146,20 @@ Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4 -> 6 -> 7
 | 4. Calendar, Review & Export | 3/3 | Complete    | 2026-02-19 |
 | 6. Onboarding Enhancement | 2/2 | Complete | 2026-02-20 |
 | 7. Content Pillars | 0/2 | Planned | - |
+| 8. Platform Selection per Pillar | 0/2 | Planned | - |
+
+### Phase 8: Platform Selection per Pillar
+**Goal**: Each content pillar gets a target social media platform (LinkedIn or X, with Instagram/YouTube/TikTok as "coming soon"). Content generation respects platform-specific specs (character limits, image sizes, tone). Platform selection is optional — no platform = generic content.
+**Depends on**: Phase 7
+**Success Criteria** (what must be TRUE):
+  1. Each content pillar has an optional platform dropdown (LinkedIn, X active; Instagram, YouTube, TikTok greyed out with "Coming Soon" chip)
+  2. Platform selection is stored in the content_pillars table and persisted across sessions
+  3. Deep Brief UI shows platform dropdown per pillar for all product types that have pillars
+  4. AI content generation uses platform-specific specs (char limits, image dimensions, tone) when a pillar has a platform assigned
+  5. Posts without a platform assignment generate as generic social media content
+**Wave Structure**: Wave 1 = 08-01 (schema + UI), Wave 2 = 08-02 (pipeline platform awareness)
+**Plans**: 2 plans
+
+Plans:
+- [ ] 08-01-PLAN.md -- Schema migration (platform column), PLATFORM_SPECS config, Deep Brief UI platform dropdown per pillar, i18n keys
+- [ ] 08-02-PLAN.md -- Pipeline platform awareness: brief assembler, plan schema/prompts, copy prompts, image resize, post generator wiring

@@ -17,6 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2: Auth & Onboarding** - User journey from signup through completed brief and asset uploads
 - [ ] **Phase 3: AI Generation Pipeline** - Content plan, copy, and image generation from product brief
 - [x] **Phase 4: Calendar, Review & Export** - Content calendar, approval workflow, content download/export, wire real data into dashboard *(COMPLETE)*
+- [ ] **Phase 6: Onboarding Enhancement** - Product type selection + social media accounts in onboarding
 
 ## Phase Details
 
@@ -96,10 +97,26 @@ Plans:
 - [x] 04-02-PLAN.md — Post review dialog (Bits UI) with editing, approval, regeneration, export; wire into calendar + publishing pages with real data
 - [x] 04-03-PLAN.md — Dashboard overview wiring: real stats (generated/pending/approved/published), upcoming posts, generate plan CTA
 
+### Phase 6: Onboarding Enhancement
+**Goal**: Enhance the onboarding flow so users select a product type (Personal Brand / Product / Service) before entering product details, and can add social media accounts (LinkedIn, Instagram, etc.) after creating their product
+**Depends on**: Phase 2
+**Requirements**: ONB2-01, ONB2-02
+**Success Criteria** (what must be TRUE):
+  1. User sees a product type selector (Personal Brand / Product / Service) as the first step before entering name, URL, and description
+  2. The selected product type is stored in the database and available throughout the app
+  3. After completing Quick Start, user can add social media accounts (platform + handle/URL) for their product
+  4. Social media accounts are stored and displayed in settings/brand pages
+**Wave Structure**: Wave 1 = 06-01 (schema + product type), Wave 2 = 06-02 (social accounts)
+**Plans**: 2 plans
+
+Plans:
+- [ ] 06-01-PLAN.md -- Schema extensions (productType column, socialAccounts table) + product type selector in Quick Start + display in settings/brand
+- [ ] 06-02-PLAN.md -- Social accounts CRUD API + management UI on brand page + account count in settings
+
 ## Progress
 
 **Execution Order:**
-Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4
+Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|---------------|--------|-----------|
@@ -108,3 +125,4 @@ Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4
 | 2. Auth & Onboarding | 2/2 | Complete (pending checkpoint) | 2026-02-18 |
 | 3. AI Generation Pipeline | 3/3 | Complete | 2026-02-19 |
 | 4. Calendar, Review & Export | 3/3 | Complete    | 2026-02-19 |
+| 6. Onboarding Enhancement | 0/2 | Planned | - |

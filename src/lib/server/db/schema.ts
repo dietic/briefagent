@@ -5,6 +5,7 @@ export const products = pgTable('products', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	userId: uuid('user_id').notNull(),
 	name: text('name').notNull(),
+	productType: text('product_type'), // 'personal_brand' | 'product' | 'service'
 	websiteUrl: text('website_url'),
 	description: text('description'),
 	logoUrl: text('logo_url'),
@@ -51,6 +52,17 @@ export const assets = pgTable('assets', {
 	tag: text('tag'), // screenshot | photo | logo | lifestyle | testimonial | graphic
 	description: text('description'),
 	isPrimary: boolean('is_primary').default(false),
+	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
+});
+
+export const socialAccounts = pgTable('social_accounts', {
+	id: uuid('id').primaryKey().defaultRandom(),
+	productId: uuid('product_id')
+		.references(() => products.id, { onDelete: 'cascade' })
+		.notNull(),
+	platform: text('platform').notNull(), // 'linkedin' | 'instagram' | 'twitter' | 'facebook' | 'tiktok' | 'youtube' | 'other'
+	handle: text('handle'), // e.g. '@briefagent'
+	url: text('url'), // e.g. 'https://linkedin.com/in/briefagent'
 	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
 });
 
@@ -130,6 +142,7 @@ export const posts = pgTable('posts', {
 export const productsRelations = relations(products, ({ many }) => ({
 	briefs: many(productBriefs),
 	assets: many(assets),
+	socialAccounts: many(socialAccounts),
 	contentPlans: many(contentPlans),
 	posts: many(posts),
 	generationJobs: many(generationJobs)
@@ -145,6 +158,13 @@ export const productBriefsRelations = relations(productBriefs, ({ one }) => ({
 export const assetsRelations = relations(assets, ({ one }) => ({
 	product: one(products, {
 		fields: [assets.productId],
+		references: [products.id]
+	})
+}));
+
+export const socialAccountsRelations = relations(socialAccounts, ({ one }) => ({
+	product: one(products, {
+		fields: [socialAccounts.productId],
 		references: [products.id]
 	})
 }));

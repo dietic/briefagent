@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** A user with zero design or marketing skills can brief the AI and get professional, brand-consistent marketing content generated and published to their social accounts.
-**Current focus:** Phase 6 - Onboarding Enhancement (product type selector, social accounts)
+**Current focus:** Phase 7 - Content Pillars (pillar schema, conditional Deep Brief UI, pillar-aware generation)
 
 ## Current Position
 
-Phase: 6 of 6 (Onboarding Enhancement)
-Plan: 2 of 2 (06-02 complete)
-Status: Phase 06 COMPLETE -- all plans done
-Last activity: 2026-02-20 — 06-02 Social accounts management (2 tasks)
+Phase: 7 of 7 (Content Pillars)
+Plan: 1 of 2 (07-01 complete)
+Status: Executing Phase 07
+Last activity: 2026-02-20 — 07-01 Content pillars schema + Deep Brief UI (2 tasks)
 
-Progress: [##########] 100% (06-01 done, 06-02 done)
+Progress: [#####-----] 50% (07-01 done, 07-02 pending)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 16 (Phase 1: 2 + Phase 5: 4 + Phase 2: 2 + Phase 3: 3/3 + Phase 4: 3/3 + Phase 6: 2/2)
-- Average duration: 5.5min
-- Total execution time: 1.39 hours
+- Total plans completed: 17 (Phase 1: 2 + Phase 5: 4 + Phase 2: 2 + Phase 3: 3/3 + Phase 4: 3/3 + Phase 6: 2/2 + Phase 7: 1/2)
+- Average duration: 5.3min
+- Total execution time: 1.44 hours
 
 **By Phase:**
 
@@ -33,10 +33,11 @@ Progress: [##########] 100% (06-01 done, 06-02 done)
 | 03-ai-generation-pipeline | 3/3 | 15min | 5min |
 | 04-calendar-review-export | 3/3 | 14min | 4.7min |
 | 06-onboarding-enhancement | 2/2 | 9min | 4.5min |
+| 07-content-pillars | 1/2 | 3min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 7min, 4min, 3min, 4min, 5min
-- Trend: Stable (~3-7min)
+- Last 5 plans: 4min, 3min, 4min, 5min, 3min
+- Trend: Stable (~3-5min)
 
 *Updated after each plan completion*
 
@@ -128,6 +129,9 @@ Recent decisions affecting current work:
 - [06-02]: RequestHandler from $types for API typing (consistent with all existing endpoints)
 - [06-02]: Platform labels as static Record (proper nouns, not i18n)
 - [06-02]: Relational query { with: product } for ownership check on DELETE endpoint
+- [07-01]: Delete-all-then-insert pattern for pillar save (simpler than diff-based upsert for 1-5 items)
+- [07-01]: Null out product detail fields for personal_brand type (pillars replace product details)
+- [07-01]: Conditional onboarding sections: {#if data.productType === 'personal_brand'} for type-specific UI
 
 ### Roadmap Evolution
 
@@ -140,6 +144,7 @@ Recent decisions affecting current work:
 - Phase 3 COMPLETE: 03-01 AI foundation + 03-02 content plan generation + 03-03 post generation pipeline (brand analysis, copy, images)
 - Phase 4 COMPLETE: 04-01 post API + calendar, 04-02 review dialog, 04-03 dashboard data wiring
 - Phase 6 COMPLETE: 06-01 product type selector + 06-02 social accounts management
+- Phase 7 IN PROGRESS: 07-01 content pillars schema + Deep Brief UI complete
 
 ### Pending Todos
 
@@ -152,5 +157,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 06-02-PLAN.md (social accounts management)
-Resume: All 6 phases complete. MVP fully delivered (16 plans). Run `pnpm drizzle-kit push` to apply all schema changes if not done.
+Stopped at: Completed 07-01-PLAN.md (content pillars schema + Deep Brief UI)
+Resume: Continue with 07-02-PLAN.md (pillar-aware content generation). Run `pnpm drizzle-kit push` to apply contentPillars table.

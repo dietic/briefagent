@@ -11,7 +11,8 @@ Rules:
 - Mix post types: mostly static_image, some text_only
 - Each post should have a distinct topic/angle -- no two posts should cover the same thing
 - Strategy overview should explain the WHY behind the content mix
-- Content themes should be broad enough to generate multiple posts but specific to the product`;
+- Content themes should be broad enough to generate multiple posts but specific to the product
+- If content pillars are provided, distribute posts roughly equally across all pillars. Each pillar should get at least 1 post. The topic and keyMessage of each post should clearly relate to its assigned pillar.`;
 }
 
 export function buildPlanUserPrompt(
@@ -27,18 +28,30 @@ export function buildPlanUserPrompt(
 - Description: ${brief.product.description ?? 'Not provided'}
 - Website: ${brief.product.websiteUrl ?? 'Not provided'}`);
 
-	// Key features & differentiator
-	if (brief.brief.keyFeatures?.length) {
-		sections.push(`## Key Features
+	// Content Pillars (personal brand) or Product Details (product/service)
+	if (brief.contentPillars.length > 0) {
+		const pillarLines = brief.contentPillars.map(
+			(p, i) => `${i + 1}. **${p.name}**${p.description ? `: ${p.description}` : ''}`
+		);
+		sections.push(`## Content Pillars
+This is a personal brand. Distribute posts across these content pillars:
+${pillarLines.join('\n')}
+
+Each pillar should receive roughly equal coverage. Tag each post's topic to align with one of these pillars.`);
+	} else {
+		// Key features & differentiator (product/service types only)
+		if (brief.brief.keyFeatures?.length) {
+			sections.push(`## Key Features
 ${brief.brief.keyFeatures.map((f) => `- ${f}`).join('\n')}`);
-	}
-	if (brief.brief.differentiator) {
-		sections.push(`## Differentiator
+		}
+		if (brief.brief.differentiator) {
+			sections.push(`## Differentiator
 ${brief.brief.differentiator}`);
-	}
-	if (brief.brief.problemSolved) {
-		sections.push(`## Problem Solved
+		}
+		if (brief.brief.problemSolved) {
+			sections.push(`## Problem Solved
 ${brief.brief.problemSolved}`);
+		}
 	}
 
 	// Target audience

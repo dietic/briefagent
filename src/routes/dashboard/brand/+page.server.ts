@@ -61,6 +61,7 @@ export const load: PageServerLoad = async ({ parent }) => {
 			.join('')
 			.toUpperCase()
 			.slice(0, 2),
+		productType: product.productType ?? null,
 		industry: brief?.industry ?? null,
 		audience: brief?.idealCustomer ?? null,
 		brandAnalysis

@@ -52,7 +52,8 @@
 						<img
 							src={data.brand.logoUrl}
 							alt={data.brand.name}
-							class="w-12 h-12 rounded-xl object-cover shrink-0"
+							class="rounded-xl object-contain shrink-0"
+							style="width: 56px; height: 56px; border: 1px solid var(--border-subtle); padding: 4px;"
 						/>
 					{:else}
 						<div
@@ -82,6 +83,11 @@
 
 				<!-- Tags -->
 				<div class="flex flex-wrap gap-2">
+					{#if data.brand.productType}
+						<span class="text-xs px-3 py-1 rounded-full" style="background: rgba(6,182,212,0.1); color: var(--c-electric);">
+							{data.brand.productType === 'personal_brand' ? m.settings_product_type_personal_brand() : data.brand.productType === 'product' ? m.settings_product_type_product() : m.settings_product_type_service()}
+						</span>
+					{/if}
 					{#if data.brand.industry}
 						<span
 							class="text-xs px-3 py-1 rounded-full"

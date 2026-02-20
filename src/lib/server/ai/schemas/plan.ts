@@ -15,7 +15,7 @@ export const postSlotSchema = z.object({
 	dateTime: z
 		.string()
 		.describe('ISO 8601 date-time for publication, e.g. 2026-03-01T09:00:00Z'),
-	platform: z.literal('linkedin'),
+	platform: z.enum(['linkedin', 'x']),
 	postType: z.enum(['static_image', 'text_only']),
 	topic: z.string().describe('Specific angle or topic for this post'),
 	contentCategory: contentCategoryZodEnum,

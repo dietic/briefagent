@@ -1,18 +1,21 @@
 import type { AssembledBrief } from '../pipeline/brief-assembler';
+import { getPlatformSpec } from '../platform-specs';
 
 export function buildPlanSystemPrompt(): string {
-	return `You are an expert LinkedIn content strategist. You create data-driven 2-week content plans.
+	return `You are an expert social media content strategist. You create data-driven 2-week content plans.
 
 Rules:
 - Generate 8-12 post slots spread across the 2-week window (weekdays preferred, occasional weekends OK)
-- Schedule posts at optimal LinkedIn engagement times (7-8am, 12pm, 5-6pm user's timezone)
+- Schedule posts at optimal engagement times per platform (LinkedIn: 7-8am, 12pm, 5-6pm; X: 8-10am, 12-1pm, 5-6pm user's timezone)
 - Content categories: educational, promotional, social_proof, behind_the_scenes, engagement, tips, announcement, storytelling
 - CRITICAL: Promotional content must NOT exceed 30% of total posts. If you have 10 posts, max 3 can be promotional.
 - Mix post types: mostly static_image, some text_only
 - Each post should have a distinct topic/angle -- no two posts should cover the same thing
 - Strategy overview should explain the WHY behind the content mix
 - Content themes should be broad enough to generate multiple posts but specific to the product
-- If content pillars are provided, distribute posts roughly equally across all pillars. Each pillar should get at least 1 post. The topic and keyMessage of each post should clearly relate to its assigned pillar.`;
+- If content pillars are provided, distribute posts roughly equally across all pillars. Each pillar should get at least 1 post. The topic and keyMessage of each post should clearly relate to its assigned pillar.
+- Each post's \`platform\` field MUST match its assigned pillar's platform. Pillars without a platform default to linkedin.
+- For X/Twitter posts, prefer text_only post type unless the topic strongly benefits from a visual. X is a text-first platform.`;
 }
 
 export function buildPlanUserPrompt(
@@ -30,14 +33,19 @@ export function buildPlanUserPrompt(
 
 	// Content Pillars (personal brand) or Product Details (product/service)
 	if (brief.contentPillars.length > 0) {
-		const pillarLines = brief.contentPillars.map(
-			(p, i) => `${i + 1}. **${p.name}**${p.description ? `: ${p.description}` : ''}`
-		);
+		const pillarLines = brief.contentPillars.map((p, i) => {
+			const platformLabel = p.platform
+				? `[Platform: ${getPlatformSpec(p.platform).displayName}]`
+				: '[Platform: LinkedIn (default)]';
+			return `${i + 1}. **${p.name}**${p.description ? `: ${p.description}` : ''} ${platformLabel}`;
+		});
 		sections.push(`## Content Pillars
 This is a personal brand. Distribute posts across these content pillars:
 ${pillarLines.join('\n')}
 
-Each pillar should receive roughly equal coverage. Tag each post's topic to align with one of these pillars.`);
+Each pillar should receive roughly equal coverage. Tag each post's topic to align with one of these pillars.
+
+IMPORTANT: Each post's platform field MUST match its pillar's platform. If a pillar has no platform, use 'linkedin'.`);
 	} else {
 		// Key features & differentiator (product/service types only)
 		if (brief.brief.keyFeatures?.length) {

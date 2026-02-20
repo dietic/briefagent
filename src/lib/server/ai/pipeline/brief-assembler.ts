@@ -39,6 +39,7 @@ export interface AssembledBrief {
 		name: string;
 		description: string | null;
 		sortOrder: number;
+		platform: string | null;
 	}>;
 }
 
@@ -119,7 +120,8 @@ export async function assembleBrief(productId: string): Promise<AssembledBrief> 
 		contentPillars: pillars.map((p) => ({
 			name: p.name,
 			description: p.description,
-			sortOrder: p.sortOrder
+			sortOrder: p.sortOrder,
+			platform: p.platform
 		}))
 	};
 }

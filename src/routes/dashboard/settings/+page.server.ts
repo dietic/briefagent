@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
-import { products } from '$lib/server/db/schema';
-import { eq, desc } from 'drizzle-orm';
+import { products, socialAccounts } from '$lib/server/db/schema';
+import { eq, desc, count } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ parent }) => {
@@ -21,5 +21,16 @@ export const load: PageServerLoad = async ({ parent }) => {
 		}
 	});
 
-	return { settingsProducts: allProducts };
+	// Get social account counts per product
+	const productIds = allProducts.map((p) => p.id);
+	const accountCounts: Record<string, number> = {};
+	for (const pid of productIds) {
+		const result = await db
+			.select({ count: count() })
+			.from(socialAccounts)
+			.where(eq(socialAccounts.productId, pid));
+		accountCounts[pid] = result[0]?.count ?? 0;
+	}
+
+	return { settingsProducts: allProducts, socialAccountCounts: accountCounts };
 };

@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** A user with zero design or marketing skills can brief the AI and get professional, brand-consistent marketing content generated and published to their social accounts.
-**Current focus:** Phase 7 - Content Pillars COMPLETE (pillar schema, Deep Brief UI, pillar-aware generation)
+**Current focus:** Phase 8 - Platform Selection per Pillar (08-01 done, 08-02 pending)
 
 ## Current Position
 
-Phase: 7 of 7 (Content Pillars)
-Plan: 2 of 2 (07-02 complete)
-Status: Phase 07 COMPLETE
-Last activity: 2026-02-20 — 07-02 Pillar-aware content generation (2 tasks)
+Phase: 8 of 8 (Platform Selection per Pillar)
+Plan: 1 of 2 (08-01 complete)
+Status: In Progress
+Last activity: 2026-02-20 — 08-01 Platform schema + specs + Deep Brief dropdown (2 tasks)
 
-Progress: [##########] 100% (07-01 done, 07-02 done)
+Progress: [#####-----] 50% (08-01 done, 08-02 pending)
 
 ## Performance Metrics
 
@@ -40,6 +40,7 @@ Progress: [##########] 100% (07-01 done, 07-02 done)
 - Trend: Stable (~2-5min)
 
 *Updated after each plan completion*
+| Phase 08 P01 | 4min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -134,6 +135,9 @@ Recent decisions affecting current work:
 - [07-01]: Conditional onboarding sections: {#if data.productType === 'personal_brand'} for type-specific UI
 - [07-02]: Pillar presence (non-empty array) as prompt branch condition, not productType -- decouples prompt logic from product schema
 - [07-02]: Product detail sections (features, differentiator, problem) skipped entirely for personal brands in AI prompts
+- [Phase 08]: [08-01]: Inline platformOptions in Svelte component (server-only import not usable in client)
+- [Phase 08]: [08-01]: Server-side Set validation of active platform slugs to reject coming-soon platforms
+- [Phase 08]: [08-01]: PLATFORM_SPECS as single source of truth for all platform-specific config
 
 ### Roadmap Evolution
 
@@ -147,6 +151,7 @@ Recent decisions affecting current work:
 - Phase 4 COMPLETE: 04-01 post API + calendar, 04-02 review dialog, 04-03 dashboard data wiring
 - Phase 6 COMPLETE: 06-01 product type selector + 06-02 social accounts management
 - Phase 7 COMPLETE: 07-01 content pillars schema + Deep Brief UI, 07-02 pillar-aware content generation
+- Phase 8 added: Platform Selection per Pillar — target platform per pillar, platform-aware content generation
 
 ### Pending Todos
 
@@ -159,5 +164,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 07-02-PLAN.md (pillar-aware content generation) -- Phase 7 COMPLETE
-Resume: All 7 phases complete. 18 plans executed across the entire roadmap.
+Stopped at: Completed 08-01-PLAN.md (platform schema + specs + Deep Brief dropdown)
+Resume: Phase 8 in progress. 08-01 done, 08-02 pending (platform-aware content generation).

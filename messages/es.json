@@ -339,6 +339,9 @@
   "onb_brief_pillar_suggest_promo": "Promocion de producto",
   "onb_brief_pillar_suggest_tips": "Consejos y guias",
   "onb_brief_pillar_suggest_stories": "Detras de escena",
+  "onb_brief_pillar_platform": "Plataforma objetivo",
+  "onb_brief_pillar_platform_none": "Cualquier plataforma",
+  "onb_brief_pillar_platform_coming_soon": "Proximamente",
   "onb_brief_pillar_suggestions_label": "Agregar rapido:",
 
   "onb_brief_section_audience": "Audiencia objetivo",

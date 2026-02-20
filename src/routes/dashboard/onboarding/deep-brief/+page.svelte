@@ -6,6 +6,18 @@
 
 	let { data }: { data: PageData } = $props();
 
+	const platformOptions = {
+		active: [
+			{ slug: 'linkedin', name: 'LinkedIn' },
+			{ slug: 'x', name: 'X (Twitter)' }
+		],
+		comingSoon: [
+			{ slug: 'instagram', name: 'Instagram' },
+			{ slug: 'youtube', name: 'YouTube' },
+			{ slug: 'tiktok', name: 'TikTok' }
+		]
+	};
+
 	// Product Details
 	let problemSolved = $state(data.brief?.problemSolved ?? '');
 	let keyFeatures = $state<string[]>(data.brief?.keyFeatures ?? []);
@@ -38,10 +50,10 @@
 	let submitting = $state(false);
 
 	// Content Pillars (personal_brand only)
-	let pillars = $state<Array<{ name: string; description: string }>>(
+	let pillars = $state<Array<{ name: string; description: string; platform: string }>>(
 		data.pillars && data.pillars.length > 0
-			? data.pillars.map((p) => ({ name: p.name, description: p.description ?? '' }))
-			: [{ name: '', description: '' }]
+			? data.pillars.map((p) => ({ name: p.name, description: p.description ?? '', platform: p.platform ?? '' }))
+			: [{ name: '', description: '', platform: '' }]
 	);
 
 	const pillarSuggestions = [
@@ -54,7 +66,7 @@
 
 	function addPillar() {
 		if (pillars.length < 5) {
-			pillars = [...pillars, { name: '', description: '' }];
+			pillars = [...pillars, { name: '', description: '', platform: '' }];
 		}
 	}
 
@@ -67,7 +79,7 @@
 	function addSuggestion(suggestion: { name: () => string; desc: string }) {
 		const name = suggestion.name();
 		if (pillars.length < 5 && !pillars.some((p) => p.name === name)) {
-			pillars = [...pillars, { name, description: suggestion.desc }];
+			pillars = [...pillars, { name, description: suggestion.desc, platform: '' }];
 		}
 	}
 
@@ -236,6 +248,32 @@
 									onfocus={(e) => (e.currentTarget.style.borderColor = 'var(--c-electric)')}
 									onblur={(e) => (e.currentTarget.style.borderColor = 'var(--border-subtle)')}
 								></textarea>
+							</div>
+							<div class="space-y-1">
+								<label class="block text-[0.75rem] font-semibold" style="color: var(--text-dim);">
+									{m.onb_brief_pillar_platform()}
+								</label>
+								<div class="relative">
+									<select
+										bind:value={pillar.platform}
+										class="w-full px-3 py-2.5 rounded-lg text-[0.85rem] outline-none appearance-none transition-all duration-200 cursor-pointer"
+										style="background: var(--bg-surface); border: 1px solid var(--border-subtle); color: var(--text-main);"
+										onfocus={(e) => (e.currentTarget.style.borderColor = 'var(--c-electric)')}
+										onblur={(e) => (e.currentTarget.style.borderColor = 'var(--border-subtle)')}
+									>
+										<option value="">{m.onb_brief_pillar_platform_none()}</option>
+										{#each platformOptions.active as p}
+											<option value={p.slug}>{p.name}</option>
+										{/each}
+										{#each platformOptions.comingSoon as p}
+											<option value={p.slug} disabled>{p.name} — {m.onb_brief_pillar_platform_coming_soon()}</option>
+										{/each}
+									</select>
+									<ChevronDown
+										class="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
+										style="color: var(--text-muted);"
+									/>
+								</div>
 							</div>
 						</div>
 					</div>

@@ -81,7 +81,7 @@ export const actions: Actions = {
 		// Handle content pillars for personal_brand type
 		if (isPersonalBrand) {
 			const pillarsRaw = formData.get('pillars') as string;
-			let pillarItems: Array<{ name: string; description: string }> = [];
+			let pillarItems: Array<{ name: string; description: string; platform: string }> = [];
 			try {
 				pillarItems = JSON.parse(pillarsRaw || '[]');
 			} catch {
@@ -90,12 +90,14 @@ export const actions: Actions = {
 			// Delete existing pillars for this product
 			await db.delete(contentPillars).where(eq(contentPillars.productId, product.id));
 			// Insert new pillars
+			const activeSlugs = new Set(['linkedin', 'x']);
 			if (pillarItems.length > 0) {
 				await db.insert(contentPillars).values(
 					pillarItems.map((p, i) => ({
 						productId: product.id,
 						name: p.name,
 						description: p.description || null,
+						platform: p.platform && activeSlugs.has(p.platform) ? p.platform : null,
 						sortOrder: i
 					}))
 				);

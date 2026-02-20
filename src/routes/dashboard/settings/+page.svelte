@@ -165,6 +165,11 @@
 										{m.settings_product_created({ date: formatDate(product.createdAt) })}
 									</span>
 								{/if}
+								{#if data.socialAccountCounts?.[product.id] > 0}
+									<span class="text-[0.7rem] flex items-center gap-1" style="color: var(--text-dim);">
+										&#x1F310; {data.socialAccountCounts[product.id]} social {data.socialAccountCounts[product.id] === 1 ? 'account' : 'accounts'}
+									</span>
+								{/if}
 							</div>
 						</div>
 

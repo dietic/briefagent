@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
 	import * as m from '$lib/paraglide/messages.js';
 	import ProgressBar from '$lib/components/dashboard/progress-bar.svelte';
+	import { Trash2, Plus, ExternalLink } from 'lucide-svelte';
 
 	let { data } = $props();
 
@@ -14,6 +16,72 @@
 		'linear-gradient(90deg, #eab308, var(--positive))',
 		'linear-gradient(90deg, var(--c-electric), var(--c-secondary))'
 	];
+
+	// Social accounts management
+	const platformLabels: Record<string, string> = {
+		linkedin: 'LinkedIn',
+		instagram: 'Instagram',
+		twitter: 'X (Twitter)',
+		facebook: 'Facebook',
+		tiktok: 'TikTok',
+		youtube: 'YouTube',
+		other: 'Other'
+	};
+
+	const platformColors: Record<string, string> = {
+		linkedin: '#0A66C2',
+		instagram: '#E4405F',
+		twitter: '#1DA1F2',
+		facebook: '#1877F2',
+		tiktok: '#69C9D0',
+		youtube: '#FF0000',
+		other: 'var(--text-dim)'
+	};
+
+	let showAddForm = $state(false);
+	let newPlatform = $state('linkedin');
+	let newHandle = $state('');
+	let newUrl = $state('');
+	let saving = $state(false);
+	let removingId = $state<string | null>(null);
+
+	async function addAccount() {
+		if (!data.brand) return;
+		saving = true;
+		try {
+			const res = await fetch('/api/social-accounts', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					productId: data.product?.id,
+					platform: newPlatform,
+					handle: newHandle || undefined,
+					url: newUrl || undefined
+				})
+			});
+			if (res.ok) {
+				showAddForm = false;
+				newPlatform = 'linkedin';
+				newHandle = '';
+				newUrl = '';
+				await invalidateAll();
+			}
+		} finally {
+			saving = false;
+		}
+	}
+
+	async function removeAccount(id: string) {
+		removingId = id;
+		try {
+			const res = await fetch(`/api/social-accounts/${id}`, { method: 'DELETE' });
+			if (res.ok) {
+				await invalidateAll();
+			}
+		} finally {
+			removingId = null;
+		}
+	}
 </script>
 
 <svelte:head>
@@ -161,6 +229,134 @@
 						{m.dash_brand_no_voice()}
 					</p>
 				{/if}
+			</div>
+
+			<!-- Social Accounts -->
+			<div
+				class="rounded-[14px] border p-6"
+				style="background: var(--bg-surface); border-color: var(--border-subtle); box-shadow: var(--card-shadow);"
+			>
+				<h3 class="text-[0.9rem] font-bold tracking-tight mb-4 flex items-center gap-2" style="color: var(--text-main);">
+					<span class="text-[0.85rem]">&#x1F310;</span>
+					{m.social_accounts_title()}
+				</h3>
+
+				{#if data.socialAccounts && data.socialAccounts.length > 0}
+					<div class="flex flex-col gap-2.5 mb-4">
+						{#each data.socialAccounts as account (account.id)}
+							<div
+								class="flex items-center justify-between gap-3 rounded-[10px] px-3 py-2.5 transition-colors duration-150"
+								style="background: var(--bg-page); border: 1px solid var(--border-subtle);"
+							>
+								<div class="flex items-center gap-2.5 min-w-0">
+									<span
+										class="text-[0.7rem] font-bold px-2 py-0.5 rounded-md shrink-0"
+										style="color: {platformColors[account.platform] ?? 'var(--text-dim)'}; background: {platformColors[account.platform] ? platformColors[account.platform] + '18' : 'var(--border-subtle)'};"
+									>
+										{platformLabels[account.platform] ?? account.platform}
+									</span>
+									<div class="flex items-center gap-2 min-w-0 overflow-hidden">
+										{#if account.handle}
+											<span class="text-[0.8rem] font-medium truncate" style="color: var(--text-main);">
+												{account.handle}
+											</span>
+										{/if}
+										{#if account.url}
+											<a
+												href={account.url}
+												target="_blank"
+												rel="noopener noreferrer"
+												class="text-[0.7rem] flex items-center gap-1 truncate transition-colors duration-150"
+												style="color: var(--c-electric);"
+											>
+												<ExternalLink class="w-3 h-3 shrink-0" />
+												<span class="truncate">{account.url.replace(/^https?:\/\//, '')}</span>
+											</a>
+										{/if}
+									</div>
+								</div>
+								<button
+									class="flex items-center justify-center w-7 h-7 rounded-md shrink-0 transition-all duration-150 cursor-pointer"
+									style="color: var(--negative); background: rgba(239,68,68,0.05);"
+									onmouseenter={(e) => { e.currentTarget.style.background = 'rgba(239,68,68,0.15)'; }}
+									onmouseleave={(e) => { e.currentTarget.style.background = 'rgba(239,68,68,0.05)'; }}
+									onclick={() => removeAccount(account.id)}
+									disabled={removingId === account.id}
+									title={m.social_accounts_remove()}
+								>
+									{#if removingId === account.id}
+										<span class="text-[0.6rem]">...</span>
+									{:else}
+										<Trash2 class="w-3.5 h-3.5" />
+									{/if}
+								</button>
+							</div>
+						{/each}
+					</div>
+				{:else if !showAddForm}
+					<p class="text-sm text-center py-4 mb-2" style="color: var(--text-dim);">
+						{m.social_accounts_empty()}
+					</p>
+				{/if}
+
+				{#if showAddForm}
+					<div
+						class="rounded-[10px] p-4 flex flex-col gap-3 mb-3"
+						style="background: var(--bg-page); border: 1px solid var(--border-subtle);"
+					>
+						<select
+							bind:value={newPlatform}
+							class="w-full text-[0.85rem] rounded-[8px] px-3 py-2 outline-none transition-colors duration-150"
+							style="background: var(--input-bg, var(--bg-surface)); border: 1px solid var(--border-subtle); color: var(--text-main);"
+						>
+							{#each Object.entries(platformLabels) as [value, label]}
+								<option {value}>{label}</option>
+							{/each}
+						</select>
+						<input
+							type="text"
+							bind:value={newHandle}
+							placeholder={m.social_accounts_handle()}
+							class="w-full text-[0.85rem] rounded-[8px] px-3 py-2 outline-none transition-colors duration-150"
+							style="background: var(--input-bg, var(--bg-surface)); border: 1px solid var(--border-subtle); color: var(--text-main);"
+						/>
+						<input
+							type="text"
+							bind:value={newUrl}
+							placeholder={m.social_accounts_url()}
+							class="w-full text-[0.85rem] rounded-[8px] px-3 py-2 outline-none transition-colors duration-150"
+							style="background: var(--input-bg, var(--bg-surface)); border: 1px solid var(--border-subtle); color: var(--text-main);"
+						/>
+						<div class="flex items-center justify-end gap-2">
+							<button
+								class="text-[0.8rem] font-semibold px-3 py-1.5 rounded-[8px] transition-colors duration-150 cursor-pointer"
+								style="color: var(--text-dim); background: var(--border-subtle);"
+								onclick={() => { showAddForm = false; newHandle = ''; newUrl = ''; newPlatform = 'linkedin'; }}
+							>
+								{m.social_accounts_cancel()}
+							</button>
+							<button
+								class="text-[0.8rem] font-bold px-3 py-1.5 rounded-[8px] text-white transition-all duration-150 cursor-pointer disabled:opacity-50"
+								style="background: var(--c-electric);"
+								onclick={addAccount}
+								disabled={saving || (!newHandle && !newUrl)}
+							>
+								{saving ? '...' : m.social_accounts_save()}
+							</button>
+						</div>
+					</div>
+				{/if}
+
+				<button
+					class="w-full flex items-center justify-center gap-2 text-[0.8rem] font-semibold px-4 py-2 rounded-[10px] border transition-all duration-200 cursor-pointer"
+					style="color: var(--text-main); border-color: var(--border-subtle); background: transparent;"
+					onmouseenter={(e) => { e.currentTarget.style.background = 'var(--bg-sidebar-hover, rgba(255,255,255,0.05))'; }}
+					onmouseleave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+					onclick={() => { showAddForm = !showAddForm; }}
+				>
+					<Plus class="w-4 h-4" />
+					{m.social_accounts_add()}
+				</button>
 			</div>
 		</div>
 

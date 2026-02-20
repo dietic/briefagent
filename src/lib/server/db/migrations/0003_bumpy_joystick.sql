@@ -1,0 +1,1 @@
+ALTER TABLE "content_pillars" ADD COLUMN "platform" text;

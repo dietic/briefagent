@@ -75,6 +75,7 @@ export const contentPillars = pgTable('content_pillars', {
 		.notNull(),
 	name: text('name').notNull(),
 	description: text('description'),
+	platform: text('platform'), // nullable: 'linkedin' | 'x' | null
 	sortOrder: integer('sort_order').notNull().default(0),
 	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
 });

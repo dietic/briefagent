@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1739973600000,
+      "tag": "0000_initial_baseline",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1771549484312,
+      "tag": "0001_colossal_thena",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771604857804,
+      "tag": "0002_shocking_sister_grimm",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1771623559507,
+      "tag": "0003_bumpy_joystick",
+      "breakpoints": true
+    }
+  ]
+}

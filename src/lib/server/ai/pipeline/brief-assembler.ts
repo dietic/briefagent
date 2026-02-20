@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
-import { products, productBriefs, assets } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { products, productBriefs, assets, contentPillars } from '$lib/server/db/schema';
+import { eq, asc } from 'drizzle-orm';
 
 export interface AssembledBrief {
 	product: {
@@ -35,6 +35,11 @@ export interface AssembledBrief {
 		description: string | null;
 		isPrimary: boolean | null;
 	}>;
+	contentPillars: Array<{
+		name: string;
+		description: string | null;
+		sortOrder: number;
+	}>;
 }
 
 export async function assembleBrief(productId: string): Promise<AssembledBrief> {
@@ -52,6 +57,11 @@ export async function assembleBrief(productId: string): Promise<AssembledBrief> 
 
 	const productAssets = await db.query.assets.findMany({
 		where: eq(assets.productId, productId)
+	});
+
+	const pillars = await db.query.contentPillars.findMany({
+		where: eq(contentPillars.productId, productId),
+		orderBy: [asc(contentPillars.sortOrder)]
 	});
 
 	return {
@@ -105,6 +115,11 @@ export async function assembleBrief(productId: string): Promise<AssembledBrief> 
 			tag: a.tag,
 			description: a.description,
 			isPrimary: a.isPrimary
+		})),
+		contentPillars: pillars.map((p) => ({
+			name: p.name,
+			description: p.description,
+			sortOrder: p.sortOrder
 		}))
 	};
 }

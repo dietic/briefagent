@@ -73,7 +73,8 @@ export async function generatePostsForPlan(
 							contentCategory: post.contentCategory,
 							keyMessage: post.keyMessage
 						},
-						brief
+						brief,
+						post.platform
 					)
 				)
 			);
@@ -118,7 +119,8 @@ export async function generatePostsForPlan(
 				post.keyMessage,
 				brandAnalysis,
 				productId,
-				post.id
+				post.id,
+				post.platform
 			);
 
 			await db

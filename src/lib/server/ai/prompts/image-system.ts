@@ -1,11 +1,15 @@
 import type { BrandAnalysis } from '../schemas/brand-analysis';
+import { getPlatformSpec } from '../platform-specs';
 
 export function buildImagePrompt(
 	topic: string,
 	keyMessage: string,
-	brand: BrandAnalysis
+	brand: BrandAnalysis,
+	platform: string | null = null
 ): string {
-	return `Create a professional social media image for LinkedIn.
+	const spec = getPlatformSpec(platform);
+
+	return `Create a professional social media image for ${spec.displayName}.
 
 Topic: ${topic}
 Key Message: ${keyMessage}
@@ -19,7 +23,7 @@ Brand Style Guidelines:
 - ${brand.imageStyleGuide}
 
 Requirements:
-- Professional, clean composition suitable for LinkedIn
+- Professional, clean composition suitable for ${spec.displayName} (${spec.imageAspectRatio} aspect ratio)
 - No text overlays (copy is separate)
 - Brand-coherent color palette and visual style
 - Eye-catching for social media feed scrolling

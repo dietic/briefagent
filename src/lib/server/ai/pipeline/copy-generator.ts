@@ -6,13 +6,14 @@ import type { AssembledBrief } from './brief-assembler';
 
 export async function generatePostCopy(
 	postSlot: { topic: string; contentCategory: string; keyMessage: string },
-	brief: AssembledBrief
+	brief: AssembledBrief,
+	platform: string | null = null
 ): Promise<CopyOutput> {
 	const { experimental_output: output } = await generateText({
 		model: copyModel,
 		experimental_output: Output.object({ schema: copyOutputSchema }),
-		system: buildCopySystemPrompt(brief),
-		prompt: buildCopyUserPrompt(postSlot)
+		system: buildCopySystemPrompt(brief, platform),
+		prompt: buildCopyUserPrompt(postSlot, platform)
 	});
 
 	if (!output) {

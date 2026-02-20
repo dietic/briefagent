@@ -3,6 +3,7 @@ import { imageModel } from '../providers';
 import sharp from 'sharp';
 import type { BrandAnalysis } from '../schemas/brand-analysis';
 import { buildImagePrompt } from '../prompts/image-system';
+import { getPlatformSpec } from '../platform-specs';
 import { supabaseAdmin } from '$lib/server/supabase-admin';
 
 export async function generatePostImage(
@@ -10,9 +11,11 @@ export async function generatePostImage(
 	keyMessage: string,
 	brandAnalysis: BrandAnalysis,
 	productId: string,
-	postId: string
+	postId: string,
+	platform: string | null = null
 ): Promise<{ imageUrl: string; imagePrompt: string }> {
-	const prompt = buildImagePrompt(postTopic, keyMessage, brandAnalysis);
+	const spec = getPlatformSpec(platform);
+	const prompt = buildImagePrompt(postTopic, keyMessage, brandAnalysis, platform);
 
 	const { image } = await generateImage({
 		model: imageModel,
@@ -26,7 +29,7 @@ export async function generatePostImage(
 	const buffer = Buffer.from(image.uint8Array);
 
 	const resized = await sharp(buffer)
-		.resize(1200, 1200, { fit: 'cover' })
+		.resize(spec.imageSize.width, spec.imageSize.height, { fit: 'cover' })
 		.jpeg({ quality: 90 })
 		.toBuffer();
 

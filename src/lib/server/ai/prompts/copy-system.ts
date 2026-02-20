@@ -1,7 +1,9 @@
 import type { AssembledBrief } from '../pipeline/brief-assembler';
+import { getPlatformSpec } from '../platform-specs';
 
-export function buildCopySystemPrompt(brief: AssembledBrief): string {
+export function buildCopySystemPrompt(brief: AssembledBrief, platform: string | null): string {
 	const { product, brief: b } = brief;
+	const spec = getPlatformSpec(platform);
 
 	const traits = b.personalityTraits?.join(', ') ?? 'professional, approachable';
 	const wordsToUse = b.wordsToUse?.length ? `\nWords to USE: ${b.wordsToUse.join(', ')}` : '';
@@ -9,7 +11,12 @@ export function buildCopySystemPrompt(brief: AssembledBrief): string {
 		? `\nWords to AVOID: ${b.wordsToAvoid.join(', ')}`
 		: '';
 
-	return `You are an expert LinkedIn content writer for ${product.name}.
+	const platformExtras =
+		spec.slug === 'x'
+			? `\n7. Be concise -- every word must earn its place\n8. Consider thread format for complex topics (but output as single post for now)`
+			: `\n7. Use line breaks for readability -- LinkedIn rewards scannable content\n8. Never use emojis excessively -- 0-2 max if they add meaning`;
+
+	return `You are an expert ${spec.displayName} content writer for ${product.name}.
 
 Product: ${product.name}
 ${product.description ? `Description: ${product.description}` : ''}
@@ -22,23 +29,26 @@ Brand personality: ${traits}
 ${b.mainGoal ? `Main goal: ${b.mainGoal}` : ''}
 ${wordsToUse}${wordsToAvoid}
 
-LinkedIn Copy Rules:
+${spec.displayName} Copy Rules:
 1. Scroll-stopping hook as the FIRST line -- create curiosity or challenge assumptions
 2. Value-driven body -- teach, share insight, or tell a story (not just promote)
-3. Professional but human tone -- avoid jargon, be conversational
+3. ${spec.toneGuidelines}
 4. CTA aligned with the main goal (${b.mainGoal ?? 'brand awareness'})
-5. 3-5 hashtags: mix of 2 popular/broad hashtags + 2-3 niche/specific hashtags
-6. Optimal post length: 1200-1800 characters
-7. Use line breaks for readability -- LinkedIn rewards scannable content
-8. Never use emojis excessively -- 0-2 max if they add meaning`;
+5. ${spec.hashtagRules}
+6. Optimal post length: ${spec.charRecommended.min}-${spec.charRecommended.max} characters (hard limit: ${spec.charLimit})${platformExtras}`;
 }
 
-export function buildCopyUserPrompt(postSlot: {
-	topic: string;
-	contentCategory: string;
-	keyMessage: string;
-}): string {
-	return `Write a LinkedIn post for the following:
+export function buildCopyUserPrompt(
+	postSlot: {
+		topic: string;
+		contentCategory: string;
+		keyMessage: string;
+	},
+	platform: string | null
+): string {
+	const spec = getPlatformSpec(platform);
+
+	return `Write a ${spec.displayName} post for the following:
 
 Topic: ${postSlot.topic}
 Content Category: ${postSlot.contentCategory}

@@ -1,7 +1,7 @@
 import { redirect, fail } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
-import { products, productBriefs } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { products, productBriefs, contentPillars } from '$lib/server/db/schema';
+import { eq, asc } from 'drizzle-orm';
 import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = async ({ parent }) => {
@@ -19,7 +19,17 @@ export const load: PageServerLoad = async ({ parent }) => {
 		where: eq(productBriefs.productId, product.id)
 	});
 
-	return { product, brief: brief ?? null };
+	const pillars = await db.query.contentPillars.findMany({
+		where: eq(contentPillars.productId, product.id),
+		orderBy: [asc(contentPillars.sortOrder)]
+	});
+
+	return {
+		product,
+		brief: brief ?? null,
+		productType: product.productType,
+		pillars
+	};
 };
 
 export const actions: Actions = {
@@ -37,11 +47,9 @@ export const actions: Actions = {
 			return fail(400, { error: 'No product found. Please complete Quick Start first.' });
 		}
 
+		const isPersonalBrand = product.productType === 'personal_brand';
+
 		// Parse form fields
-		const problemSolved = (formData.get('problemSolved') as string) || null;
-		const differentiator = (formData.get('differentiator') as string) || null;
-		const pricingInfo = (formData.get('pricingInfo') as string) || null;
-		const productStage = (formData.get('productStage') as string) || null;
 		const idealCustomer = (formData.get('idealCustomer') as string) || null;
 		const industry = (formData.get('industry') as string) || null;
 		const ageRange = (formData.get('ageRange') as string) || null;
@@ -64,12 +72,42 @@ export const actions: Actions = {
 			}
 		};
 
-		const keyFeatures = parseArray('keyFeatures');
 		const painPoints = parseArray('painPoints');
 		const audienceHangouts = parseArray('audienceHangouts');
 		const personalityTraits = parseArray('personalityTraits');
 		const wordsToUse = parseArray('wordsToUse');
 		const wordsToAvoid = parseArray('wordsToAvoid');
+
+		// Handle content pillars for personal_brand type
+		if (isPersonalBrand) {
+			const pillarsRaw = formData.get('pillars') as string;
+			let pillarItems: Array<{ name: string; description: string }> = [];
+			try {
+				pillarItems = JSON.parse(pillarsRaw || '[]');
+			} catch {
+				pillarItems = [];
+			}
+			// Delete existing pillars for this product
+			await db.delete(contentPillars).where(eq(contentPillars.productId, product.id));
+			// Insert new pillars
+			if (pillarItems.length > 0) {
+				await db.insert(contentPillars).values(
+					pillarItems.map((p, i) => ({
+						productId: product.id,
+						name: p.name,
+						description: p.description || null,
+						sortOrder: i
+					}))
+				);
+			}
+		}
+
+		// Product detail fields: null for personal_brand, read from form for others
+		const problemSolved = isPersonalBrand ? null : (formData.get('problemSolved') as string) || null;
+		const differentiator = isPersonalBrand ? null : (formData.get('differentiator') as string) || null;
+		const pricingInfo = isPersonalBrand ? null : (formData.get('pricingInfo') as string) || null;
+		const productStage = isPersonalBrand ? null : (formData.get('productStage') as string) || null;
+		const keyFeatures = isPersonalBrand ? null : parseArray('keyFeatures');
 
 		const briefData = {
 			productId: product.id,

@@ -66,6 +66,19 @@ export const socialAccounts = pgTable('social_accounts', {
 	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
 });
 
+// ── Content Pillars ─────────────────────────────────────────────────
+
+export const contentPillars = pgTable('content_pillars', {
+	id: uuid('id').primaryKey().defaultRandom(),
+	productId: uuid('product_id')
+		.references(() => products.id, { onDelete: 'cascade' })
+		.notNull(),
+	name: text('name').notNull(),
+	description: text('description'),
+	sortOrder: integer('sort_order').notNull().default(0),
+	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
+});
+
 // ── Generation Pipeline Enums ───────────────────────────────────────
 
 export const jobStatusEnum = pgEnum('job_status', ['pending', 'running', 'completed', 'failed']);
@@ -143,6 +156,7 @@ export const productsRelations = relations(products, ({ many }) => ({
 	briefs: many(productBriefs),
 	assets: many(assets),
 	socialAccounts: many(socialAccounts),
+	contentPillars: many(contentPillars),
 	contentPlans: many(contentPlans),
 	posts: many(posts),
 	generationJobs: many(generationJobs)
@@ -165,6 +179,13 @@ export const assetsRelations = relations(assets, ({ one }) => ({
 export const socialAccountsRelations = relations(socialAccounts, ({ one }) => ({
 	product: one(products, {
 		fields: [socialAccounts.productId],
+		references: [products.id]
+	})
+}));
+
+export const contentPillarsRelations = relations(contentPillars, ({ one }) => ({
+	product: one(products, {
+		fields: [contentPillars.productId],
 		references: [products.id]
 	})
 }));

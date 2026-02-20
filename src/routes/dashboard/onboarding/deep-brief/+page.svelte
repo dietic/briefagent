@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import * as m from '$lib/paraglide/messages.js';
-	import { Loader2, X, ChevronDown } from 'lucide-svelte';
+	import { Loader2, X, ChevronDown, Plus, Trash2 } from 'lucide-svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -36,6 +36,40 @@
 	let postingFrequency = $state(data.brief?.postingFrequency ?? '');
 
 	let submitting = $state(false);
+
+	// Content Pillars (personal_brand only)
+	let pillars = $state<Array<{ name: string; description: string }>>(
+		data.pillars && data.pillars.length > 0
+			? data.pillars.map((p) => ({ name: p.name, description: p.description ?? '' }))
+			: [{ name: '', description: '' }]
+	);
+
+	const pillarSuggestions = [
+		{ name: () => m.onb_brief_pillar_suggest_journey(), desc: '' },
+		{ name: () => m.onb_brief_pillar_suggest_insights(), desc: '' },
+		{ name: () => m.onb_brief_pillar_suggest_promo(), desc: '' },
+		{ name: () => m.onb_brief_pillar_suggest_tips(), desc: '' },
+		{ name: () => m.onb_brief_pillar_suggest_stories(), desc: '' }
+	];
+
+	function addPillar() {
+		if (pillars.length < 5) {
+			pillars = [...pillars, { name: '', description: '' }];
+		}
+	}
+
+	function removePillar(index: number) {
+		if (pillars.length > 1) {
+			pillars = pillars.filter((_, i) => i !== index);
+		}
+	}
+
+	function addSuggestion(suggestion: { name: () => string; desc: string }) {
+		const name = suggestion.name();
+		if (pillars.length < 5 && !pillars.some((p) => p.name === name)) {
+			pillars = [...pillars, { name, description: suggestion.desc }];
+		}
+	}
 
 	const allTraits = [
 		{ key: 'professional', label: () => m.onb_brief_trait_professional() },
@@ -120,6 +154,7 @@
 		class="space-y-8"
 	>
 		<!-- Hidden inputs for array fields -->
+		<input type="hidden" name="pillars" value={JSON.stringify(pillars)} />
 		<input type="hidden" name="keyFeatures" value={JSON.stringify(keyFeatures)} />
 		<input type="hidden" name="painPoints" value={JSON.stringify(painPoints)} />
 		<input type="hidden" name="audienceHangouts" value={JSON.stringify(audienceHangouts)} />
@@ -127,6 +162,150 @@
 		<input type="hidden" name="wordsToUse" value={JSON.stringify(wordsToUse)} />
 		<input type="hidden" name="wordsToAvoid" value={JSON.stringify(wordsToAvoid)} />
 
+		{#if data.productType === 'personal_brand'}
+		<!-- Section 1: Content Pillars (personal_brand) -->
+		<section
+			class="rounded-2xl p-6"
+			style="background: var(--bg-surface); border: 1px solid var(--border-subtle);"
+		>
+			<h2
+				class="text-[1rem] font-bold mb-1 flex items-center gap-2"
+				style="color: var(--text-main);"
+			>
+				<span
+					class="flex items-center justify-center w-6 h-6 rounded-md text-[0.7rem] font-extrabold text-white"
+					style="background: var(--c-electric);"
+				>1</span>
+				{m.onb_brief_section_pillars()}
+			</h2>
+			<p class="text-[0.8rem] mb-5 ml-8" style="color: var(--text-dim);">
+				{m.onb_brief_pillars_subtitle()}
+			</p>
+
+			<div class="space-y-4">
+				{#each pillars as pillar, i}
+					<div
+						class="relative rounded-xl p-4"
+						style="background: var(--input-bg); border: 1px solid var(--border-subtle);"
+					>
+						{#if pillars.length > 1}
+							<button
+								type="button"
+								onclick={() => removePillar(i)}
+								class="absolute top-3 right-3 p-1.5 rounded-lg cursor-pointer transition-all duration-200"
+								style="color: var(--text-muted); background: transparent;"
+								onmouseenter={(e) => {
+									e.currentTarget.style.color = 'var(--negative)';
+									e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
+								}}
+								onmouseleave={(e) => {
+									e.currentTarget.style.color = 'var(--text-muted)';
+									e.currentTarget.style.background = 'transparent';
+								}}
+								title={m.onb_brief_pillar_remove()}
+							>
+								<Trash2 class="w-3.5 h-3.5" />
+							</button>
+						{/if}
+
+						<div class="space-y-3 pr-8">
+							<div class="space-y-1">
+								<label class="block text-[0.75rem] font-semibold" style="color: var(--text-dim);">
+									{m.onb_brief_pillar_name()}
+								</label>
+								<input
+									type="text"
+									bind:value={pillar.name}
+									placeholder={m.onb_brief_pillar_name_placeholder()}
+									class="w-full px-3 py-2.5 rounded-lg text-[0.85rem] outline-none transition-all duration-200"
+									style="background: var(--bg-surface); border: 1px solid var(--border-subtle); color: var(--text-main);"
+									onfocus={(e) => (e.currentTarget.style.borderColor = 'var(--c-electric)')}
+									onblur={(e) => (e.currentTarget.style.borderColor = 'var(--border-subtle)')}
+								/>
+							</div>
+							<div class="space-y-1">
+								<label class="block text-[0.75rem] font-semibold" style="color: var(--text-dim);">
+									{m.onb_brief_pillar_desc()}
+								</label>
+								<textarea
+									bind:value={pillar.description}
+									placeholder={m.onb_brief_pillar_desc_placeholder()}
+									rows="2"
+									class="w-full px-3 py-2.5 rounded-lg text-[0.85rem] outline-none transition-all duration-200 resize-none"
+									style="background: var(--bg-surface); border: 1px solid var(--border-subtle); color: var(--text-main);"
+									onfocus={(e) => (e.currentTarget.style.borderColor = 'var(--c-electric)')}
+									onblur={(e) => (e.currentTarget.style.borderColor = 'var(--border-subtle)')}
+								></textarea>
+							</div>
+						</div>
+					</div>
+				{/each}
+
+				<!-- Add pillar button -->
+				<button
+					type="button"
+					onclick={addPillar}
+					disabled={pillars.length >= 5}
+					class="w-full py-3 rounded-xl text-[0.85rem] font-medium flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+					style="
+						border: 1.5px dashed var(--border-subtle);
+						color: var(--text-muted);
+						background: transparent;
+					"
+					onmouseenter={(e) => {
+						if (!e.currentTarget.disabled) {
+							e.currentTarget.style.borderColor = 'var(--c-electric)';
+							e.currentTarget.style.color = 'var(--c-electric)';
+						}
+					}}
+					onmouseleave={(e) => {
+						e.currentTarget.style.borderColor = 'var(--border-subtle)';
+						e.currentTarget.style.color = 'var(--text-muted)';
+					}}
+				>
+					<Plus class="w-4 h-4" />
+					{pillars.length >= 5 ? m.onb_brief_pillar_max() : m.onb_brief_pillar_add()}
+				</button>
+
+				<!-- Quick-add suggestions -->
+				<div class="flex flex-wrap items-center gap-2">
+					<span class="text-[0.75rem] font-semibold" style="color: var(--text-muted);">
+						{m.onb_brief_pillar_suggestions_label()}
+					</span>
+					{#each pillarSuggestions as suggestion}
+						{@const alreadyAdded = pillars.some((p) => p.name === suggestion.name())}
+						<button
+							type="button"
+							onclick={() => addSuggestion(suggestion)}
+							disabled={pillars.length >= 5 || alreadyAdded}
+							class="px-3 py-1.5 rounded-lg text-[0.75rem] font-medium cursor-pointer transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
+							style="
+								background: {alreadyAdded ? 'var(--c-electric-glow)' : 'var(--bg-surface-alt)'};
+								color: {alreadyAdded ? 'var(--c-electric)' : 'var(--text-dim)'};
+								border: 1px solid {alreadyAdded ? 'var(--c-electric)' : 'var(--border-subtle)'};
+							"
+							onmouseenter={(e) => {
+								if (!e.currentTarget.disabled && !alreadyAdded) {
+									e.currentTarget.style.background = 'var(--c-electric-glow)';
+									e.currentTarget.style.borderColor = 'var(--c-electric)';
+									e.currentTarget.style.color = 'var(--c-electric)';
+								}
+							}}
+							onmouseleave={(e) => {
+								if (!alreadyAdded) {
+									e.currentTarget.style.background = 'var(--bg-surface-alt)';
+									e.currentTarget.style.borderColor = 'var(--border-subtle)';
+									e.currentTarget.style.color = 'var(--text-dim)';
+								}
+							}}
+						>
+							{suggestion.name()}
+						</button>
+					{/each}
+				</div>
+			</div>
+		</section>
+		{:else}
 		<!-- Section 1: Product Details -->
 		<section
 			class="rounded-2xl p-6"
@@ -265,6 +444,7 @@
 				</div>
 			</div>
 		</section>
+		{/if}
 
 		<!-- Section 2: Target Audience -->
 		<section
@@ -586,23 +766,19 @@
 					<label class="block text-[0.8rem] font-semibold" style="color: var(--text-main);">
 						{m.onb_brief_goal()}
 					</label>
+					<input type="hidden" name="mainGoal" value={mainGoal} />
 					<div class="grid grid-cols-2 gap-2">
 						{#each goalOptions as goal}
 							{@const selected = mainGoal === goal.value}
-							<label
-								class="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-200"
+							<button
+								type="button"
+								class="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 text-left"
 								style="
 									background: {selected ? 'var(--c-electric-glow)' : 'var(--input-bg)'};
 									border: 1px solid {selected ? 'var(--c-electric)' : 'var(--border-subtle)'};
 								"
+								onclick={() => (mainGoal = goal.value)}
 							>
-								<input
-									type="radio"
-									name="mainGoal"
-									value={goal.value}
-									bind:group={mainGoal}
-									class="sr-only"
-								/>
 								<div
 									class="w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0"
 									style="border-color: {selected ? 'var(--c-electric)' : 'var(--border-subtle)'};"
@@ -620,7 +796,7 @@
 								>
 									{goal.label()}
 								</span>
-							</label>
+							</button>
 						{/each}
 					</div>
 				</div>
@@ -630,23 +806,19 @@
 					<label class="block text-[0.8rem] font-semibold" style="color: var(--text-main);">
 						{m.onb_brief_frequency()}
 					</label>
+					<input type="hidden" name="postingFrequency" value={postingFrequency} />
 					<div class="grid grid-cols-2 gap-2">
 						{#each frequencyOptions as freq}
 							{@const selected = postingFrequency === freq.value}
-							<label
-								class="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-200"
+							<button
+								type="button"
+								class="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 text-left"
 								style="
 									background: {selected ? 'var(--c-electric-glow)' : 'var(--input-bg)'};
 									border: 1px solid {selected ? 'var(--c-electric)' : 'var(--border-subtle)'};
 								"
+								onclick={() => (postingFrequency = freq.value)}
 							>
-								<input
-									type="radio"
-									name="postingFrequency"
-									value={freq.value}
-									bind:group={postingFrequency}
-									class="sr-only"
-								/>
 								<div
 									class="w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0"
 									style="border-color: {selected ? 'var(--c-electric)' : 'var(--border-subtle)'};"
@@ -664,7 +836,7 @@
 								>
 									{freq.label()}
 								</span>
-							</label>
+							</button>
 						{/each}
 					</div>
 				</div>

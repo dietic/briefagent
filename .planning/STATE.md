@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** A user with zero design or marketing skills can brief the AI and get professional, brand-consistent marketing content generated and published to their social accounts.
-**Current focus:** Phase 7 - Content Pillars (pillar schema, conditional Deep Brief UI, pillar-aware generation)
+**Current focus:** Phase 7 - Content Pillars COMPLETE (pillar schema, Deep Brief UI, pillar-aware generation)
 
 ## Current Position
 
 Phase: 7 of 7 (Content Pillars)
-Plan: 1 of 2 (07-01 complete)
-Status: Executing Phase 07
-Last activity: 2026-02-20 — 07-01 Content pillars schema + Deep Brief UI (2 tasks)
+Plan: 2 of 2 (07-02 complete)
+Status: Phase 07 COMPLETE
+Last activity: 2026-02-20 — 07-02 Pillar-aware content generation (2 tasks)
 
-Progress: [#####-----] 50% (07-01 done, 07-02 pending)
+Progress: [##########] 100% (07-01 done, 07-02 done)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 17 (Phase 1: 2 + Phase 5: 4 + Phase 2: 2 + Phase 3: 3/3 + Phase 4: 3/3 + Phase 6: 2/2 + Phase 7: 1/2)
-- Average duration: 5.3min
-- Total execution time: 1.44 hours
+- Total plans completed: 18 (Phase 1: 2 + Phase 5: 4 + Phase 2: 2 + Phase 3: 3/3 + Phase 4: 3/3 + Phase 6: 2/2 + Phase 7: 2/2)
+- Average duration: 5.1min
+- Total execution time: 1.47 hours
 
 **By Phase:**
 
@@ -33,11 +33,11 @@ Progress: [#####-----] 50% (07-01 done, 07-02 pending)
 | 03-ai-generation-pipeline | 3/3 | 15min | 5min |
 | 04-calendar-review-export | 3/3 | 14min | 4.7min |
 | 06-onboarding-enhancement | 2/2 | 9min | 4.5min |
-| 07-content-pillars | 1/2 | 3min | 3min |
+| 07-content-pillars | 2/2 | 5min | 2.5min |
 
 **Recent Trend:**
-- Last 5 plans: 4min, 3min, 4min, 5min, 3min
-- Trend: Stable (~3-5min)
+- Last 5 plans: 3min, 4min, 5min, 3min, 2min
+- Trend: Stable (~2-5min)
 
 *Updated after each plan completion*
 
@@ -132,6 +132,8 @@ Recent decisions affecting current work:
 - [07-01]: Delete-all-then-insert pattern for pillar save (simpler than diff-based upsert for 1-5 items)
 - [07-01]: Null out product detail fields for personal_brand type (pillars replace product details)
 - [07-01]: Conditional onboarding sections: {#if data.productType === 'personal_brand'} for type-specific UI
+- [07-02]: Pillar presence (non-empty array) as prompt branch condition, not productType -- decouples prompt logic from product schema
+- [07-02]: Product detail sections (features, differentiator, problem) skipped entirely for personal brands in AI prompts
 
 ### Roadmap Evolution
 
@@ -144,7 +146,7 @@ Recent decisions affecting current work:
 - Phase 3 COMPLETE: 03-01 AI foundation + 03-02 content plan generation + 03-03 post generation pipeline (brand analysis, copy, images)
 - Phase 4 COMPLETE: 04-01 post API + calendar, 04-02 review dialog, 04-03 dashboard data wiring
 - Phase 6 COMPLETE: 06-01 product type selector + 06-02 social accounts management
-- Phase 7 IN PROGRESS: 07-01 content pillars schema + Deep Brief UI complete
+- Phase 7 COMPLETE: 07-01 content pillars schema + Deep Brief UI, 07-02 pillar-aware content generation
 
 ### Pending Todos
 
@@ -157,5 +159,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 07-01-PLAN.md (content pillars schema + Deep Brief UI)
-Resume: Continue with 07-02-PLAN.md (pillar-aware content generation). Run `pnpm drizzle-kit push` to apply contentPillars table.
+Stopped at: Completed 07-02-PLAN.md (pillar-aware content generation) -- Phase 7 COMPLETE
+Resume: All 7 phases complete. 18 plans executed across the entire roadmap.

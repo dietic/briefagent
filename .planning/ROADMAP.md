@@ -18,6 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 3: AI Generation Pipeline** - Content plan, copy, and image generation from product brief
 - [x] **Phase 4: Calendar, Review & Export** - Content calendar, approval workflow, content download/export, wire real data into dashboard *(COMPLETE)*
 - [ ] **Phase 6: Onboarding Enhancement** - Product type selection + social media accounts in onboarding
+- [ ] **Phase 7: Content Pillars** - Conditional Deep Brief for personal brands with content pillars (topics) and AI prompt integration
 
 ## Phase Details
 
@@ -113,10 +114,27 @@ Plans:
 - [ ] 06-01-PLAN.md -- Schema extensions (productType column, socialAccounts table) + product type selector in Quick Start + display in settings/brand
 - [ ] 06-02-PLAN.md -- Social accounts CRUD API + management UI on brand page + account count in settings
 
+### Phase 7: Content Pillars
+**Goal**: Personal Brand users can define content pillars (topics they post about) in the Deep Brief, replacing the generic Product Details section. The AI uses pillars to generate mixed-topic content plans from a single account.
+**Depends on**: Phase 6
+**Requirements**: PILR-01, PILR-02, PILR-03
+**Success Criteria** (what must be TRUE):
+  1. When a Personal Brand user reaches Deep Brief Section 1, they see a "Content Pillars" editor instead of "Product Details"
+  2. User can add 1-5 content pillars, each with a name and short description
+  3. Pillars are stored in a contentPillars database table and loaded on return visits
+  4. The AI content plan generation prompt includes pillars and distributes posts across them
+  5. Product and Service types still see the original Product Details section (unchanged)
+**Wave Structure**: Wave 1 = 07-01 (schema + deep brief UI), Wave 2 = 07-02 (AI prompt integration)
+**Plans**: 2 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Schema + contentPillars table, conditional Deep Brief Section 1 UI (pillar card editor for personal_brand), i18n keys (en/es)
+- [ ] 07-02-PLAN.md — Brief assembler + AI content plan prompt integration with pillar context and distribution instructions
+
 ## Progress
 
 **Execution Order:**
-Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4 -> 6
+Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4 -> 6 -> 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|---------------|--------|-----------|
@@ -125,4 +143,5 @@ Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4 -> 6
 | 2. Auth & Onboarding | 2/2 | Complete (pending checkpoint) | 2026-02-18 |
 | 3. AI Generation Pipeline | 3/3 | Complete | 2026-02-19 |
 | 4. Calendar, Review & Export | 3/3 | Complete    | 2026-02-19 |
-| 6. Onboarding Enhancement | 0/2 | Planned | - |
+| 6. Onboarding Enhancement | 2/2 | Complete | 2026-02-20 |
+| 7. Content Pillars | 0/2 | Planned | - |

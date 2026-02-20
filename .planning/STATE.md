@@ -5,21 +5,21 @@
 See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** A user with zero design or marketing skills can brief the AI and get professional, brand-consistent marketing content generated and published to their social accounts.
-**Current focus:** Phase 8 - Platform Selection per Pillar (08-01 done, 08-02 pending)
+**Current focus:** Phase 8 - Platform Selection per Pillar (COMPLETE)
 
 ## Current Position
 
 Phase: 8 of 8 (Platform Selection per Pillar)
-Plan: 1 of 2 (08-01 complete)
-Status: In Progress
-Last activity: 2026-02-20 — 08-01 Platform schema + specs + Deep Brief dropdown (2 tasks)
+Plan: 2 of 2 (08-02 complete)
+Status: Complete
+Last activity: 2026-02-20 — 08-02 Platform-aware content generation pipeline (2 tasks)
 
-Progress: [#####-----] 50% (08-01 done, 08-02 pending)
+Progress: [##########] 100% (08-01 done, 08-02 done)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 18 (Phase 1: 2 + Phase 5: 4 + Phase 2: 2 + Phase 3: 3/3 + Phase 4: 3/3 + Phase 6: 2/2 + Phase 7: 2/2)
+- Total plans completed: 20 (Phase 1: 2 + Phase 5: 4 + Phase 2: 2 + Phase 3: 3/3 + Phase 4: 3/3 + Phase 6: 2/2 + Phase 7: 2/2 + Phase 8: 2/2)
 - Average duration: 5.1min
 - Total execution time: 1.47 hours
 
@@ -41,6 +41,7 @@ Progress: [#####-----] 50% (08-01 done, 08-02 pending)
 
 *Updated after each plan completion*
 | Phase 08 P01 | 4min | 2 tasks | 7 files |
+| Phase 08 P02 | 3min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -138,6 +139,9 @@ Recent decisions affecting current work:
 - [Phase 08]: [08-01]: Inline platformOptions in Svelte component (server-only import not usable in client)
 - [Phase 08]: [08-01]: Server-side Set validation of active platform slugs to reject coming-soon platforms
 - [Phase 08]: [08-01]: PLATFORM_SPECS as single source of truth for all platform-specific config
+- [Phase 08]: [08-02]: getPlatformSpec as single integration point for all platform-specific prompt/generator behavior
+- [Phase 08]: [08-02]: Default parameters (platform = null) on all generator functions for backward compatibility
+- [Phase 08]: [08-02]: Platform-specific extras in copy prompt (linkedin: line breaks/emoji, x: conciseness/threads)
 
 ### Roadmap Evolution
 
@@ -152,6 +156,7 @@ Recent decisions affecting current work:
 - Phase 6 COMPLETE: 06-01 product type selector + 06-02 social accounts management
 - Phase 7 COMPLETE: 07-01 content pillars schema + Deep Brief UI, 07-02 pillar-aware content generation
 - Phase 8 added: Platform Selection per Pillar — target platform per pillar, platform-aware content generation
+- Phase 8 COMPLETE: 08-01 platform schema + specs + UI, 08-02 platform-aware AI pipeline
 
 ### Pending Todos
 
@@ -164,5 +169,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 08-01-PLAN.md (platform schema + specs + Deep Brief dropdown)
-Resume: Phase 8 in progress. 08-01 done, 08-02 pending (platform-aware content generation).
+Stopped at: Completed 08-02-PLAN.md (platform-aware content generation pipeline)
+Resume: Phase 8 complete. All 8 phases done. 20 plans total.

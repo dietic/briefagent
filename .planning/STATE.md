@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** A user with zero design or marketing skills can brief the AI and get professional, brand-consistent marketing content generated and published to their social accounts.
-**Current focus:** Phase 4 COMPLETE - All phases done. MVP feature-complete.
+**Current focus:** Phase 6 - Onboarding Enhancement (product type selector, social accounts)
 
 ## Current Position
 
-Phase: 4 of 4 (Calendar, Review & Export)
-Plan: 3 of 3 (04-03 complete)
-Status: Phase 4 COMPLETE (04-01 + 04-02 + 04-03 done)
-Last activity: 2026-02-19 — 04-03 Dashboard overview data wiring (2 tasks, server load + page rewrite)
+Phase: 6 of 6 (Onboarding Enhancement)
+Plan: 1 of 2 (06-01 complete)
+Status: 06-01 done, 06-02 pending
+Last activity: 2026-02-20 — 06-01 Product type selector + schema extensions (2 tasks)
 
-Progress: [##########] 100% (04-01 done, 04-02 done, 04-03 done)
+Progress: [#####-----] 50% (06-01 done, 06-02 pending)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 14 (Phase 1: 2 + Phase 5: 4 + Phase 2: 2 + Phase 3: 3/3 + Phase 4: 3/3)
-- Average duration: 5.6min
-- Total execution time: 1.32 hours
+- Total plans completed: 15 (Phase 1: 2 + Phase 5: 4 + Phase 2: 2 + Phase 3: 3/3 + Phase 4: 3/3 + Phase 6: 1/2)
+- Average duration: 5.5min
+- Total execution time: 1.39 hours
 
 **By Phase:**
 
@@ -32,10 +32,11 @@ Progress: [##########] 100% (04-01 done, 04-02 done, 04-03 done)
 | 02-auth-onboarding | 2/2 | 16min | 8min |
 | 03-ai-generation-pipeline | 3/3 | 15min | 5min |
 | 04-calendar-review-export | 3/3 | 14min | 4.7min |
+| 06-onboarding-enhancement | 1/2 | 4min | 4min |
 
 **Recent Trend:**
-- Last 5 plans: 9min, 4min, 7min, 4min, 3min
-- Trend: Accelerating (~3-7min)
+- Last 5 plans: 4min, 7min, 4min, 3min, 4min
+- Trend: Stable (~3-7min)
 
 *Updated after each plan completion*
 
@@ -120,6 +121,10 @@ Recent decisions affecting current work:
 - [04-03]: Inline stat cards instead of KpiCard for count-only display (no sparklines needed)
 - [04-03]: Removed ChartSection/ActivityFeed/QuickStats -- no real engagement analytics in MVP
 - [04-03]: CTA gradient border using color-mix() for subtle electric-to-secondary accent
+- [06-01]: Plain text column for productType (not DB enum) -- only 3 values, avoids migration complexity
+- [06-01]: Two-step Quick Start using $state step tracking with CSS animation transitions
+- [06-01]: Hidden input pattern for submitting productType with existing form action
+- [06-01]: Returning users with existing productType auto-skip to details step
 
 ### Roadmap Evolution
 
@@ -131,6 +136,7 @@ Recent decisions affecting current work:
 - Phase 2 completed: 2 plans (auth + onboarding), pending human verification
 - Phase 3 COMPLETE: 03-01 AI foundation + 03-02 content plan generation + 03-03 post generation pipeline (brand analysis, copy, images)
 - Phase 4 COMPLETE: 04-01 post API + calendar, 04-02 review dialog, 04-03 dashboard data wiring
+- Phase 6 started: onboarding enhancement — 06-01 product type selector complete
 
 ### Pending Todos
 
@@ -142,6 +148,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-19
-Stopped at: Completed 04-02-PLAN.md (post review dialog + publishing wiring). All Phase 4 plans done.
-Resume: All 4 phases complete. MVP is feature-complete. User may want to run `pnpm drizzle-kit push` for any pending DB migrations, then test the full flow.
+Last session: 2026-02-20
+Stopped at: Completed 06-01-PLAN.md (product type selector + schema extensions)
+Resume: Phase 6 plan 02 next (social accounts UI). Run `pnpm drizzle-kit push` to apply productType column and socialAccounts table.

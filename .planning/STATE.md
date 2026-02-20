@@ -10,16 +10,16 @@ See: .planning/PROJECT.md (updated 2026-02-16)
 ## Current Position
 
 Phase: 6 of 6 (Onboarding Enhancement)
-Plan: 1 of 2 (06-01 complete)
-Status: 06-01 done, 06-02 pending
-Last activity: 2026-02-20 — 06-01 Product type selector + schema extensions (2 tasks)
+Plan: 2 of 2 (06-02 complete)
+Status: Phase 06 COMPLETE -- all plans done
+Last activity: 2026-02-20 — 06-02 Social accounts management (2 tasks)
 
-Progress: [#####-----] 50% (06-01 done, 06-02 pending)
+Progress: [##########] 100% (06-01 done, 06-02 done)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 15 (Phase 1: 2 + Phase 5: 4 + Phase 2: 2 + Phase 3: 3/3 + Phase 4: 3/3 + Phase 6: 1/2)
+- Total plans completed: 16 (Phase 1: 2 + Phase 5: 4 + Phase 2: 2 + Phase 3: 3/3 + Phase 4: 3/3 + Phase 6: 2/2)
 - Average duration: 5.5min
 - Total execution time: 1.39 hours
 
@@ -32,10 +32,10 @@ Progress: [#####-----] 50% (06-01 done, 06-02 pending)
 | 02-auth-onboarding | 2/2 | 16min | 8min |
 | 03-ai-generation-pipeline | 3/3 | 15min | 5min |
 | 04-calendar-review-export | 3/3 | 14min | 4.7min |
-| 06-onboarding-enhancement | 1/2 | 4min | 4min |
+| 06-onboarding-enhancement | 2/2 | 9min | 4.5min |
 
 **Recent Trend:**
-- Last 5 plans: 4min, 7min, 4min, 3min, 4min
+- Last 5 plans: 7min, 4min, 3min, 4min, 5min
 - Trend: Stable (~3-7min)
 
 *Updated after each plan completion*
@@ -125,6 +125,9 @@ Recent decisions affecting current work:
 - [06-01]: Two-step Quick Start using $state step tracking with CSS animation transitions
 - [06-01]: Hidden input pattern for submitting productType with existing form action
 - [06-01]: Returning users with existing productType auto-skip to details step
+- [06-02]: RequestHandler from $types for API typing (consistent with all existing endpoints)
+- [06-02]: Platform labels as static Record (proper nouns, not i18n)
+- [06-02]: Relational query { with: product } for ownership check on DELETE endpoint
 
 ### Roadmap Evolution
 
@@ -136,7 +139,7 @@ Recent decisions affecting current work:
 - Phase 2 completed: 2 plans (auth + onboarding), pending human verification
 - Phase 3 COMPLETE: 03-01 AI foundation + 03-02 content plan generation + 03-03 post generation pipeline (brand analysis, copy, images)
 - Phase 4 COMPLETE: 04-01 post API + calendar, 04-02 review dialog, 04-03 dashboard data wiring
-- Phase 6 started: onboarding enhancement — 06-01 product type selector complete
+- Phase 6 COMPLETE: 06-01 product type selector + 06-02 social accounts management
 
 ### Pending Todos
 
@@ -149,5 +152,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 06-01-PLAN.md (product type selector + schema extensions)
-Resume: Phase 6 plan 02 next (social accounts UI). Run `pnpm drizzle-kit push` to apply productType column and socialAccounts table.
+Stopped at: Completed 06-02-PLAN.md (social accounts management)
+Resume: All 6 phases complete. MVP fully delivered (16 plans). Run `pnpm drizzle-kit push` to apply all schema changes if not done.

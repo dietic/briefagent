@@ -1,6 +1,6 @@
 import { redirect, fail } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
-import { products, productBriefs, contentPillars } from '$lib/server/db/schema';
+import { products, productBriefs, contentPillars, pillarPlatforms } from '$lib/server/db/schema';
 import { eq, asc } from 'drizzle-orm';
 import type { PageServerLoad, Actions } from './$types';
 
@@ -21,7 +21,12 @@ export const load: PageServerLoad = async ({ parent }) => {
 
 	const pillars = await db.query.contentPillars.findMany({
 		where: eq(contentPillars.productId, product.id),
-		orderBy: [asc(contentPillars.sortOrder)]
+		orderBy: [asc(contentPillars.sortOrder)],
+		with: {
+			pillarPlatforms: {
+				columns: { platform: true }
+			}
+		}
 	});
 
 	return {
@@ -78,29 +83,41 @@ export const actions: Actions = {
 		const wordsToUse = parseArray('wordsToUse');
 		const wordsToAvoid = parseArray('wordsToAvoid');
 
-		// Handle content pillars for personal_brand type
-		if (isPersonalBrand) {
+		// Handle content pillars for ALL product types
+		{
 			const pillarsRaw = formData.get('pillars') as string;
-			let pillarItems: Array<{ name: string; description: string; platform: string }> = [];
+			let pillarItems: Array<{ name: string; description: string; platforms: string[] }> = [];
 			try {
 				pillarItems = JSON.parse(pillarsRaw || '[]');
 			} catch {
 				pillarItems = [];
 			}
-			// Delete existing pillars for this product
+			// Delete existing pillars for this product (cascade deletes junction rows)
 			await db.delete(contentPillars).where(eq(contentPillars.productId, product.id));
 			// Insert new pillars
 			const activeSlugs = new Set(['linkedin', 'x']);
 			if (pillarItems.length > 0) {
-				await db.insert(contentPillars).values(
+				const insertedPillars = await db.insert(contentPillars).values(
 					pillarItems.map((p, i) => ({
 						productId: product.id,
 						name: p.name,
 						description: p.description || null,
-						platform: p.platform && activeSlugs.has(p.platform) ? p.platform : null,
 						sortOrder: i
 					}))
+				).returning();
+
+				// Insert junction rows for platforms
+				const junctionRows = insertedPillars.flatMap((pillar, i) =>
+					(pillarItems[i].platforms || [])
+						.filter((platform: string) => activeSlugs.has(platform))
+						.map((platform: string) => ({
+							pillarId: pillar.id,
+							platform
+						}))
 				);
+				if (junctionRows.length > 0) {
+					await db.insert(pillarPlatforms).values(junctionRows);
+				}
 			}
 		}
 

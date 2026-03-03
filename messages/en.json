@@ -315,6 +315,8 @@
   "onb_brief_pillar_suggest_tips": "Tips & How-tos",
   "onb_brief_pillar_suggest_stories": "Behind the Scenes",
   "onb_brief_pillar_platform": "Target platform",
+  "onb_brief_pillar_platforms": "Target platforms",
+  "onb_brief_pillar_platforms_hint": "Select where to publish this pillar's content",
   "onb_brief_pillar_platform_none": "Any platform",
   "onb_brief_pillar_platform_coming_soon": "Coming soon",
   "onb_brief_pillar_suggestions_label": "Quick add:",

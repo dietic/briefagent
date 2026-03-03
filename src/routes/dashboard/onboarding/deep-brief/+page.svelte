@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import * as m from '$lib/paraglide/messages.js';
-	import { Loader2, X, ChevronDown, Plus, Trash2, Check } from 'lucide-svelte';
+	import { Loader2, X, ChevronDown, Plus, Trash2 } from 'lucide-svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -18,34 +18,15 @@
 		]
 	};
 
-	let openDropdown = $state<number | null>(null);
-
-	function toggleDropdown(index: number) {
-		openDropdown = openDropdown === index ? null : index;
-	}
-
-	function selectPlatform(pillarIndex: number, slug: string) {
-		pillars[pillarIndex].platform = slug;
-		openDropdown = null;
-	}
-
-	function getPlatformLabel(slug: string): string {
-		const all = [...platformOptions.active, ...platformOptions.comingSoon];
-		return all.find((p) => p.slug === slug)?.name ?? m.onb_brief_pillar_platform_none();
-	}
-
-	function getPlatformColor(slug: string): string | null {
-		const all = [...platformOptions.active, ...platformOptions.comingSoon];
-		return all.find((p) => p.slug === slug)?.color ?? null;
-	}
-
-	function handleClickOutside(event: MouseEvent) {
-		if (openDropdown !== null) {
-			const target = event.target as HTMLElement;
-			if (!target.closest('[data-platform-dropdown]')) {
-				openDropdown = null;
-			}
+	function togglePlatform(pillarIndex: number, slug: string) {
+		const current = pillars[pillarIndex].platforms;
+		if (current.includes(slug)) {
+			pillars[pillarIndex].platforms = current.filter((p: string) => p !== slug);
+		} else {
+			pillars[pillarIndex].platforms = [...current, slug];
 		}
+		// Force reactivity
+		pillars = [...pillars];
 	}
 
 	// Product Details
@@ -79,11 +60,15 @@
 
 	let submitting = $state(false);
 
-	// Content Pillars (personal_brand only)
-	let pillars = $state<Array<{ name: string; description: string; platform: string }>>(
+	// Content Pillars (all product types)
+	let pillars = $state<Array<{ name: string; description: string; platforms: string[] }>>(
 		data.pillars && data.pillars.length > 0
-			? data.pillars.map((p) => ({ name: p.name, description: p.description ?? '', platform: p.platform ?? '' }))
-			: [{ name: '', description: '', platform: '' }]
+			? data.pillars.map((p) => ({
+					name: p.name,
+					description: p.description ?? '',
+					platforms: p.pillarPlatforms?.map((pp: { platform: string }) => pp.platform) ?? []
+				}))
+			: [{ name: '', description: '', platforms: [] }]
 	);
 
 	const pillarSuggestions = [
@@ -96,7 +81,7 @@
 
 	function addPillar() {
 		if (pillars.length < 5) {
-			pillars = [...pillars, { name: '', description: '', platform: '' }];
+			pillars = [...pillars, { name: '', description: '', platforms: [] }];
 		}
 	}
 
@@ -109,7 +94,7 @@
 	function addSuggestion(suggestion: { name: () => string; desc: string }) {
 		const name = suggestion.name();
 		if (pillars.length < 5 && !pillars.some((p) => p.name === name)) {
-			pillars = [...pillars, { name, description: suggestion.desc, platform: '' }];
+			pillars = [...pillars, { name, description: suggestion.desc, platforms: [] }];
 		}
 	}
 
@@ -170,8 +155,6 @@
 	}
 </script>
 
-<svelte:window onclick={handleClickOutside} />
-
 <div>
 	<!-- Header -->
 	<div class="text-center mb-10">
@@ -206,8 +189,7 @@
 		<input type="hidden" name="wordsToUse" value={JSON.stringify(wordsToUse)} />
 		<input type="hidden" name="wordsToAvoid" value={JSON.stringify(wordsToAvoid)} />
 
-		{#if data.productType === 'personal_brand'}
-		<!-- Section 1: Content Pillars (personal_brand) -->
+		<!-- Section 1: Content Pillars (ALL product types) -->
 		<section
 			class="rounded-2xl p-6"
 			style="background: var(--bg-surface); border: 1px solid var(--border-subtle);"
@@ -283,96 +265,38 @@
 							</div>
 							<div class="space-y-1">
 								<label class="block text-[0.75rem] font-semibold" style="color: var(--text-dim);">
-									{m.onb_brief_pillar_platform()}
+									{m.onb_brief_pillar_platforms()}
 								</label>
-								<div class="relative" data-platform-dropdown>
-									<!-- Custom dropdown trigger -->
-									<button
-										type="button"
-										onclick={() => toggleDropdown(i)}
-										class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[0.85rem] outline-none transition-all duration-200 cursor-pointer text-left"
-										style="background: var(--bg-surface); border: 1px solid {openDropdown === i ? 'var(--c-electric)' : 'var(--border-subtle)'}; color: var(--text-main);"
-									>
-										{#if pillar.platform && getPlatformColor(pillar.platform)}
-											<span
-												class="w-2.5 h-2.5 rounded-full shrink-0"
-												style="background: {getPlatformColor(pillar.platform)};"
-											></span>
-										{/if}
-										<span class="flex-1 truncate" style="color: {pillar.platform ? 'var(--text-main)' : 'var(--text-muted)'};">
-											{getPlatformLabel(pillar.platform)}
-										</span>
-										<ChevronDown
-											class="w-4 h-4 shrink-0 transition-transform duration-200"
-											style="color: var(--text-muted); transform: {openDropdown === i ? 'rotate(180deg)' : 'rotate(0)'};"
-										/>
-									</button>
-
-									<!-- Dropdown panel -->
-									{#if openDropdown === i}
-										<div
-											class="absolute z-50 top-[calc(100%+4px)] left-0 w-full rounded-lg py-1 shadow-xl"
-											style="background: var(--bg-surface); border: 1px solid var(--border-subtle);"
+								<div class="flex flex-wrap gap-2">
+									{#each platformOptions.active as p}
+										{@const selected = pillar.platforms.includes(p.slug)}
+										<button
+											type="button"
+											onclick={() => togglePlatform(i, p.slug)}
+											class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[0.78rem] font-medium transition-all duration-200 cursor-pointer"
+											style="
+												background: {selected ? 'var(--c-electric-glow)' : 'var(--bg-surface-alt)'};
+												color: {selected ? 'var(--c-electric)' : 'var(--text-dim)'};
+												border: 1px solid {selected ? 'var(--c-electric)' : 'var(--border-subtle)'};
+											"
 										>
-											<!-- Any platform -->
-											<button
-												type="button"
-												onclick={() => selectPlatform(i, '')}
-												class="w-full flex items-center gap-2.5 px-3 py-2 text-[0.82rem] text-left cursor-pointer transition-colors duration-150"
-												style="color: var(--text-dim); background: {pillar.platform === '' ? 'var(--c-electric-glow)' : 'transparent'};"
-												onmouseenter={(e) => { if (pillar.platform !== '') e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
-												onmouseleave={(e) => { if (pillar.platform !== '') e.currentTarget.style.background = 'transparent'; }}
-											>
-												<span class="flex-1">{m.onb_brief_pillar_platform_none()}</span>
-												{#if pillar.platform === ''}
-													<Check class="w-3.5 h-3.5" style="color: var(--c-electric);" />
-												{/if}
-											</button>
-
-											<div class="mx-2 my-1" style="border-top: 1px solid var(--border-subtle);"></div>
-
-											<!-- Active platforms -->
-											{#each platformOptions.active as p}
-												<button
-													type="button"
-													onclick={() => selectPlatform(i, p.slug)}
-													class="w-full flex items-center gap-2.5 px-3 py-2 text-[0.82rem] text-left cursor-pointer transition-colors duration-150"
-													style="color: var(--text-main); background: {pillar.platform === p.slug ? 'var(--c-electric-glow)' : 'transparent'};"
-													onmouseenter={(e) => { if (pillar.platform !== p.slug) e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
-													onmouseleave={(e) => { if (pillar.platform !== p.slug) e.currentTarget.style.background = 'transparent'; }}
-												>
-													<span
-														class="w-2.5 h-2.5 rounded-full shrink-0"
-														style="background: {p.color};"
-													></span>
-													<span class="flex-1">{p.name}</span>
-													{#if pillar.platform === p.slug}
-														<Check class="w-3.5 h-3.5" style="color: var(--c-electric);" />
-													{/if}
-												</button>
-											{/each}
-
-											<div class="mx-2 my-1" style="border-top: 1px solid var(--border-subtle);"></div>
-
-											<!-- Coming soon platforms -->
-											{#each platformOptions.comingSoon as p}
-												<div
-													class="w-full flex items-center gap-2.5 px-3 py-2 text-[0.82rem] opacity-40 cursor-not-allowed"
-													style="color: var(--text-muted);"
-												>
-													<span
-														class="w-2.5 h-2.5 rounded-full shrink-0 opacity-50"
-														style="background: {p.color};"
-													></span>
-													<span class="flex-1">{p.name}</span>
-													<span
-														class="text-[0.6rem] font-bold tracking-wider uppercase px-1.5 py-0.5 rounded"
-														style="background: rgba(255,255,255,0.06); color: var(--text-muted);"
-													>Soon</span>
-												</div>
-											{/each}
-										</div>
-									{/if}
+											<span
+												class="w-2 h-2 rounded-full shrink-0"
+												style="background: {p.color};"
+											></span>
+											{p.name}
+										</button>
+									{/each}
+									{#each platformOptions.comingSoon as p}
+										<span
+											class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[0.78rem] font-medium opacity-35 cursor-not-allowed"
+											style="background: var(--bg-surface-alt); color: var(--text-muted); border: 1px solid var(--border-subtle);"
+										>
+											<span class="w-2 h-2 rounded-full shrink-0 opacity-50" style="background: {p.color};"></span>
+											{p.name}
+											<span class="text-[0.55rem] font-bold uppercase tracking-wider">Soon</span>
+										</span>
+									{/each}
 								</div>
 							</div>
 						</div>
@@ -443,8 +367,9 @@
 				</div>
 			</div>
 		</section>
-		{:else}
-		<!-- Section 1: Product Details -->
+
+		{#if data.productType !== 'personal_brand'}
+		<!-- Section 1b: Product Details (product/service only) -->
 		<section
 			class="rounded-2xl p-6"
 			style="background: var(--bg-surface); border: 1px solid var(--border-subtle);"
@@ -456,7 +381,7 @@
 				<span
 					class="flex items-center justify-center w-6 h-6 rounded-md text-[0.7rem] font-extrabold text-white"
 					style="background: var(--c-electric);"
-				>1</span>
+				>1b</span>
 				{m.onb_brief_section_product()}
 			</h2>
 

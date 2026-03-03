@@ -17,6 +17,47 @@
 	let saved = $state(false);
 	let savingPlatforms = $state(false);
 
+	const platformOptions = {
+		active: [
+			{ slug: 'linkedin', name: 'LinkedIn', color: '#0a66c2' },
+			{ slug: 'x', name: 'X (Twitter)', color: '#eff3f4' }
+		],
+		comingSoon: [
+			{ slug: 'instagram', name: 'Instagram', color: '#e1306c' },
+			{ slug: 'youtube', name: 'YouTube', color: '#ff0000' },
+			{ slug: 'tiktok', name: 'TikTok', color: '#00f2ea' }
+		]
+	};
+
+	// Build mutable platform state from server data
+	let pillarPlatformState = $state<Record<string, string[]>>(
+		Object.fromEntries(
+			data.pillars.map((p: { id: string; pillarPlatforms?: { platform: string }[] }) => [
+				p.id,
+				p.pillarPlatforms?.map((pp) => pp.platform) ?? []
+			])
+		)
+	);
+
+	function toggleSettingsPlatform(pillarId: string, slug: string) {
+		const current = pillarPlatformState[pillarId] ?? [];
+		if (current.includes(slug)) {
+			pillarPlatformState[pillarId] = current.filter((p) => p !== slug);
+		} else {
+			pillarPlatformState[pillarId] = [...current, slug];
+		}
+		pillarPlatformState = { ...pillarPlatformState };
+	}
+
+	let platformDataJson = $derived(
+		JSON.stringify(
+			data.pillars.map((p: { id: string }) => ({
+				pillarId: p.id,
+				platforms: pillarPlatformState[p.id] ?? []
+			}))
+		)
+	);
+
 	function resetSaved() {
 		if (saved) {
 			setTimeout(() => { saved = false; }, 2000);
@@ -44,7 +85,7 @@
 		{data.settingsProduct.name}
 	</h1>
 
-	<!-- ═══ Section 1: Product Details ═══ -->
+	<!-- Section 1: Product Details -->
 	<section
 		class="rounded-[14px] border p-6 mb-6"
 		style="background: var(--bg-surface); border-color: var(--border-subtle); box-shadow: var(--card-shadow);"
@@ -128,7 +169,7 @@
 		</form>
 	</section>
 
-	<!-- ═══ Section 2: Target Platforms ═══ -->
+	<!-- Section 2: Target Platforms -->
 	<section
 		class="rounded-[14px] border p-6 mb-6"
 		style="background: var(--bg-surface); border-color: var(--border-subtle); box-shadow: var(--card-shadow);"
@@ -162,13 +203,15 @@
 					};
 				}}
 			>
+				<input type="hidden" name="pillarPlatforms" value={platformDataJson} />
+
 				<div class="flex flex-col gap-3">
 					{#each data.pillars as pillar}
 						<div
-							class="flex items-center gap-4 rounded-xl p-3"
+							class="rounded-xl p-4"
 							style="border: 1px solid var(--border-subtle); background: var(--bg-surface-alt, var(--bg-surface));"
 						>
-							<div class="flex-1 min-w-0">
+							<div class="mb-2">
 								<span class="text-sm font-bold" style="color: var(--text-main);">
 									{pillar.name}
 								</span>
@@ -178,17 +221,38 @@
 									</p>
 								{/if}
 							</div>
-							<select
-								name="pillar_{pillar.id}"
-								value={pillar.pillarPlatforms?.[0]?.platform ?? 'none'}
-								disabled={data.planCount > 0}
-								class="rounded-lg px-3 py-1.5 text-sm outline-none disabled:opacity-50 disabled:cursor-not-allowed"
-								style="background: var(--input-bg, var(--bg-surface)); border: 1px solid var(--border-subtle); color: var(--text-main);"
-							>
-								<option value="none">Any platform</option>
-								<option value="linkedin">LinkedIn</option>
-								<option value="x">X (Twitter)</option>
-							</select>
+							<div class="flex flex-wrap gap-2">
+								{#each platformOptions.active as p}
+									{@const selected = (pillarPlatformState[pillar.id] ?? []).includes(p.slug)}
+									<button
+										type="button"
+										onclick={() => toggleSettingsPlatform(pillar.id, p.slug)}
+										disabled={data.planCount > 0}
+										class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[0.78rem] font-medium transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+										style="
+											background: {selected ? 'var(--c-electric-glow)' : 'var(--bg-surface)'};
+											color: {selected ? 'var(--c-electric)' : 'var(--text-dim)'};
+											border: 1px solid {selected ? 'var(--c-electric)' : 'var(--border-subtle)'};
+										"
+									>
+										<span
+											class="w-2 h-2 rounded-full shrink-0"
+											style="background: {p.color};"
+										></span>
+										{p.name}
+									</button>
+								{/each}
+								{#each platformOptions.comingSoon as p}
+									<span
+										class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[0.78rem] font-medium opacity-35 cursor-not-allowed"
+										style="background: var(--bg-surface); color: var(--text-muted); border: 1px solid var(--border-subtle);"
+									>
+										<span class="w-2 h-2 rounded-full shrink-0 opacity-50" style="background: {p.color};"></span>
+										{p.name}
+										<span class="text-[0.55rem] font-bold uppercase tracking-wider">Soon</span>
+									</span>
+								{/each}
+							</div>
 						</div>
 					{/each}
 				</div>

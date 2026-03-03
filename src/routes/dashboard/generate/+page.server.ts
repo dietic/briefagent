@@ -31,9 +31,8 @@ export const load: PageServerLoad = async ({ parent }) => {
 		generatedPostCount: plan.posts.filter((p) => p.copyText !== null).length
 	}));
 
-	const pillars = await db.query.contentPillars.findMany({
+	const rawPillars = await db.query.contentPillars.findMany({
 		where: eq(contentPillars.productId, product.id),
-		columns: { id: true, name: true },
 		orderBy: [asc(contentPillars.sortOrder)],
 		with: {
 			pillarPlatforms: {
@@ -42,5 +41,13 @@ export const load: PageServerLoad = async ({ parent }) => {
 		}
 	});
 
-	return { product, existingPlans, pillars };
+	return {
+		product,
+		existingPlans,
+		pillars: rawPillars.map((p) => ({
+			id: p.id,
+			name: p.name,
+			platforms: p.pillarPlatforms.map((pp) => pp.platform)
+		}))
+	};
 };

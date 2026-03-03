@@ -106,19 +106,26 @@ export const actions: Actions = {
 		if (!product) return fail(404, { error: 'Product not found' });
 
 		const formData = await request.formData();
-		const entries = formData.entries();
+		const platformsRaw = formData.get('pillarPlatforms') as string;
+
+		let platformData: Array<{ pillarId: string; platforms: string[] }> = [];
+		try {
+			platformData = JSON.parse(platformsRaw || '[]');
+		} catch {
+			return fail(400, { error: 'Invalid platform data' });
+		}
+
 		const activeSlugs = new Set(['linkedin', 'x']);
 
-		for (const [key, value] of entries) {
-			if (key.startsWith('pillar_')) {
-				const pillarId = key.replace('pillar_', '');
-				const platform = value === 'none' ? null : (value as string);
-				// Delete existing junction rows for this pillar
-				await db.delete(pillarPlatforms).where(eq(pillarPlatforms.pillarId, pillarId));
-				// Insert new junction row if a valid platform was selected
-				if (platform && activeSlugs.has(platform)) {
-					await db.insert(pillarPlatforms).values({ pillarId, platform });
-				}
+		// For each pillar, delete existing junction rows and re-insert
+		for (const entry of platformData) {
+			await db.delete(pillarPlatforms).where(eq(pillarPlatforms.pillarId, entry.pillarId));
+
+			const validPlatforms = entry.platforms.filter((p) => activeSlugs.has(p));
+			if (validPlatforms.length > 0) {
+				await db
+					.insert(pillarPlatforms)
+					.values(validPlatforms.map((platform) => ({ pillarId: entry.pillarId, platform })));
 			}
 		}
 

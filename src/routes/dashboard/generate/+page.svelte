@@ -36,12 +36,14 @@
 	let hasPillars = $derived(data.pillars.length > 0);
 
 	let postCountMin = $derived(() => {
-		const count = selectedPillarIds.size;
-		return Math.max(4, count * 2);
+		const totalPlatformPosts = [...selectedPillarIds].reduce((sum, id) => {
+			const pillar = data.pillars.find((p: { id: string }) => p.id === id);
+			return sum + Math.max(1, pillar?.platforms?.length ?? 1);
+		}, 0);
+		return Math.max(4, totalPlatformPosts);
 	});
 	let postCountMax = $derived(() => {
-		const count = selectedPillarIds.size;
-		return Math.min(12, Math.max(postCountMin(), count * 3));
+		return Math.min(20, Math.max(postCountMin(), Math.ceil(postCountMin() * 1.5)));
 	});
 
 	function togglePillar(id: string) {
@@ -360,17 +362,17 @@
 										</span>
 
 										<!-- Platform badges -->
-										{#if pillar.pillarPlatforms?.length}
-											<span class="flex gap-1 shrink-0">
-												{#each pillar.pillarPlatforms as pp}
+										{#if pillar.platforms?.length > 0}
+											<div class="flex gap-1 shrink-0">
+												{#each pillar.platforms as platform}
 													<span
 														class="mono text-[0.6rem] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider"
 														style="background: var(--bg-sidebar-hover); color: var(--text-muted);"
 													>
-														{pp.platform === 'x' ? 'X' : 'LI'}
+														{platform === 'x' ? 'X' : 'LI'}
 													</span>
 												{/each}
-											</span>
+											</div>
 										{/if}
 									</button>
 								{/each}

@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** A user with zero design or marketing skills can brief the AI and get professional, brand-consistent marketing content generated and published to their social accounts.
-**Current focus:** Phase 8 - Platform Selection per Pillar (COMPLETE)
+**Current focus:** Phase 9 - Pillar System Rework (IN PROGRESS)
 
 ## Current Position
 
-Phase: 8 of 8 (Platform Selection per Pillar)
-Plan: 2 of 2 (08-02 complete)
-Status: Complete
-Last activity: 2026-02-20 — 08-02 Platform-aware content generation pipeline (2 tasks)
+Phase: 9 of 9 (Pillar System Rework)
+Plan: 1 of 2 (09-01 complete)
+Status: In Progress
+Last activity: 2026-03-03 — 09-01 complete (schema + pipeline + deep brief)
 
-Progress: [##########] 100% (08-01 done, 08-02 done)
+Progress: [#####-----] 50% (09-01 done, 09-02 pending)
 
 ## Performance Metrics
 
@@ -42,6 +42,7 @@ Progress: [##########] 100% (08-01 done, 08-02 done)
 *Updated after each plan completion*
 | Phase 08 P01 | 4min | 2 tasks | 7 files |
 | Phase 08 P02 | 3min | 2 tasks | 8 files |
+| Phase 09 P01 | 10min | 3 tasks | 15 files |
 
 ## Accumulated Context
 
@@ -142,6 +143,10 @@ Recent decisions affecting current work:
 - [Phase 08]: [08-02]: getPlatformSpec as single integration point for all platform-specific prompt/generator behavior
 - [Phase 08]: [08-02]: Default parameters (platform = null) on all generator functions for backward compatibility
 - [Phase 08]: [08-02]: Platform-specific extras in copy prompt (linkedin: line breaks/emoji, x: conciseness/threads)
+- [Phase 09]: [09-01]: Junction table pillar_platforms replaces single platform column for many-to-many
+- [Phase 09]: [09-01]: Content Pillars section universal for all product types, not gated behind personal_brand
+- [Phase 09]: [09-01]: Toggle chips for multi-platform selection replacing single-select dropdown
+- [Phase 09]: [09-01]: AI plan prompt instructs ONE post PER PLATFORM per pillar with separate content
 
 ### Roadmap Evolution
 
@@ -157,6 +162,8 @@ Recent decisions affecting current work:
 - Phase 7 COMPLETE: 07-01 content pillars schema + Deep Brief UI, 07-02 pillar-aware content generation
 - Phase 8 added: Platform Selection per Pillar — target platform per pillar, platform-aware content generation
 - Phase 8 COMPLETE: 08-01 platform schema + specs + UI, 08-02 platform-aware AI pipeline
+- Phase 9 added: Pillar System Rework — universal pillars, multi-platform per pillar, dedicated management page, AI pipeline adaptation
+- Phase 9 IN PROGRESS: 09-01 complete (schema+pipeline+deep-brief), 09-02 pending (pillars page+generate+settings)
 
 ### Pending Todos
 
@@ -168,6 +175,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-20
-Stopped at: Completed 08-02-PLAN.md (platform-aware content generation pipeline)
-Resume: Phase 8 complete. All 8 phases done. 20 plans total.
+Last session: 2026-03-03
+Stopped at: Completed 09-01-PLAN.md (schema + AI pipeline + deep brief for multi-platform pillars)
+Resume: Ready to execute 09-02-PLAN.md (pillars management page + generate + settings updates).

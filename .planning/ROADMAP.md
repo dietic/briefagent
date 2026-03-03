@@ -135,7 +135,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4 -> 6 -> 7 -> 8
+Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4 -> 6 -> 7 -> 8 -> 9
 
 | Phase | Plans Complete | Status | Completed |
 |-------|---------------|--------|-----------|
@@ -147,6 +147,7 @@ Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4 -> 6 -> 7 -> 8
 | 6. Onboarding Enhancement | 2/2 | Complete | 2026-02-20 |
 | 7. Content Pillars | 0/2 | Planned | - |
 | 8. Platform Selection per Pillar | 0/2 | Planned | - |
+| 9. Pillar System Rework | 0/2 | Planned | - |
 
 ### Phase 8: Platform Selection per Pillar
 **Goal**: Each content pillar gets a target social media platform (LinkedIn or X, with Instagram/YouTube/TikTok as "coming soon"). Content generation respects platform-specific specs (character limits, image sizes, tone). Platform selection is optional — no platform = generic content.
@@ -163,3 +164,22 @@ Phases execute in dependency order: 1 (done) -> 5 -> 2 -> 3 -> 4 -> 6 -> 7 -> 8
 Plans:
 - [ ] 08-01-PLAN.md -- Schema migration (platform column), PLATFORM_SPECS config, Deep Brief UI platform dropdown per pillar, i18n keys
 - [ ] 08-02-PLAN.md -- Pipeline platform awareness: brief assembler, plan schema/prompts, copy prompts, image resize, post generator wiring
+
+### Phase 9: Pillar System Rework - Make pillars universal, multi-platform per pillar, dedicated management page, AI pipeline adaptation
+
+**Goal:** Transform the content pillar system from single-platform-per-pillar restricted to personal brands into a universal, many-to-many pillar-platform system with a dedicated management page. Pillars available for all product types. AI generates one content idea per pillar, adapted separately per platform.
+**Depends on:** Phase 8
+**Success Criteria** (what must be TRUE):
+  1. Pillars are available for ALL product types (personal_brand, product, service), not gated behind personal_brand
+  2. Each pillar supports multiple platforms (many-to-many via junction table), not a single platform column
+  3. A dedicated /dashboard/pillars page allows adding, editing, removing, and reordering pillars with multi-platform selection
+  4. Sidebar navigation includes a Pillars item accessible from any dashboard page
+  5. AI content generation creates separate posts per platform for each pillar, with content adapted to platform-native style
+  6. Product/service types see both Content Pillars and Product Details in the Deep Brief
+  7. Generate page shows multi-platform badges per pillar and calculates post count from pillar-platform combinations
+**Wave Structure**: Wave 1 = 09-01 (schema + AI pipeline + onboarding UI), Wave 2 = 09-02 (pillars page + generate/settings updates)
+**Plans**: 2 plans
+
+Plans:
+- [ ] 09-01-PLAN.md -- Schema migration (pillarPlatforms junction table, data migration, drop platform column), brief assembler + AI prompt + plan generator updates for multi-platform pillars, Deep Brief UI rework (universal pillars, multi-platform toggle chips)
+- [ ] 09-02-PLAN.md -- Dedicated /dashboard/pillars page with card-based editor, sidebar nav item, generate page multi-platform badges, settings page junction table updates, i18n keys

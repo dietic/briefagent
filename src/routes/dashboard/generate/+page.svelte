@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
 	import * as m from '$lib/paraglide/messages.js';
+	import { AlertDialog, Popover } from 'bits-ui';
 	import {
 		Sparkles,
 		Loader2,
@@ -9,7 +11,9 @@
 		Calendar,
 		Tag,
 		FileText,
-		ImageIcon
+		ImageIcon,
+		Trash2,
+		Check
 	} from 'lucide-svelte';
 
 	let { data } = $props();
@@ -26,6 +30,35 @@
 	// Track which job type is active
 	let activeJobType = $state<'plan' | 'posts' | null>(null);
 
+	// Pillar selection
+	let selectedPillarIds = $state(new Set(data.pillars.map((p: { id: string }) => p.id)));
+	let showPillarPicker = $state(false);
+	let hasPillars = $derived(data.pillars.length > 0);
+
+	let postCountMin = $derived(() => {
+		const count = selectedPillarIds.size;
+		return Math.max(4, count * 2);
+	});
+	let postCountMax = $derived(() => {
+		const count = selectedPillarIds.size;
+		return Math.min(12, Math.max(postCountMin(), count * 3));
+	});
+
+	function togglePillar(id: string) {
+		const next = new Set(selectedPillarIds);
+		if (next.has(id)) next.delete(id);
+		else next.add(id);
+		selectedPillarIds = next;
+	}
+
+	function toggleAllPillars() {
+		if (selectedPillarIds.size === data.pillars.length) {
+			selectedPillarIds = new Set();
+		} else {
+			selectedPillarIds = new Set(data.pillars.map((p: { id: string }) => p.id));
+		}
+	}
+
 	let isGenerating = $derived(status === 'starting' || status === 'running');
 	let progressPercent = $derived(totalSteps > 0 ? (currentStep / totalSteps) * 100 : 0);
 
@@ -34,16 +67,22 @@
 	async function startGeneration() {
 		if (!data.product) return;
 
+		showPillarPicker = false;
 		status = 'starting';
 		activeJobType = 'plan';
 		errorMsg = null;
 		resultId = null;
 
+		const body: Record<string, unknown> = { productId: data.product.id };
+		if (hasPillars && selectedPillarIds.size > 0) {
+			body.pillarIds = [...selectedPillarIds];
+		}
+
 		try {
 			const res = await fetch('/api/generate/plan', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ productId: data.product.id })
+				body: JSON.stringify(body)
 			});
 
 			if (!res.ok) {
@@ -187,6 +226,31 @@
 		if (text.length <= max) return text;
 		return text.slice(0, max).trimEnd() + '...';
 	}
+
+	// Plan deletion
+	let deletePlanTarget = $state<{ id: string; postCount: number } | null>(null);
+	let deleteConfirmOpen = $state(false);
+	let deletingPlanId = $state<string | null>(null);
+
+	function openDeletePlan(id: string, postCount: number) {
+		deletePlanTarget = { id, postCount };
+		deleteConfirmOpen = true;
+	}
+
+	async function confirmDeletePlan() {
+		if (!deletePlanTarget) return;
+		deletingPlanId = deletePlanTarget.id;
+		try {
+			const res = await fetch(`/api/content-plans/${deletePlanTarget.id}`, { method: 'DELETE' });
+			if (res.ok) {
+				deleteConfirmOpen = false;
+				deletePlanTarget = null;
+				await invalidateAll();
+			}
+		} finally {
+			deletingPlanId = null;
+		}
+	}
 </script>
 
 <svelte:head>
@@ -207,29 +271,163 @@
 		</div>
 
 		{#if !noProduct}
-			<button
-				onclick={startGeneration}
-				disabled={isGenerating}
-				class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-[0.85rem] font-semibold transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
-				style="
-					background: var(--c-electric);
-					color: var(--bg-page);
-				"
-				onmouseenter={(e) => {
-					if (!isGenerating) e.currentTarget.style.opacity = '0.85';
-				}}
-				onmouseleave={(e) => {
-					e.currentTarget.style.opacity = '1';
-				}}
-			>
-				{#if isGenerating && activeJobType === 'plan'}
-					<Loader2 class="w-4 h-4 animate-spin" />
-					{m.gen_button_generating()}
-				{:else}
-					<Sparkles class="w-4 h-4" />
-					{m.gen_button()}
-				{/if}
-			</button>
+			{#if hasPillars}
+				<Popover.Root bind:open={showPillarPicker}>
+					<Popover.Trigger
+						disabled={isGenerating}
+						class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-[0.85rem] font-semibold transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+						style="
+							background: var(--c-electric);
+							color: var(--bg-page);
+						"
+						onmouseenter={(e) => {
+							if (!isGenerating) (e.currentTarget as HTMLElement).style.opacity = '0.85';
+						}}
+						onmouseleave={(e) => {
+							(e.currentTarget as HTMLElement).style.opacity = '1';
+						}}
+					>
+						{#if isGenerating && activeJobType === 'plan'}
+							<Loader2 class="w-4 h-4 animate-spin" />
+							{m.gen_button_generating()}
+						{:else}
+							<Sparkles class="w-4 h-4" />
+							{m.gen_button()}
+						{/if}
+					</Popover.Trigger>
+
+					<Popover.Portal>
+						<Popover.Content
+							class="z-50 w-[300px] rounded-[14px] shadow-xl animate-in fade-in-0 zoom-in-95 slide-in-from-top-2"
+							style="background: var(--bg-surface); border: 1px solid var(--border-subtle);"
+							sideOffset={6}
+							align="end"
+						>
+							<!-- Header -->
+							<div class="flex items-center justify-between px-4 pt-3.5 pb-2">
+								<span
+									class="text-[0.7rem] font-bold uppercase tracking-[0.1em]"
+									style="color: var(--text-muted);"
+								>
+									{m.gen_select_pillars()}
+								</span>
+								<button
+									class="text-[0.7rem] font-semibold cursor-pointer transition-opacity"
+									style="color: var(--c-electric);"
+									onmouseenter={(e) => { (e.currentTarget as HTMLElement).style.opacity = '0.7'; }}
+									onmouseleave={(e) => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}
+									onclick={toggleAllPillars}
+								>
+									{selectedPillarIds.size === data.pillars.length ? m.gen_select_none() : m.gen_select_all()}
+								</button>
+							</div>
+
+							<!-- Pillar list -->
+							<div class="px-2 py-1 max-h-[240px] overflow-y-auto">
+								{#each data.pillars as pillar}
+									{@const selected = selectedPillarIds.has(pillar.id)}
+									<button
+										class="flex items-center gap-2.5 w-full px-2 py-2 rounded-lg text-left transition-colors duration-100 cursor-pointer"
+										style="background: {selected ? 'var(--c-electric-glow)' : 'transparent'};"
+										onmouseenter={(e) => {
+											(e.currentTarget as HTMLElement).style.background = selected ? 'var(--c-electric-glow)' : 'var(--bg-sidebar-hover)';
+										}}
+										onmouseleave={(e) => {
+											(e.currentTarget as HTMLElement).style.background = selected ? 'var(--c-electric-glow)' : 'transparent';
+										}}
+										onclick={() => togglePillar(pillar.id)}
+									>
+										<!-- Checkbox -->
+										<div
+											class="flex items-center justify-center w-4.5 h-4.5 rounded-md shrink-0 transition-colors duration-100"
+											style="
+												width: 18px; height: 18px;
+												background: {selected ? 'var(--c-electric)' : 'transparent'};
+												border: {selected ? 'none' : '1.5px solid var(--border-subtle)'};
+											"
+										>
+											{#if selected}
+												<Check class="w-3 h-3" style="color: var(--bg-page);" />
+											{/if}
+										</div>
+
+										<!-- Name -->
+										<span
+											class="text-[0.82rem] font-medium truncate flex-1"
+											style="color: var(--text-main);"
+										>
+											{pillar.name}
+										</span>
+
+										<!-- Platform badge -->
+										{#if pillar.platform}
+											<span
+												class="mono text-[0.6rem] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider shrink-0"
+												style="background: var(--bg-sidebar-hover); color: var(--text-muted);"
+											>
+												{pillar.platform === 'x' ? 'X' : 'LI'}
+											</span>
+										{/if}
+									</button>
+								{/each}
+							</div>
+
+							<!-- Footer -->
+							<div
+								class="px-4 py-3 flex items-center justify-between"
+								style="border-top: 1px solid var(--border-subtle);"
+							>
+								<span class="text-[0.75rem] font-medium" style="color: var(--text-muted);">
+									{#if selectedPillarIds.size === 0}
+										{m.gen_no_pillars_selected()}
+									{:else}
+										{m.gen_posts_estimate({ min: String(postCountMin()), max: String(postCountMax()) })}
+									{/if}
+								</span>
+								<button
+									onclick={startGeneration}
+									disabled={selectedPillarIds.size === 0}
+									class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[0.8rem] font-semibold transition-all duration-150 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+									style="background: var(--c-electric); color: var(--bg-page);"
+									onmouseenter={(e) => {
+										if (selectedPillarIds.size > 0) (e.currentTarget as HTMLElement).style.opacity = '0.85';
+									}}
+									onmouseleave={(e) => {
+										(e.currentTarget as HTMLElement).style.opacity = '1';
+									}}
+								>
+									<Sparkles class="w-3.5 h-3.5" />
+									{m.gen_generate()}
+								</button>
+							</div>
+						</Popover.Content>
+					</Popover.Portal>
+				</Popover.Root>
+			{:else}
+				<button
+					onclick={startGeneration}
+					disabled={isGenerating}
+					class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-[0.85rem] font-semibold transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+					style="
+						background: var(--c-electric);
+						color: var(--bg-page);
+					"
+					onmouseenter={(e) => {
+						if (!isGenerating) (e.currentTarget as HTMLElement).style.opacity = '0.85';
+					}}
+					onmouseleave={(e) => {
+						e.currentTarget.style.opacity = '1';
+					}}
+				>
+					{#if isGenerating && activeJobType === 'plan'}
+						<Loader2 class="w-4 h-4 animate-spin" />
+						{m.gen_button_generating()}
+					{:else}
+						<Sparkles class="w-4 h-4" />
+						{m.gen_button()}
+					{/if}
+				</button>
+			{/if}
 		{/if}
 	</div>
 
@@ -454,6 +652,17 @@
 											{/if}
 										</button>
 									{/if}
+									<button
+										onclick={() => openDeletePlan(plan.id, plan.postCount)}
+										disabled={deletingPlanId === plan.id}
+										class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[0.7rem] font-semibold transition-all duration-200 cursor-pointer disabled:opacity-50"
+										style="color: var(--negative); background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.15);"
+										onmouseenter={(e) => { e.currentTarget.style.background = 'rgba(239,68,68,0.12)'; }}
+										onmouseleave={(e) => { e.currentTarget.style.background = 'rgba(239,68,68,0.05)'; }}
+										title={m.gen_delete_plan()}
+									>
+										<Trash2 class="w-3 h-3" />
+									</button>
 								</div>
 							</div>
 						</div>
@@ -463,3 +672,55 @@
 		</div>
 	{/if}
 </div>
+
+<!-- Delete plan confirmation dialog -->
+<AlertDialog.Root bind:open={deleteConfirmOpen}>
+	<AlertDialog.Portal>
+		<AlertDialog.Overlay
+			class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+			style="animation: fadeIn 150ms ease-out;"
+		/>
+		<AlertDialog.Content
+			class="fixed inset-0 z-50 m-auto max-w-md w-[calc(100%-2rem)] h-fit rounded-2xl p-6"
+			style="
+				background: var(--bg-surface);
+				border: 1px solid var(--border-subtle);
+				box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+				animation: dialogIn 200ms ease-out;
+			"
+		>
+			<div class="flex items-center gap-3 mb-4">
+				<div
+					class="flex items-center justify-center w-10 h-10 rounded-xl shrink-0"
+					style="background: rgba(239,68,68,0.1);"
+				>
+					<Trash2 class="w-5 h-5" style="color: var(--negative);" />
+				</div>
+				<AlertDialog.Title class="text-lg font-extrabold tracking-tight" style="color: var(--text-main);">
+					{m.gen_delete_confirm_title()}
+				</AlertDialog.Title>
+			</div>
+
+			<AlertDialog.Description class="text-[0.85rem] leading-relaxed mb-6" style="color: var(--text-dim);">
+				{m.gen_delete_confirm_desc({ count: String(deletePlanTarget?.postCount ?? 0) })}
+			</AlertDialog.Description>
+
+			<div class="flex items-center justify-end gap-3">
+				<AlertDialog.Cancel
+					class="px-4 py-2 rounded-[10px] text-[0.85rem] font-semibold transition-colors duration-150 cursor-pointer"
+					style="color: var(--text-dim); background: var(--border-subtle);"
+				>
+					{m.gen_delete_cancel()}
+				</AlertDialog.Cancel>
+				<AlertDialog.Action
+					class="px-4 py-2 rounded-[10px] text-[0.85rem] font-bold text-white transition-all duration-150 cursor-pointer disabled:opacity-50"
+					style="background: var(--negative);"
+					onclick={confirmDeletePlan}
+					disabled={deletingPlanId !== null}
+				>
+					{deletingPlanId ? '...' : m.gen_delete_confirm_btn()}
+				</AlertDialog.Action>
+			</div>
+		</AlertDialog.Content>
+	</AlertDialog.Portal>
+</AlertDialog.Root>

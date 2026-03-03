@@ -1,13 +1,13 @@
 import { db } from '$lib/server/db';
-import { contentPlans, posts } from '$lib/server/db/schema';
-import { eq, desc, isNotNull, and } from 'drizzle-orm';
+import { contentPlans, contentPillars, posts } from '$lib/server/db/schema';
+import { eq, desc, asc, isNotNull, and } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ parent }) => {
 	const { product } = await parent();
 
 	if (!product) {
-		return { product: null, existingPlans: [] };
+		return { product: null, existingPlans: [], pillars: [] };
 	}
 
 	const plans = await db.query.contentPlans.findMany({
@@ -31,5 +31,11 @@ export const load: PageServerLoad = async ({ parent }) => {
 		generatedPostCount: plan.posts.filter((p) => p.copyText !== null).length
 	}));
 
-	return { product, existingPlans };
+	const pillars = await db.query.contentPillars.findMany({
+		where: eq(contentPillars.productId, product.id),
+		columns: { id: true, name: true, platform: true },
+		orderBy: [asc(contentPillars.sortOrder)]
+	});
+
+	return { product, existingPlans, pillars };
 };

@@ -7,7 +7,7 @@ export interface PlatformSpec {
 	charLimit: number;
 	charRecommended: { min: number; max: number };
 	imageSize: { width: number; height: number };
-	imageAspectRatio: string;
+	imageAspectRatio: `${number}:${number}`;
 	hashtagRules: string;
 	toneGuidelines: string;
 	active: boolean;

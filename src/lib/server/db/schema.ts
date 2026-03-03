@@ -144,6 +144,7 @@ export const posts = pgTable('posts', {
 	hashtags: text('hashtags').array(),
 	imageUrl: text('image_url'),
 	imagePrompt: text('image_prompt'),
+	contentData: jsonb('content_data'),
 	rejectionReason: text('rejection_reason'),
 	publishedAt: timestamp('published_at', { withTimezone: true }),
 	status: postStatusEnum('status').default('draft').notNull(),

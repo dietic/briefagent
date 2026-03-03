@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** A user with zero design or marketing skills can brief the AI and get professional, brand-consistent marketing content generated and published to their social accounts.
-**Current focus:** Phase 9 - Pillar System Rework (IN PROGRESS)
+**Current focus:** Phase 9 - Pillar System Rework (COMPLETE)
 
 ## Current Position
 
 Phase: 9 of 9 (Pillar System Rework)
-Plan: 1 of 2 (09-01 complete)
-Status: In Progress
-Last activity: 2026-03-03 — 09-01 complete (schema + pipeline + deep brief)
+Plan: 2 of 2 (09-02 complete)
+Status: Complete
+Last activity: 2026-03-03 — 09-02 complete (pillars page + generate + settings)
 
-Progress: [#####-----] 50% (09-01 done, 09-02 pending)
+Progress: [##########] 100% (09-01 done, 09-02 done)
 
 ## Performance Metrics
 
@@ -43,6 +43,7 @@ Progress: [#####-----] 50% (09-01 done, 09-02 pending)
 | Phase 08 P01 | 4min | 2 tasks | 7 files |
 | Phase 08 P02 | 3min | 2 tasks | 8 files |
 | Phase 09 P01 | 10min | 3 tasks | 15 files |
+| Phase 09 P02 | 7min | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -147,6 +148,9 @@ Recent decisions affecting current work:
 - [Phase 09]: [09-01]: Content Pillars section universal for all product types, not gated behind personal_brand
 - [Phase 09]: [09-01]: Toggle chips for multi-platform selection replacing single-select dropdown
 - [Phase 09]: [09-01]: AI plan prompt instructs ONE post PER PLATFORM per pillar with separate content
+- [Phase 09]: [09-02]: Dedicated /dashboard/pillars page with card-based editor and delete-all-then-insert CRUD
+- [Phase 09]: [09-02]: Generate page maps pillars to clean platforms[] and uses multi-platform post count math
+- [Phase 09]: [09-02]: Settings page uses JSON pillarPlatforms hidden input for multi-platform toggle chip editing
 
 ### Roadmap Evolution
 
@@ -163,7 +167,7 @@ Recent decisions affecting current work:
 - Phase 8 added: Platform Selection per Pillar — target platform per pillar, platform-aware content generation
 - Phase 8 COMPLETE: 08-01 platform schema + specs + UI, 08-02 platform-aware AI pipeline
 - Phase 9 added: Pillar System Rework — universal pillars, multi-platform per pillar, dedicated management page, AI pipeline adaptation
-- Phase 9 IN PROGRESS: 09-01 complete (schema+pipeline+deep-brief), 09-02 pending (pillars page+generate+settings)
+- Phase 9 COMPLETE: 09-01 (schema+pipeline+deep-brief) + 09-02 (pillars page+generate+settings)
 
 ### Pending Todos
 
@@ -176,5 +180,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-03
-Stopped at: Completed 09-01-PLAN.md (schema + AI pipeline + deep brief for multi-platform pillars)
-Resume: Ready to execute 09-02-PLAN.md (pillars management page + generate + settings updates).
+Stopped at: Completed 09-02-PLAN.md (pillars page + generate + settings updates)
+Resume: Phase 9 complete. All plans executed.

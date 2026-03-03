@@ -528,5 +528,22 @@
   "gen_delete_confirm_title": "\u00bfEliminar Plan de Contenido?",
   "gen_delete_confirm_desc": "Esto eliminar\u00e1 permanentemente este plan y todos los {count} posts asociados. Esta acci\u00f3n no se puede deshacer.",
   "gen_delete_confirm_btn": "Eliminar Plan",
-  "gen_delete_cancel": "Cancelar"
+  "gen_delete_cancel": "Cancelar",
+
+  "dash_nav_pillars": "Pilares",
+  "pillars_title": "Pilares de Contenido",
+  "pillars_subtitle": "Define los temas sobre los que creas contenido -- la IA distribuye publicaciones entre ellos",
+  "pillars_save": "Guardar pilares",
+  "pillars_saved": "Pilares guardados!",
+  "pillars_empty": "Sin pilares aun. Agrega tu primer pilar de contenido para comenzar.",
+  "pillars_add": "Agregar pilar",
+  "pillars_remove": "Eliminar",
+  "pillars_max": "Maximo 5 pilares",
+  "pillars_name": "Nombre del pilar",
+  "pillars_name_placeholder": "ej., Lecciones de liderazgo",
+  "pillars_desc": "Descripcion",
+  "pillars_desc_placeholder": "Que compartiras sobre este tema -- la IA usa esto para definir el tono y enfoque",
+  "pillars_platforms": "Plataformas",
+  "pillars_no_product": "Completa el onboarding primero para gestionar tus pilares.",
+  "pillars_suggestions_label": "Agregar rapido:"
 }

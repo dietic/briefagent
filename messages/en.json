@@ -528,5 +528,22 @@
   "gen_delete_confirm_title": "Delete Content Plan?",
   "gen_delete_confirm_desc": "This will permanently delete this plan and all {count} posts associated with it. This cannot be undone.",
   "gen_delete_confirm_btn": "Delete Plan",
-  "gen_delete_cancel": "Cancel"
+  "gen_delete_cancel": "Cancel",
+
+  "dash_nav_pillars": "Pillars",
+  "pillars_title": "Content Pillars",
+  "pillars_subtitle": "Define the topics you create content about -- the AI distributes posts across them",
+  "pillars_save": "Save pillars",
+  "pillars_saved": "Pillars saved!",
+  "pillars_empty": "No pillars yet. Add your first content pillar to get started.",
+  "pillars_add": "Add pillar",
+  "pillars_remove": "Remove",
+  "pillars_max": "Maximum 5 pillars",
+  "pillars_name": "Pillar name",
+  "pillars_name_placeholder": "e.g., Leadership Lessons",
+  "pillars_desc": "Description",
+  "pillars_desc_placeholder": "What you'll share about this topic -- the AI uses this to set tone and angle",
+  "pillars_platforms": "Platforms",
+  "pillars_no_product": "Complete onboarding first to manage your pillars.",
+  "pillars_suggestions_label": "Quick add:"
 }

@@ -4,6 +4,7 @@
 	import {
 		LayoutDashboard,
 		CalendarDays,
+		Layers,
 		Megaphone,
 		Send,
 		BarChart3,
@@ -46,6 +47,7 @@
 			items: [
 				{ href: '/dashboard', label: () => m.dash_nav_overview(), icon: LayoutDashboard },
 				{ href: '/dashboard/calendar', label: () => m.dash_nav_calendar(), icon: CalendarDays },
+				{ href: '/dashboard/pillars', label: () => m.dash_nav_pillars(), icon: Layers },
 				{ href: '/dashboard/brand', label: () => m.dash_nav_campaigns(), icon: Megaphone },
 				{ href: '/dashboard/publishing', label: () => m.dash_nav_publishing(), icon: Send }
 			]

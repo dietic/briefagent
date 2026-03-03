@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import { products, productBriefs, assets, contentPillars } from '$lib/server/db/schema';
-import { eq, asc } from 'drizzle-orm';
+import { eq, asc, inArray, and } from 'drizzle-orm';
 
 export interface AssembledBrief {
 	product: {
@@ -43,7 +43,7 @@ export interface AssembledBrief {
 	}>;
 }
 
-export async function assembleBrief(productId: string): Promise<AssembledBrief> {
+export async function assembleBrief(productId: string, pillarIds?: string[]): Promise<AssembledBrief> {
 	const product = await db.query.products.findFirst({
 		where: eq(products.id, productId)
 	});
@@ -61,7 +61,9 @@ export async function assembleBrief(productId: string): Promise<AssembledBrief> 
 	});
 
 	const pillars = await db.query.contentPillars.findMany({
-		where: eq(contentPillars.productId, productId),
+		where: pillarIds?.length
+			? and(eq(contentPillars.productId, productId), inArray(contentPillars.id, pillarIds))
+			: eq(contentPillars.productId, productId),
 		orderBy: [asc(contentPillars.sortOrder)]
 	});
 

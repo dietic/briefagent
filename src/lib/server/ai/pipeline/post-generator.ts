@@ -1,5 +1,5 @@
-import { generatePostCopy } from './copy-generator';
-import { generatePostImage } from './image-generator';
+import { generatePostCopy, generateCarouselCopy, generateThreadCopy, generatePollCopy } from './copy-generator';
+import { generatePostImage, generateCarouselImages } from './image-generator';
 import { getCachedBrandAnalysis } from './brand-analyzer';
 import { assembleBrief } from './brief-assembler';
 import type { BrandAnalysis } from '../schemas/brand-analysis';
@@ -16,6 +16,17 @@ async function updateJob(jobId: string, updates: Record<string, unknown>) {
 
 function delay(ms: number): Promise<void> {
 	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/** Count the number of image generation steps a post will require */
+function imageStepsForPost(post: { postType: string; contentData: unknown }): number {
+	if (post.postType === 'static_image') return 1;
+	if (post.postType === 'carousel') {
+		const data = post.contentData as { carouselSlideCount?: number } | null;
+		return data?.carouselSlideCount ?? 6;
+	}
+	// thread, poll, text_only — no images
+	return 0;
 }
 
 export async function generatePostsForPlan(
@@ -56,32 +67,71 @@ export async function generatePostsForPlan(
 			where: eq(posts.contentPlanId, contentPlanId)
 		});
 
-		const imagePostCount = planPosts.filter((p) => p.postType === 'static_image').length;
-		const totalSteps = 2 + planPosts.length + imagePostCount; // brief + brand + N copies + M images
+		const totalImageSteps = planPosts.reduce((sum, p) => sum + imageStepsForPost(p), 0);
+		const totalSteps = 2 + planPosts.length + totalImageSteps; // brief + brand + N copies + M images
 		await updateJob(jobId, { totalSteps });
 
-		// Step 4: Generate copy for each post in batches of 3
+		// Step 4: Generate copy for each post (batches of 3 for standard, sequential for special types)
 		let currentStep = 2;
-		for (let i = 0; i < planPosts.length; i += 3) {
-			const batch = planPosts.slice(i, i + 3);
+		for (let i = 0; i < planPosts.length; i++) {
+			const post = planPosts[i];
+			const postSlot = {
+				topic: post.topic,
+				contentCategory: post.contentCategory,
+				keyMessage: post.keyMessage
+			};
+			const contentData = post.contentData as Record<string, unknown> | null;
 
-			const copyResults = await Promise.all(
-				batch.map((post) =>
-					generatePostCopy(
-						{
-							topic: post.topic,
-							contentCategory: post.contentCategory,
-							keyMessage: post.keyMessage
+			if (post.postType === 'carousel') {
+				const slideCount = (contentData?.carouselSlideCount as number) ?? 6;
+				const copy = await generateCarouselCopy(postSlot, slideCount, brief, post.platform);
+				await db
+					.update(posts)
+					.set({
+						copyText: copy.introText,
+						hashtags: copy.hashtags,
+						contentData: {
+							...contentData,
+							slides: copy.slides.map((s) => ({ headline: s.headline, body: s.body }))
 						},
-						brief,
-						post.platform
-					)
-				)
-			);
-
-			// Save each copy result
-			for (let j = 0; j < batch.length; j++) {
-				const copy = copyResults[j];
+						updatedAt: new Date()
+					})
+					.where(eq(posts.id, post.id));
+			} else if (post.postType === 'thread') {
+				const tweetCount = (contentData?.threadTweetCount as number) ?? 5;
+				const copy = await generateThreadCopy(postSlot, tweetCount, brief, post.platform);
+				await db
+					.update(posts)
+					.set({
+						copyText: copy.tweets[0]?.text ?? '',
+						hashtags: copy.hashtags,
+						contentData: {
+							...contentData,
+							tweets: copy.tweets
+						},
+						updatedAt: new Date()
+					})
+					.where(eq(posts.id, post.id));
+			} else if (post.postType === 'poll') {
+				const pollOptions = contentData?.pollOptions as string[] | undefined;
+				const copy = await generatePollCopy(postSlot, pollOptions, brief, post.platform);
+				await db
+					.update(posts)
+					.set({
+						copyText: copy.contextPost,
+						hashtags: copy.hashtags,
+						contentData: {
+							...contentData,
+							question: copy.question,
+							options: copy.options,
+							durationDays: 3
+						},
+						updatedAt: new Date()
+					})
+					.where(eq(posts.id, post.id));
+			} else {
+				// static_image or text_only — use existing generator
+				const copy = await generatePostCopy(postSlot, brief, post.platform);
 				await db
 					.update(posts)
 					.set({
@@ -89,53 +139,95 @@ export async function generatePostsForPlan(
 						hashtags: copy.hashtags,
 						updatedAt: new Date()
 					})
-					.where(eq(posts.id, batch[j].id));
-				currentStep++;
+					.where(eq(posts.id, post.id));
 			}
 
-			const doneCount = Math.min(i + 3, planPosts.length);
+			currentStep++;
+			const doneCount = i + 1;
 			await updateJob(jobId, {
 				currentStep,
 				progress: `Generating copy ${doneCount}/${planPosts.length}...`
 			});
 
-			// Rate limit delay between batches
-			if (i + 3 < planPosts.length) {
+			// Rate limit delay
+			if (i < planPosts.length - 1) {
 				await delay(200);
 			}
 		}
 
-		// Step 5: Generate images for static_image posts sequentially
-		const imagePosts = planPosts.filter((p) => p.postType === 'static_image');
-		for (let i = 0; i < imagePosts.length; i++) {
-			const post = imagePosts[i];
-			await updateJob(jobId, {
-				currentStep,
-				progress: `Generating image ${i + 1}/${imagePosts.length}...`
-			});
+		// Step 5: Generate images — static_image posts get one image, carousel posts get per-slide images
+		const postsNeedingImages = planPosts.filter(
+			(p) => p.postType === 'static_image' || p.postType === 'carousel'
+		);
+		let imageIdx = 0;
+		const totalImages = postsNeedingImages.reduce((sum, p) => sum + imageStepsForPost(p), 0);
 
-			const result = await generatePostImage(
-				post.topic,
-				post.keyMessage,
-				brandAnalysis,
-				productId,
-				post.id,
-				post.platform
-			);
+		for (const post of postsNeedingImages) {
+			if (post.postType === 'static_image') {
+				await updateJob(jobId, {
+					currentStep,
+					progress: `Generating image ${imageIdx + 1}/${totalImages}...`
+				});
 
-			await db
-				.update(posts)
-				.set({
-					imageUrl: result.imageUrl,
-					imagePrompt: result.imagePrompt,
-					updatedAt: new Date()
-				})
-				.where(eq(posts.id, post.id));
+				const result = await generatePostImage(
+					post.topic,
+					post.keyMessage,
+					brandAnalysis,
+					productId,
+					post.id,
+					post.platform
+				);
 
-			currentStep++;
+				await db
+					.update(posts)
+					.set({
+						imageUrl: result.imageUrl,
+						imagePrompt: result.imagePrompt,
+						updatedAt: new Date()
+					})
+					.where(eq(posts.id, post.id));
 
-			// Rate limit delay between image calls
-			if (i < imagePosts.length - 1) {
+				currentStep++;
+				imageIdx++;
+				await delay(500);
+			} else if (post.postType === 'carousel') {
+				// Re-read the post to get the updated contentData with slides
+				const freshPost = await db.query.posts.findFirst({
+					where: eq(posts.id, post.id)
+				});
+				const data = (freshPost?.contentData ?? {}) as Record<string, unknown>;
+				const slides = (data.slides ?? []) as Array<{ headline: string; body: string }>;
+
+				await updateJob(jobId, {
+					currentStep,
+					progress: `Generating carousel images ${imageIdx + 1}/${totalImages}...`
+				});
+
+				const slideResults = await generateCarouselImages(
+					slides,
+					brandAnalysis,
+					productId,
+					post.id
+				);
+
+				// Merge imageUrl into each slide in contentData
+				const updatedSlides = slides.map((s, idx) => ({
+					...s,
+					imageUrl: slideResults[idx]?.imageUrl,
+					imagePrompt: slideResults[idx]?.imagePrompt
+				}));
+
+				await db
+					.update(posts)
+					.set({
+						imageUrl: slideResults[0]?.imageUrl ?? null,
+						contentData: { ...data, slides: updatedSlides },
+						updatedAt: new Date()
+					})
+					.where(eq(posts.id, post.id));
+
+				currentStep += slides.length;
+				imageIdx += slides.length;
 				await delay(500);
 			}
 		}

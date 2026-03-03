@@ -1,6 +1,6 @@
 import { generateObject } from 'ai';
 import { planModel } from '../providers';
-import { contentPlanSchema, type ContentPlan } from '../schemas/plan';
+import { createContentPlanSchema, type ContentPlan } from '../schemas/plan';
 import { buildPlanSystemPrompt, buildPlanUserPrompt } from '../prompts/plan-system';
 import type { AssembledBrief } from './brief-assembler';
 import { addDays, formatISO } from 'date-fns';
@@ -8,16 +8,19 @@ import { addDays, formatISO } from 'date-fns';
 export async function generateContentPlan(
 	brief: AssembledBrief,
 	previousPlanSummaries: string[],
-	startDate?: string
+	startDate?: string,
+	minPosts = 8,
+	maxPosts = 12
 ): Promise<ContentPlan> {
 	const resolvedStartDate = startDate ?? formatISO(addDays(new Date(), 1), { representation: 'date' });
 
-	const systemPrompt = buildPlanSystemPrompt();
+	const schema = createContentPlanSchema(minPosts, maxPosts);
+	const systemPrompt = buildPlanSystemPrompt(minPosts, maxPosts);
 	const userPrompt = buildPlanUserPrompt(brief, previousPlanSummaries, resolvedStartDate);
 
 	const { object: plan } = await generateObject({
 		model: planModel,
-		schema: contentPlanSchema,
+		schema,
 		system: systemPrompt,
 		prompt: userPrompt
 	});
@@ -38,7 +41,7 @@ export async function generateContentPlan(
 
 		const { object: retryPlan } = await generateObject({
 			model: planModel,
-			schema: contentPlanSchema,
+			schema,
 			system: systemPrompt,
 			prompt: strictUserPrompt
 		});

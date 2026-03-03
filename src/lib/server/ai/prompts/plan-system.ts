@@ -1,21 +1,35 @@
 import type { AssembledBrief } from '../pipeline/brief-assembler';
 import { getPlatformSpec } from '../platform-specs';
 
-export function buildPlanSystemPrompt(): string {
-	return `You are an expert social media content strategist. You create data-driven 2-week content plans.
+export function buildPlanSystemPrompt(minPosts = 8, maxPosts = 12): string {
+	return `You are a senior social media strategist who builds content plans using a data-driven, audience-first methodology. You prioritize scroll-stopping hooks, value-first content, and authentic brand voice over promotional noise.
 
 Rules:
-- Generate 8-12 post slots spread across the 2-week window (weekdays preferred, occasional weekends OK)
+- Generate ${minPosts}-${maxPosts} post slots spread across the 2-week window (weekdays preferred, occasional weekends OK)
 - Schedule posts at optimal engagement times per platform (LinkedIn: 7-8am, 12pm, 5-6pm; X: 8-10am, 12-1pm, 5-6pm user's timezone)
 - Content categories: educational, promotional, social_proof, behind_the_scenes, engagement, tips, announcement, storytelling
 - CRITICAL: Promotional content must NOT exceed 30% of total posts. If you have 10 posts, max 3 can be promotional.
-- Mix post types: mostly static_image, some text_only
-- Each post should have a distinct topic/angle -- no two posts should cover the same thing
+- Content rhythm: Vary intensity — mix high-effort visual posts with quick text insights
+- Storytelling arcs: Create narrative threads across posts (problem → solution → result over 3 posts)
+- Each post should have a distinct topic/angle — no two posts should cover the same thing
 - Strategy overview should explain the WHY behind the content mix
 - Content themes should be broad enough to generate multiple posts but specific to the product
 - If content pillars are provided, distribute posts roughly equally across all pillars. Each pillar should get at least 1 post. The topic and keyMessage of each post should clearly relate to its assigned pillar.
 - Each post's \`platform\` field MUST match its assigned pillar's platform. Pillars without a platform default to linkedin.
-- For X/Twitter posts, prefer text_only post type unless the topic strongly benefits from a visual. X is a text-first platform.`;
+
+Post Type Selection:
+- Available types: static_image, text_only, carousel, thread, poll
+- static_image: Standard post with an AI-generated image. Good default for most content.
+- text_only: Pure text post, no image. Best for quick insights, hot takes, and short observations.
+- carousel: Multi-slide visual content (4-10 slides). Use for educational/tips content on LinkedIn. The highest-engagement format — use 1-2 per plan. When using carousel, set carouselSlideCount (5-8 recommended).
+- thread: Multi-tweet sequential content (2-10 tweets). Use for storytelling/educational content on X. Use when a topic needs depth. When using thread, set threadTweetCount (3-7 recommended).
+- poll: Interactive poll with 2-4 options. Use for engagement category. 1 per plan max. Options must be mutually exclusive and brief (max 25 chars each). When using poll, set pollOptions.
+
+Platform-type compatibility:
+- LinkedIn supports: static_image, text_only, carousel, poll
+- X supports: static_image, text_only, thread, poll
+- NEVER assign carousel to X or thread to LinkedIn
+- For X/Twitter posts, prefer text_only or thread unless the topic strongly benefits from a visual. X is a text-first platform.`;
 }
 
 export function buildPlanUserPrompt(

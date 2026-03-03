@@ -75,8 +75,16 @@ export const contentPillars = pgTable('content_pillars', {
 		.notNull(),
 	name: text('name').notNull(),
 	description: text('description'),
-	platform: text('platform'), // nullable: 'linkedin' | 'x' | null
 	sortOrder: integer('sort_order').notNull().default(0),
+	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
+});
+
+export const pillarPlatforms = pgTable('pillar_platforms', {
+	id: uuid('id').primaryKey().defaultRandom(),
+	pillarId: uuid('pillar_id')
+		.references(() => contentPillars.id, { onDelete: 'cascade' })
+		.notNull(),
+	platform: text('platform').notNull(), // 'linkedin' | 'x'
 	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
 });
 
@@ -185,10 +193,18 @@ export const socialAccountsRelations = relations(socialAccounts, ({ one }) => ({
 	})
 }));
 
-export const contentPillarsRelations = relations(contentPillars, ({ one }) => ({
+export const contentPillarsRelations = relations(contentPillars, ({ one, many }) => ({
 	product: one(products, {
 		fields: [contentPillars.productId],
 		references: [products.id]
+	}),
+	pillarPlatforms: many(pillarPlatforms)
+}));
+
+export const pillarPlatformsRelations = relations(pillarPlatforms, ({ one }) => ({
+	pillar: one(contentPillars, {
+		fields: [pillarPlatforms.pillarId],
+		references: [contentPillars.id]
 	})
 }));
 

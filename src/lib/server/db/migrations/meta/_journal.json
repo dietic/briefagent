@@ -36,6 +36,13 @@
       "when": 1771979914629,
       "tag": "0004_classy_living_mummy",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1772509542828,
+      "tag": "0005_crazy_champions",
+      "breakpoints": true
     }
   ]
 }

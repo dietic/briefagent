@@ -359,13 +359,17 @@
 											{pillar.name}
 										</span>
 
-										<!-- Platform badge -->
-										{#if pillar.platform}
-											<span
-												class="mono text-[0.6rem] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider shrink-0"
-												style="background: var(--bg-sidebar-hover); color: var(--text-muted);"
-											>
-												{pillar.platform === 'x' ? 'X' : 'LI'}
+										<!-- Platform badges -->
+										{#if pillar.pillarPlatforms?.length}
+											<span class="flex gap-1 shrink-0">
+												{#each pillar.pillarPlatforms as pp}
+													<span
+														class="mono text-[0.6rem] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider"
+														style="background: var(--bg-sidebar-hover); color: var(--text-muted);"
+													>
+														{pp.platform === 'x' ? 'X' : 'LI'}
+													</span>
+												{/each}
 											</span>
 										{/if}
 									</button>

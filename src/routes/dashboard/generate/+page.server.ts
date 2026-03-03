@@ -33,8 +33,13 @@ export const load: PageServerLoad = async ({ parent }) => {
 
 	const pillars = await db.query.contentPillars.findMany({
 		where: eq(contentPillars.productId, product.id),
-		columns: { id: true, name: true, platform: true },
-		orderBy: [asc(contentPillars.sortOrder)]
+		columns: { id: true, name: true },
+		orderBy: [asc(contentPillars.sortOrder)],
+		with: {
+			pillarPlatforms: {
+				columns: { platform: true }
+			}
+		}
 	});
 
 	return { product, existingPlans, pillars };

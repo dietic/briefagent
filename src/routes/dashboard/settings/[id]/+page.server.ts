@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { products, productBriefs, contentPillars, contentPlans } from '$lib/server/db/schema';
+import { products, productBriefs, contentPillars, contentPlans, pillarPlatforms } from '$lib/server/db/schema';
 import { eq, and, count } from 'drizzle-orm';
 import { error, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
@@ -30,7 +30,12 @@ export const load: PageServerLoad = async ({ parent, params }) => {
 
 	const pillars = await db.query.contentPillars.findMany({
 		where: eq(contentPillars.productId, params.id),
-		orderBy: contentPillars.sortOrder
+		orderBy: contentPillars.sortOrder,
+		with: {
+			pillarPlatforms: {
+				columns: { platform: true }
+			}
+		}
 	});
 
 	const [planCountResult] = await db
@@ -102,15 +107,18 @@ export const actions: Actions = {
 
 		const formData = await request.formData();
 		const entries = formData.entries();
+		const activeSlugs = new Set(['linkedin', 'x']);
 
 		for (const [key, value] of entries) {
 			if (key.startsWith('pillar_')) {
 				const pillarId = key.replace('pillar_', '');
 				const platform = value === 'none' ? null : (value as string);
-				await db
-					.update(contentPillars)
-					.set({ platform })
-					.where(eq(contentPillars.id, pillarId));
+				// Delete existing junction rows for this pillar
+				await db.delete(pillarPlatforms).where(eq(pillarPlatforms.pillarId, pillarId));
+				// Insert new junction row if a valid platform was selected
+				if (platform && activeSlugs.has(platform)) {
+					await db.insert(pillarPlatforms).values({ pillarId, platform });
+				}
 			}
 		}
 

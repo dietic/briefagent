@@ -15,7 +15,7 @@ Rules:
 - Strategy overview should explain the WHY behind the content mix
 - Content themes should be broad enough to generate multiple posts but specific to the product
 - If content pillars are provided, distribute posts roughly equally across all pillars. Each pillar should get at least 1 post. The topic and keyMessage of each post should clearly relate to its assigned pillar.
-- Each post's \`platform\` field MUST match its assigned pillar's platform. Pillars without a platform default to linkedin.
+- For each pillar, generate ONE post PER PLATFORM it targets. Each post's \`platform\` field MUST match one of its pillar's target platforms. Pillars without platforms default to linkedin.
 
 Post Type Selection:
 - Available types: static_image, text_only, carousel, thread, poll
@@ -45,35 +45,36 @@ export function buildPlanUserPrompt(
 - Description: ${brief.product.description ?? 'Not provided'}
 - Website: ${brief.product.websiteUrl ?? 'Not provided'}`);
 
-	// Content Pillars (personal brand) or Product Details (product/service)
+	// Content Pillars (all product types)
 	if (brief.contentPillars.length > 0) {
 		const pillarLines = brief.contentPillars.map((p, i) => {
-			const platformLabel = p.platform
-				? `[Platform: ${getPlatformSpec(p.platform).displayName}]`
-				: '[Platform: LinkedIn (default)]';
-			return `${i + 1}. **${p.name}**${p.description ? `: ${p.description}` : ''} ${platformLabel}`;
+			const platformNames = p.platforms.length > 0
+				? p.platforms.map(slug => getPlatformSpec(slug).displayName).join(', ')
+				: 'LinkedIn (default)';
+			return `${i + 1}. **${p.name}**${p.description ? `: ${p.description}` : ''} [Platforms: ${platformNames}]`;
 		});
+
 		sections.push(`## Content Pillars
-This is a personal brand. Distribute posts across these content pillars:
+Distribute posts across these content pillars. For each pillar, generate ONE post PER PLATFORM it targets.
 ${pillarLines.join('\n')}
 
-Each pillar should receive roughly equal coverage. Tag each post's topic to align with one of these pillars.
+IMPORTANT: Each post's platform field MUST match one of its pillar's target platforms.
+If a pillar targets multiple platforms, generate separate posts for each platform with content adapted to that platform's native style.
+If a pillar has no platforms, default to linkedin.`);
+	}
 
-IMPORTANT: Each post's platform field MUST match its pillar's platform. If a pillar has no platform, use 'linkedin'.`);
-	} else {
-		// Key features & differentiator (product/service types only)
-		if (brief.brief.keyFeatures?.length) {
-			sections.push(`## Key Features
+	// Show product details section if available (both pillar and non-pillar users)
+	if (brief.brief.keyFeatures?.length) {
+		sections.push(`## Key Features
 ${brief.brief.keyFeatures.map((f) => `- ${f}`).join('\n')}`);
-		}
-		if (brief.brief.differentiator) {
-			sections.push(`## Differentiator
+	}
+	if (brief.brief.differentiator) {
+		sections.push(`## Differentiator
 ${brief.brief.differentiator}`);
-		}
-		if (brief.brief.problemSolved) {
-			sections.push(`## Problem Solved
+	}
+	if (brief.brief.problemSolved) {
+		sections.push(`## Problem Solved
 ${brief.brief.problemSolved}`);
-		}
 	}
 
 	// Target audience

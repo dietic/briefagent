@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { products, productBriefs, assets, contentPillars } from '$lib/server/db/schema';
+import { products, productBriefs, assets, contentPillars, pillarPlatforms } from '$lib/server/db/schema';
 import { eq, asc, inArray, and } from 'drizzle-orm';
 
 export interface AssembledBrief {
@@ -36,10 +36,11 @@ export interface AssembledBrief {
 		isPrimary: boolean | null;
 	}>;
 	contentPillars: Array<{
+		id: string;
 		name: string;
 		description: string | null;
 		sortOrder: number;
-		platform: string | null;
+		platforms: string[];
 	}>;
 }
 
@@ -64,7 +65,12 @@ export async function assembleBrief(productId: string, pillarIds?: string[]): Pr
 		where: pillarIds?.length
 			? and(eq(contentPillars.productId, productId), inArray(contentPillars.id, pillarIds))
 			: eq(contentPillars.productId, productId),
-		orderBy: [asc(contentPillars.sortOrder)]
+		orderBy: [asc(contentPillars.sortOrder)],
+		with: {
+			pillarPlatforms: {
+				columns: { platform: true }
+			}
+		}
 	});
 
 	return {
@@ -120,10 +126,11 @@ export async function assembleBrief(productId: string, pillarIds?: string[]): Pr
 			isPrimary: a.isPrimary
 		})),
 		contentPillars: pillars.map((p) => ({
+			id: p.id,
 			name: p.name,
 			description: p.description,
 			sortOrder: p.sortOrder,
-			platform: p.platform
+			platforms: p.pillarPlatforms.map((pp) => pp.platform)
 		}))
 	};
 }

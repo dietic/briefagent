@@ -180,7 +180,7 @@
 							</div>
 							<select
 								name="pillar_{pillar.id}"
-								value={pillar.platform ?? 'none'}
+								value={pillar.pillarPlatforms?.[0]?.platform ?? 'none'}
 								disabled={data.planCount > 0}
 								class="rounded-lg px-3 py-1.5 text-sm outline-none disabled:opacity-50 disabled:cursor-not-allowed"
 								style="background: var(--input-bg, var(--bg-surface)); border: 1px solid var(--border-subtle); color: var(--text-main);"

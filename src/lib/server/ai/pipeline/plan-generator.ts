@@ -14,6 +14,15 @@ export async function generateContentPlan(
 ): Promise<ContentPlan> {
 	const resolvedStartDate = startDate ?? formatISO(addDays(new Date(), 1), { representation: 'date' });
 
+	// Calculate post count based on pillar-platform combinations
+	if (brief.contentPillars.length > 0) {
+		const totalPillarPosts = brief.contentPillars.reduce(
+			(sum, p) => sum + Math.max(1, p.platforms.length), 0
+		);
+		minPosts = Math.max(4, totalPillarPosts);
+		maxPosts = Math.min(20, Math.max(minPosts, Math.ceil(totalPillarPosts * 1.5)));
+	}
+
 	const schema = createContentPlanSchema(minPosts, maxPosts);
 	const systemPrompt = buildPlanSystemPrompt(minPosts, maxPosts);
 	const userPrompt = buildPlanUserPrompt(brief, previousPlanSummaries, resolvedStartDate);

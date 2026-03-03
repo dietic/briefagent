@@ -1,18 +1,38 @@
 <script lang="ts">
 	import * as m from '$lib/paraglide/messages.js';
 	import ThemeToggle from '$lib/components/ui/theme-toggle.svelte';
+	import ProductSwitcher from '$lib/components/dashboard/product-switcher.svelte';
 	import { Search, Bell } from 'lucide-svelte';
 
-	let { title }: { title: string } = $props();
+	type SlimProduct = {
+		id: string;
+		name: string;
+		logoUrl: string | null;
+		onboardingStep: string | null;
+	};
+
+	let {
+		title,
+		product,
+		products
+	}: {
+		title: string;
+		product: SlimProduct | null;
+		products: SlimProduct[];
+	} = $props();
 </script>
 
 <header
 	class="flex items-center justify-between h-14 px-6 sticky top-0 z-30"
 	style="background: var(--bg-surface); border-bottom: 1px solid var(--border-subtle);"
 >
-	<!-- Breadcrumb -->
+	<!-- Breadcrumb with product switcher -->
 	<div class="flex items-center gap-2 text-[0.85rem]">
-		<span style="color: var(--text-muted);">{m.dash_breadcrumb_dashboard()}</span>
+		{#if product && products.length > 0}
+			<ProductSwitcher {product} {products} />
+		{:else}
+			<span style="color: var(--text-muted);">{m.dash_breadcrumb_dashboard()}</span>
+		{/if}
 		<span style="color: var(--text-muted);" class="text-[0.75rem]">/</span>
 		<span class="font-semibold" style="color: var(--text-main);">{title}</span>
 	</div>

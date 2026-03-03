@@ -4,7 +4,6 @@
 	import {
 		LayoutDashboard,
 		CalendarDays,
-		PenTool,
 		Megaphone,
 		Send,
 		BarChart3,
@@ -47,7 +46,6 @@
 			items: [
 				{ href: '/dashboard', label: () => m.dash_nav_overview(), icon: LayoutDashboard },
 				{ href: '/dashboard/calendar', label: () => m.dash_nav_calendar(), icon: CalendarDays },
-				{ href: '/dashboard/editor', label: () => m.dash_nav_content(), icon: PenTool },
 				{ href: '/dashboard/brand', label: () => m.dash_nav_campaigns(), icon: Megaphone },
 				{ href: '/dashboard/publishing', label: () => m.dash_nav_publishing(), icon: Send }
 			]
@@ -62,7 +60,7 @@
 		{
 			label: () => m.dash_nav_section_system(),
 			items: [
-				{ href: '#', label: () => m.dash_nav_settings(), icon: Settings, disabled: true }
+				{ href: '/dashboard/settings', label: () => m.dash_nav_settings(), icon: Settings }
 			]
 		}
 	];

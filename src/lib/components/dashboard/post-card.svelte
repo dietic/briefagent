@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { postStatusColors, type PostStatus } from '$lib/utils/post-status';
+	import { Image, AlignLeft, Layers, MessageSquare, BarChart2 } from 'lucide-svelte';
+	import * as m from '$lib/paraglide/messages.js';
 
 	interface RealPost {
 		id: string;
@@ -13,6 +15,7 @@
 		copyText: string | null;
 		hashtags: string[] | null;
 		keyMessage: string;
+		contentData?: unknown;
 		rejectionReason?: string | null;
 	}
 
@@ -30,11 +33,22 @@
 		twitter: { bg: 'rgba(249,115,22,0.1)', text: 'var(--c-secondary)' }
 	};
 
+	const postTypeConfig: Record<string, { icon: typeof Image; label: () => string; color: string }> = {
+		static_image: { icon: Image, label: () => m.post_type_image(), color: 'var(--c-electric)' },
+		text_only: { icon: AlignLeft, label: () => m.post_type_text(), color: 'var(--text-dim)' },
+		carousel: { icon: Layers, label: () => m.post_type_carousel(), color: 'var(--c-secondary)' },
+		thread: { icon: MessageSquare, label: () => m.post_type_thread(), color: 'var(--c-tertiary)' },
+		poll: { icon: BarChart2, label: () => m.post_type_poll(), color: '#a78bfa' }
+	};
+
 	let pc = $derived(
 		platformColors[post.platform.toLowerCase()] ?? platformColors.linkedin
 	);
 	let statusInfo = $derived(
 		postStatusColors[post.status as PostStatus] ?? postStatusColors.draft
+	);
+	let typeInfo = $derived(
+		postTypeConfig[post.postType] ?? postTypeConfig.static_image
 	);
 
 	let formattedDate = $derived(() => {
@@ -49,12 +63,19 @@
 	style="background: var(--bg-surface); border: 1px solid var(--border-subtle); box-shadow: var(--card-shadow);"
 	{onclick}
 >
-	<!-- Platform + Status -->
+	<!-- Platform + Type + Status -->
 	<div class="flex items-center gap-2">
 		<span
 			class="text-[0.65rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded"
 			style="background: {pc.bg}; color: {pc.text};"
 		>{post.platform}</span>
+		<span
+			class="inline-flex items-center gap-1 text-[0.62rem] font-bold px-1.5 py-0.5 rounded"
+			style="color: {typeInfo.color}; background: color-mix(in srgb, {typeInfo.color} 10%, transparent);"
+		>
+			<typeInfo.icon class="w-3 h-3" />
+			{typeInfo.label()}
+		</span>
 		<span class="text-[0.65rem] capitalize" style="color: var(--text-muted);">
 			{post.contentCategory.replace('_', ' ')}
 		</span>

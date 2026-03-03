@@ -10,10 +10,24 @@
 		Image,
 		Clock,
 		Loader2,
-		Send
+		Send,
+		Layers,
+		MessageSquare,
+		BarChart2,
+		Plus,
+		Trash2,
+		ChevronLeft,
+		ChevronRight
 	} from 'lucide-svelte';
 	import * as m from '$lib/paraglide/messages.js';
 	import { postStatusColors, type PostStatus } from '$lib/utils/post-status';
+
+	interface CarouselSlide {
+		headline: string;
+		body: string;
+		imageUrl?: string;
+		imagePrompt?: string;
+	}
 
 	interface ReviewPost {
 		id: string;
@@ -24,8 +38,10 @@
 		scheduledAt: string | null;
 		status: string;
 		platform: string;
+		postType: string;
 		keyMessage: string;
 		contentCategory: string;
+		contentData?: unknown;
 	}
 
 	let {
@@ -46,6 +62,14 @@
 	let rejectionReason = $state('');
 	let showRejectForm = $state(false);
 
+	// -- Type-specific editing state --
+	let cd = post.contentData as Record<string, unknown> | null | undefined;
+	let editedSlides = $state<CarouselSlide[]>(cd?.slides ? [...(cd.slides as CarouselSlide[])] : []);
+	let activeSlideIndex = $state(0);
+	let editedTweets = $state<Array<{ text: string }>>(cd?.tweets ? [...(cd.tweets as Array<{ text: string }>)] : []);
+	let editedPollQuestion = $state((cd?.question as string) ?? '');
+	let editedPollOptions = $state<string[]>(cd?.options ? [...(cd.options as string[])] : []);
+
 	// -- Loading state --
 	let loadingApprove = $state(false);
 	let loadingReject = $state(false);
@@ -53,6 +77,7 @@
 	let loadingRegenImage = $state(false);
 	let loadingRegenBoth = $state(false);
 	let loadingPublish = $state(false);
+	let loadingSlideRegen = $state<number | null>(null);
 
 	// -- Feedback state --
 	let copied = $state(false);
@@ -65,10 +90,21 @@
 			loadingRegenCopy ||
 			loadingRegenImage ||
 			loadingRegenBoth ||
-			loadingPublish
+			loadingPublish ||
+			loadingSlideRegen !== null
 	);
 
 	let statusInfo = $derived(postStatusColors[post.status as PostStatus] ?? postStatusColors.draft);
+
+	// Map platform to CSS aspect-ratio for image containers
+	const platformAspectRatio: Record<string, string> = {
+		linkedin: '1 / 1',
+		x: '16 / 9',
+		instagram: '4 / 5',
+		youtube: '16 / 9',
+		tiktok: '9 / 16'
+	};
+	let imageAspect = $derived(platformAspectRatio[post.platform] ?? '1 / 1');
 
 	// Reset form state when post changes
 	$effect(() => {
@@ -77,6 +113,12 @@
 		editedScheduledAt = formatForDatetimeLocal(post.scheduledAt);
 		rejectionReason = '';
 		showRejectForm = false;
+		cd = post.contentData as Record<string, unknown> | null | undefined;
+		editedSlides = cd?.slides ? [...(cd.slides as CarouselSlide[])] : [];
+		activeSlideIndex = 0;
+		editedTweets = cd?.tweets ? [...(cd.tweets as Array<{ text: string }>)] : [];
+		editedPollQuestion = (cd?.question as string) ?? '';
+		editedPollOptions = cd?.options ? [...(cd.options as string[])] : [];
 	});
 
 	function formatForDatetimeLocal(iso: string | null): string {
@@ -118,15 +160,57 @@
 		}
 	}
 
+	async function regenerateSlide(index: number) {
+		loadingSlideRegen = index;
+		try {
+			const res = await fetch(`/api/posts/${post.id}/regenerate`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ type: 'slide', slideIndex: index })
+			});
+			if (!res.ok) throw new Error('Failed to regenerate slide');
+			onupdate?.();
+			open = false;
+		} finally {
+			loadingSlideRegen = null;
+		}
+	}
+
+	function buildContentData(): Record<string, unknown> | undefined {
+		if (post.postType === 'carousel') {
+			return {
+				...(post.contentData ?? {}),
+				slides: editedSlides
+			};
+		}
+		if (post.postType === 'thread') {
+			return {
+				...(post.contentData ?? {}),
+				tweets: editedTweets
+			};
+		}
+		if (post.postType === 'poll') {
+			return {
+				...(post.contentData ?? {}),
+				question: editedPollQuestion,
+				options: editedPollOptions
+			};
+		}
+		return undefined;
+	}
+
 	async function handleApprove() {
 		loadingApprove = true;
 		try {
-			await updatePost({
+			const body: Record<string, unknown> = {
 				status: 'scheduled',
 				copyText: editedCopy,
 				hashtags: editedHashtags,
 				scheduledAt: editedScheduledAt || undefined
-			});
+			};
+			const cd = buildContentData();
+			if (cd) body.contentData = cd;
+			await updatePost(body);
 		} finally {
 			loadingApprove = false;
 		}
@@ -265,91 +349,335 @@
 					</span>
 				</div>
 
-				<!-- 1. Image preview -->
-				<section>
-					{#if post.imageUrl}
-						<div class="rounded-xl overflow-hidden border" style="border-color: var(--border-subtle);">
-							<img
-								src={post.imageUrl}
-								alt={post.topic}
-								class="w-full max-h-64 object-cover"
-							/>
+				<!-- ═══ CAROUSEL EDITOR ═══ -->
+				{#if post.postType === 'carousel'}
+					<section>
+						{#if editedSlides.length > 0}
+						<label class="text-xs font-bold uppercase tracking-wider mb-2 block" style="color: var(--text-muted);">
+							<Layers class="w-3.5 h-3.5 inline -mt-0.5 mr-1" />
+							{m.carousel_slide_of({ n: activeSlideIndex + 1, total: editedSlides.length })}
+						</label>
+						<!-- Slide strip thumbnails + generate all button -->
+						<div class="flex items-center gap-3 mb-3">
+							<div class="flex gap-2 overflow-x-auto pb-1 flex-1">
+								{#each editedSlides as slide, i}
+									<button
+										class="shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 cursor-pointer transition-all"
+										style="border-color: {i === activeSlideIndex ? 'var(--c-electric)' : 'var(--border-subtle)'};"
+										onclick={() => { activeSlideIndex = i; }}
+									>
+										{#if slide.imageUrl}
+											<img src={slide.imageUrl} alt="Slide {i + 1}" class="w-full h-full object-cover" />
+										{:else}
+											<div class="w-full h-full flex items-center justify-center text-[0.6rem] font-bold" style="background: var(--bg-surface-alt, var(--bg-surface)); color: var(--text-muted);">
+												{i + 1}
+											</div>
+										{/if}
+									</button>
+								{/each}
+							</div>
+							<button
+								class="shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg text-[0.7rem] font-bold cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all hover:-translate-y-px"
+								style="border: 1px solid var(--border-subtle); color: var(--c-secondary); background: rgba(249,115,22,0.05);"
+								onclick={() => regeneratePost('image')}
+								disabled={isAnyLoading}
+							>
+								{#if loadingRegenImage}
+									<Loader2 class="w-3.5 h-3.5 animate-spin" />
+								{:else}
+									<RefreshCw class="w-3.5 h-3.5" />
+								{/if}
+								{m.carousel_generate_all_images()}
+							</button>
 						</div>
-					{:else}
+						<!-- Active slide editor -->
+						{#if editedSlides[activeSlideIndex]}
+							<div class="rounded-xl p-4" style="border: 1px solid var(--border-subtle); background: var(--bg-surface-alt, var(--bg-surface));">
+								{#if editedSlides[activeSlideIndex].imageUrl}
+									<div
+										class="rounded-lg overflow-hidden mb-3 mx-auto"
+										style="aspect-ratio: 1 / 1; background: var(--bg-surface-alt, #0a0f14); max-height: 320px;"
+									>
+										<img src={editedSlides[activeSlideIndex].imageUrl} alt="Slide {activeSlideIndex + 1}" class="w-full h-full object-contain" />
+									</div>
+								{/if}
+								<input
+									type="text"
+									bind:value={editedSlides[activeSlideIndex].headline}
+									class="w-full rounded-lg px-3 py-2 text-sm font-bold outline-none mb-2"
+									style="background: var(--input-bg, var(--bg-surface)); border: 1px solid var(--border-subtle); color: var(--text-main);"
+									placeholder="Slide headline"
+								/>
+								<textarea
+									bind:value={editedSlides[activeSlideIndex].body}
+									class="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y min-h-[60px]"
+									style="background: var(--input-bg, var(--bg-surface)); border: 1px solid var(--border-subtle); color: var(--text-main);"
+									placeholder="Slide body text"
+								></textarea>
+								<div class="flex gap-2 mt-2">
+									{#if activeSlideIndex > 0}
+										<button
+											class="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[0.7rem] cursor-pointer"
+											style="color: var(--text-dim); border: 1px solid var(--border-subtle);"
+											onclick={() => { activeSlideIndex--; }}
+										>
+											<ChevronLeft class="w-3 h-3" /> Prev
+										</button>
+									{/if}
+									{#if activeSlideIndex < editedSlides.length - 1}
+										<button
+											class="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[0.7rem] cursor-pointer"
+											style="color: var(--text-dim); border: 1px solid var(--border-subtle);"
+											onclick={() => { activeSlideIndex++; }}
+										>
+											Next <ChevronRight class="w-3 h-3" />
+										</button>
+									{/if}
+								</div>
+							</div>
+						{/if}
+						{:else}
+						<!-- Empty state: carousel not yet generated -->
 						<div
 							class="rounded-xl flex flex-col items-center justify-center py-10 border"
 							style="border-color: var(--border-subtle); background: var(--bg-surface-alt, var(--bg-surface));"
 						>
-							<Image class="w-10 h-10 mb-2" style="color: var(--text-muted); opacity: 0.4;" />
-							<span class="text-xs" style="color: var(--text-muted);">No image generated</span>
+							<Layers class="w-10 h-10 mb-2" style="color: var(--text-muted); opacity: 0.4;" />
+							<span class="text-sm font-bold mb-1" style="color: var(--text-muted);">Carousel not generated yet</span>
+							<span class="text-xs" style="color: var(--text-dim);">Use "Regenerate Both" below to generate slides and images</span>
 						</div>
-					{/if}
-					<div class="flex gap-2 mt-3">
-						<button
-							class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all hover:-translate-y-px cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-							style="border: 1px solid var(--border-subtle); color: var(--text-dim); background: var(--bg-surface-alt, var(--bg-surface));"
-							onclick={downloadImage}
-							disabled={!post.imageUrl || isAnyLoading}
-						>
-							<Download class="w-3.5 h-3.5" />
-							{m.review_download_image()}
-						</button>
-						<button
-							class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all hover:-translate-y-px cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-							style="border: 1px solid var(--border-subtle); color: var(--c-secondary); background: rgba(249,115,22,0.05);"
-							onclick={() => regeneratePost('image')}
-							disabled={isAnyLoading}
-						>
-							{#if loadingRegenImage}
-								<Loader2 class="w-3.5 h-3.5 animate-spin" />
-							{:else}
-								<RefreshCw class="w-3.5 h-3.5" />
-							{/if}
-							{loadingRegenImage ? m.review_loading() : m.review_regenerate_image()}
-						</button>
-					</div>
-				</section>
+						{/if}
+					</section>
 
-				<!-- 2. Copy editing -->
-				<section>
-					<label class="text-xs font-bold uppercase tracking-wider mb-2 block" style="color: var(--text-muted);">
-						{m.review_edit_copy()}
-					</label>
-					<textarea
-						bind:value={editedCopy}
-						class="w-full rounded-xl px-4 py-3 text-sm leading-relaxed resize-y min-h-[120px] outline-none transition-colors"
-						style="
-							background: var(--input-bg, var(--bg-surface-alt));
-							border: 1px solid var(--border-subtle);
-							color: var(--text-main);
-						"
-						onfocus={(e) => { e.currentTarget.style.borderColor = 'var(--c-electric)'; }}
-						onblur={(e) => { e.currentTarget.style.borderColor = 'var(--border-subtle)'; }}
-					></textarea>
-					<div class="flex items-center justify-between mt-1.5">
-						<span
-							class="text-[0.7rem] font-mono"
-							style="color: {charCount > 3000 ? 'var(--negative)' : 'var(--text-muted)'};"
-						>
-							{charCount} {m.review_characters()}
-						</span>
-						<button
-							class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:-translate-y-px cursor-pointer"
-							style="border: 1px solid var(--border-subtle); color: {copied ? 'var(--positive)' : 'var(--text-dim)'}; background: {copied ? 'rgba(34,197,94,0.08)' : 'transparent'};"
-							onclick={copyToClipboard}
-						>
-							{#if copied}
-								<Check class="w-3.5 h-3.5" />
-								{m.review_copied()}
-							{:else}
-								<Copy class="w-3.5 h-3.5" />
-								{m.review_copy_clipboard()}
-							{/if}
-						</button>
-					</div>
-				</section>
+					<!-- Intro text (shown above carousel on LinkedIn) -->
+					<section>
+						<label class="text-xs font-bold uppercase tracking-wider mb-2 block" style="color: var(--text-muted);">
+							{m.carousel_intro_text()}
+						</label>
+						<textarea
+							bind:value={editedCopy}
+							class="w-full rounded-xl px-4 py-3 text-sm leading-relaxed resize-y min-h-[80px] outline-none transition-colors"
+							style="background: var(--input-bg, var(--bg-surface-alt)); border: 1px solid var(--border-subtle); color: var(--text-main);"
+							onfocus={(e) => { e.currentTarget.style.borderColor = 'var(--c-electric)'; }}
+							onblur={(e) => { e.currentTarget.style.borderColor = 'var(--border-subtle)'; }}
+						></textarea>
+					</section>
 
-				<!-- 3. Hashtag editing -->
+				<!-- ═══ THREAD EDITOR ═══ -->
+				{:else if post.postType === 'thread'}
+					<section>
+						{#if editedTweets.length > 0}
+						<label class="text-xs font-bold uppercase tracking-wider mb-2 block" style="color: var(--text-muted);">
+							<MessageSquare class="w-3.5 h-3.5 inline -mt-0.5 mr-1" />
+							Thread ({editedTweets.length} tweets)
+						</label>
+						<div class="flex flex-col gap-3">
+							{#each editedTweets as tweet, i}
+								<div class="relative rounded-xl p-3" style="border: 1px solid var(--border-subtle); background: var(--bg-surface-alt, var(--bg-surface));">
+									<div class="flex items-center justify-between mb-1.5">
+										<span class="text-[0.65rem] font-bold" style="color: var(--text-muted);">
+											{m.thread_tweet_n({ n: i + 1 })}
+										</span>
+										<span
+											class="text-[0.6rem] font-mono"
+											style="color: {tweet.text.length > 280 ? 'var(--negative)' : 'var(--text-muted)'};"
+										>
+											{tweet.text.length}/280
+										</span>
+									</div>
+									<textarea
+										bind:value={editedTweets[i].text}
+										class="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y min-h-[60px]"
+										style="background: var(--input-bg, var(--bg-surface)); border: 1px solid var(--border-subtle); color: var(--text-main);"
+									></textarea>
+									{#if editedTweets.length > 2}
+										<button
+											class="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center rounded-full cursor-pointer"
+											style="background: var(--negative); color: white;"
+											onclick={() => { editedTweets = editedTweets.filter((_, idx) => idx !== i); }}
+										>
+											<Trash2 class="w-3 h-3" />
+										</button>
+									{/if}
+								</div>
+							{/each}
+						</div>
+						{#if editedTweets.length < 10}
+							<button
+								class="flex items-center gap-1.5 mt-2 px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer"
+								style="border: 1px dashed var(--border-subtle); color: var(--text-dim);"
+								onclick={() => { editedTweets = [...editedTweets, { text: '' }]; }}
+							>
+								<Plus class="w-3 h-3" />
+								{m.thread_add_tweet()}
+							</button>
+						{/if}
+						{:else}
+						<!-- Empty state: thread not yet generated -->
+						<div
+							class="rounded-xl flex flex-col items-center justify-center py-10 border"
+							style="border-color: var(--border-subtle); background: var(--bg-surface-alt, var(--bg-surface));"
+						>
+							<MessageSquare class="w-10 h-10 mb-2" style="color: var(--text-muted); opacity: 0.4;" />
+							<span class="text-sm font-bold mb-1" style="color: var(--text-muted);">Thread not generated yet</span>
+							<span class="text-xs" style="color: var(--text-dim);">Use "Regenerate Copy" below to generate tweets</span>
+						</div>
+						{/if}
+					</section>
+
+				<!-- ═══ POLL EDITOR ═══ -->
+				{:else if post.postType === 'poll'}
+					<section>
+						<label class="text-xs font-bold uppercase tracking-wider mb-2 block" style="color: var(--text-muted);">
+							<BarChart2 class="w-3.5 h-3.5 inline -mt-0.5 mr-1" />
+							{m.poll_question_label()}
+						</label>
+						<textarea
+							bind:value={editedPollQuestion}
+							class="w-full rounded-xl px-4 py-3 text-sm leading-relaxed resize-y min-h-[60px] outline-none"
+							style="background: var(--input-bg, var(--bg-surface-alt)); border: 1px solid var(--border-subtle); color: var(--text-main);"
+							placeholder={m.poll_question_label()}
+						></textarea>
+
+						<div class="flex flex-col gap-2 mt-3">
+							{#each editedPollOptions as option, i}
+								<div class="flex items-center gap-2">
+									<span class="text-[0.65rem] font-bold shrink-0 w-4" style="color: var(--text-muted);">{i + 1}</span>
+									<input
+										type="text"
+										bind:value={editedPollOptions[i]}
+										class="flex-1 rounded-lg px-3 py-2 text-sm outline-none"
+										style="background: var(--input-bg, var(--bg-surface-alt)); border: 1px solid var(--border-subtle); color: var(--text-main);"
+										maxlength={25}
+										placeholder={m.poll_option_n({ n: i + 1 })}
+									/>
+									{#if editedPollOptions.length > 2}
+										<button
+											class="w-6 h-6 flex items-center justify-center rounded cursor-pointer"
+											style="color: var(--negative);"
+											onclick={() => { editedPollOptions = editedPollOptions.filter((_, idx) => idx !== i); }}
+										>
+											<Trash2 class="w-3.5 h-3.5" />
+										</button>
+									{/if}
+								</div>
+							{/each}
+						</div>
+						{#if editedPollOptions.length < 4}
+							<button
+								class="flex items-center gap-1.5 mt-2 px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer"
+								style="border: 1px dashed var(--border-subtle); color: var(--text-dim);"
+								onclick={() => { editedPollOptions = [...editedPollOptions, '']; }}
+							>
+								<Plus class="w-3 h-3" />
+								{m.poll_add_option()}
+							</button>
+						{/if}
+
+						<!-- Context post text -->
+						<label class="text-xs font-bold uppercase tracking-wider mt-4 mb-2 block" style="color: var(--text-muted);">
+							{m.review_edit_copy()}
+						</label>
+						<textarea
+							bind:value={editedCopy}
+							class="w-full rounded-xl px-4 py-3 text-sm leading-relaxed resize-y min-h-[80px] outline-none"
+							style="background: var(--input-bg, var(--bg-surface-alt)); border: 1px solid var(--border-subtle); color: var(--text-main);"
+						></textarea>
+					</section>
+
+				<!-- ═══ STANDARD (static_image / text_only) ═══ -->
+				{:else}
+					<!-- 1. Image preview -->
+					<section>
+						{#if post.imageUrl}
+							<div
+								class="rounded-xl overflow-hidden border mx-auto"
+								style="border-color: var(--border-subtle); aspect-ratio: {imageAspect}; background: var(--bg-surface-alt, #0a0f14); max-height: 480px;"
+							>
+								<img
+									src={post.imageUrl}
+									alt={post.topic}
+									class="w-full h-full object-contain"
+								/>
+							</div>
+						{:else if post.postType === 'static_image'}
+							<div
+								class="rounded-xl flex flex-col items-center justify-center py-10 border"
+								style="border-color: var(--border-subtle); background: var(--bg-surface-alt, var(--bg-surface));"
+							>
+								<Image class="w-10 h-10 mb-2" style="color: var(--text-muted); opacity: 0.4;" />
+								<span class="text-xs" style="color: var(--text-muted);">No image generated</span>
+							</div>
+						{/if}
+						{#if post.postType === 'static_image'}
+							<div class="flex gap-2 mt-3">
+								<button
+									class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all hover:-translate-y-px cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+									style="border: 1px solid var(--border-subtle); color: var(--text-dim); background: var(--bg-surface-alt, var(--bg-surface));"
+									onclick={downloadImage}
+									disabled={!post.imageUrl || isAnyLoading}
+								>
+									<Download class="w-3.5 h-3.5" />
+									{m.review_download_image()}
+								</button>
+								<button
+									class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all hover:-translate-y-px cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+									style="border: 1px solid var(--border-subtle); color: var(--c-secondary); background: rgba(249,115,22,0.05);"
+									onclick={() => regeneratePost('image')}
+									disabled={isAnyLoading}
+								>
+									{#if loadingRegenImage}
+										<Loader2 class="w-3.5 h-3.5 animate-spin" />
+									{:else}
+										<RefreshCw class="w-3.5 h-3.5" />
+									{/if}
+									{loadingRegenImage ? m.review_loading() : m.review_regenerate_image()}
+								</button>
+							</div>
+						{/if}
+					</section>
+
+					<!-- 2. Copy editing -->
+					<section>
+						<label class="text-xs font-bold uppercase tracking-wider mb-2 block" style="color: var(--text-muted);">
+							{m.review_edit_copy()}
+						</label>
+						<textarea
+							bind:value={editedCopy}
+							class="w-full rounded-xl px-4 py-3 text-sm leading-relaxed resize-y min-h-[120px] outline-none transition-colors"
+							style="
+								background: var(--input-bg, var(--bg-surface-alt));
+								border: 1px solid var(--border-subtle);
+								color: var(--text-main);
+							"
+							onfocus={(e) => { e.currentTarget.style.borderColor = 'var(--c-electric)'; }}
+							onblur={(e) => { e.currentTarget.style.borderColor = 'var(--border-subtle)'; }}
+						></textarea>
+						<div class="flex items-center justify-between mt-1.5">
+							<span
+								class="text-[0.7rem] font-mono"
+								style="color: {charCount > 3000 ? 'var(--negative)' : 'var(--text-muted)'};"
+							>
+								{charCount} {m.review_characters()}
+							</span>
+							<button
+								class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:-translate-y-px cursor-pointer"
+								style="border: 1px solid var(--border-subtle); color: {copied ? 'var(--positive)' : 'var(--text-dim)'}; background: {copied ? 'rgba(34,197,94,0.08)' : 'transparent'};"
+								onclick={copyToClipboard}
+							>
+								{#if copied}
+									<Check class="w-3.5 h-3.5" />
+									{m.review_copied()}
+								{:else}
+									<Copy class="w-3.5 h-3.5" />
+									{m.review_copy_clipboard()}
+								{/if}
+							</button>
+						</div>
+					</section>
+				{/if}
+
+				<!-- 3. Hashtag editing (shared across all types) -->
 				<section>
 					<label class="text-xs font-bold uppercase tracking-wider mb-2 block" style="color: var(--text-muted);">
 						{m.review_hashtags()}

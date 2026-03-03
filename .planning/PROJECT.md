@@ -2,11 +2,11 @@
 
 ## What This Is
 
-An AI-powered marketing agency platform for indie builders and small businesses. Users brief the platform about their product — what it does, who it's for, what their brand looks and sounds like — and the AI generates content strategies, original visual assets, and platform-optimized copy, then publishes everything to connected social media accounts. The tagline is "The AI marketing agency you can brief in 5 minutes."
+An AI-powered marketing agency platform for indie builders and small businesses. Users brief the platform about their product — what it does, who it's for, what their brand looks and sounds like — and the AI generates content strategies, original visual assets, and platform-optimized copy. Users then review, approve, and download the content to publish manually on their social accounts. The tagline is "The AI marketing agency you can brief in 5 minutes."
 
 ## Core Value
 
-A user with zero design skills and zero marketing knowledge can brief the AI and get professional, brand-consistent marketing content generated and published to their social accounts — the AI proposes, the human disposes.
+A user with zero design skills and zero marketing knowledge can brief the AI and get professional, brand-consistent marketing content generated, reviewed, and ready to download — the AI proposes, the human disposes.
 
 ## Requirements
 
@@ -22,8 +22,7 @@ A user with zero design skills and zero marketing knowledge can brief the AI and
 - [ ] AI copy generation (platform-optimized per channel)
 - [ ] AI image generation (fully AI-generated, brand-informed from asset analysis)
 - [ ] Content calendar with review/approval workflow
-- [ ] LinkedIn publishing (personal profiles + company pages)
-- [ ] Scheduling and automated publishing
+- [ ] Content download/export for manual publishing
 - [ ] Full marketing landing page
 
 ### Out of Scope
@@ -31,7 +30,8 @@ A user with zero design skills and zero marketing knowledge can brief the AI and
 - Real-time chat or messaging — not core to content generation value
 - Mobile app — web-first, mobile later
 - OAuth login (Google, etc.) — email/password sufficient for v1
-- Instagram publishing — requires Meta App Review, deferred to Phase 3
+- Social account linking / auto-publishing — MVP is manual download, auto-publishing deferred to v2
+- Instagram publishing — requires Meta App Review, deferred to v2+
 - Billing/payment gating — free access in Phase 1, billing is Phase 3
 - Autopilot mode — deferred to Phase 2 to build user trust first
 - Carousel and reel generation — deferred to Phase 2
@@ -53,7 +53,7 @@ A user with zero design skills and zero marketing knowledge can brief the AI and
 
 The AI's output quality depends entirely on how good the brief is. Progressive onboarding in three steps:
 
-**Step 1 — Quick Start (~2 min):** Product name, website URL, description, logo upload, connect at least one social account. URL triggers auto-scraping to extract descriptions, colors, key phrases, screenshots — with graceful fallback if scraping fails (show what was extracted, let user correct/fill manually, never block onboarding).
+**Step 1 — Quick Start (~2 min):** Product name, website URL, description, logo upload. URL triggers auto-scraping to extract descriptions, colors, key phrases, screenshots — with graceful fallback if scraping fails (show what was extracted, let user correct/fill manually, never block onboarding).
 
 **Step 2 — Deep Brief (~5 min):** Wizard-style flow covering:
 - Product details: problem it solves, key features, differentiator, pricing, product stage
@@ -77,13 +77,13 @@ The AI's output quality depends entirely on how good the brief is. Progressive o
 - Review screen: full platform preview, edit copy (with char counts), swap visual, edit hashtags, change schedule
 - Actions: approve, reject with reason, regenerate (separate buttons for copy / image / both), edit and approve
 
-### Publishing
+### Content Export (MVP)
 
-- LinkedIn only in Phase 1 (API is simpler)
-- Users choose per product: personal profile or company page
-- System checks every minute for posts at scheduled time
-- Publishes via LinkedIn API, stores live post URL on success
-- On failure: retry up to 3 times, surface error clearly in dashboard
+- Users download generated content (copy text + images) for manual publishing
+- One-click copy-to-clipboard for post text
+- Individual image download
+- Users can mark posts as "published" manually to track status
+- Automated social publishing (LinkedIn, Instagram, etc.) deferred to v2
 
 ### Brief Completeness Score (Phase 2)
 
@@ -95,7 +95,7 @@ Toggle per product. When enabled, AI-generated posts skip review and go straight
 
 ### Phasing
 
-**Phase 1 (MVP):** Auth (email/password with verification), full onboarding flow with website scraping, product brief editor, asset uploads with tagging, LinkedIn OAuth (personal + company page), AI content plan generation, AI copy generation, AI static image generation, content calendar (monthly/weekly), post review/approval flow with granular regeneration, LinkedIn publishing (text + image), basic scheduling, manual approval mode, full marketing landing page.
+**Phase 1 (MVP):** Auth (email/password with verification), full onboarding flow with website scraping, product brief editor, asset uploads with tagging, AI content plan generation, AI copy generation, AI static image generation, content calendar (monthly/weekly), post review/approval flow with granular regeneration, content download/export for manual publishing, full marketing landing page.
 
 **Phase 2:** Carousel generation, reel/motion graphic generation, autopilot mode, brief completeness score with nudges, inline editing of post copy and visuals, multiple products per user, email notifications (published, failed, weekly digest), custom default prompt for AI generation.
 
@@ -138,7 +138,7 @@ Vibrant, creative, energetic — inspired by Gumloop and Relume.io. Bold gradien
 ## Constraints
 
 - **AI Costs:** Image generation + LLM calls per post create per-unit costs. Pricing must account for this. Optimize model selection for cost/quality balance.
-- **LinkedIn API:** Publishing API has rate limits and requires OAuth 2.0 app approval. Personal profile posting requires specific LinkedIn product permissions.
+- **Social APIs (v2):** LinkedIn/Instagram publishing APIs have rate limits and require OAuth app approval. Deferred to post-MVP to reduce complexity.
 - **Image Quality:** AI-generated images must be consistently brand-coherent. This is the hardest technical problem and the core differentiator. If output quality isn't good enough, the value prop falls apart.
 - **Website Scraping:** Unreliable by nature — many sites block scrapers. Must never block onboarding.
 
@@ -146,7 +146,7 @@ Vibrant, creative, energetic — inspired by Gumloop and Relume.io. Bold gradien
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| LinkedIn-only for Phase 1 | API is simpler, Instagram requires Meta App Review (weeks) | — Pending |
+| No social publishing in MVP | Users download content and publish manually; reduces complexity, avoids OAuth/API approval delays | Adopted |
 | Fully AI-generated images (not templates) | Higher quality ceiling, true brand-informed generation | — Pending |
 | Email/password auth (no OAuth) | Simpler to build, sufficient for v1 | — Pending |
 | Tech stack TBD via research | Want best-fit stack, not defaults | — Pending |
@@ -162,4 +162,4 @@ Vibrant, creative, energetic — inspired by Gumloop and Relume.io. Bold gradien
 | All 5 dashboard variants as views | Overview, Calendar, Editor, Brand/Campaigns, Publishing Hub — all built as SvelteKit pages | Adopted |
 
 ---
-*Last updated: 2026-02-16 — design direction finalized, dashboard phase added*
+*Last updated: 2026-02-18 — MVP simplification: no social publishing, users download content manually*

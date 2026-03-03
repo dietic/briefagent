@@ -1,5 +1,5 @@
 ---
-phase: 02-auth-onboarding-linkedin
+phase: 02-auth-onboarding
 plan: 01
 subsystem: auth
 tags: [supabase, ssr, cookies, sveltekit, adapter-node, i18n, paraglide]
@@ -19,7 +19,7 @@ provides:
   - "33 auth i18n keys (en/es)"
   - "requireAuth helper for server-side auth checks"
   - "adapter-node for server-side capabilities"
-affects: [02-02-onboarding, 02-03-linkedin, 03-ai-pipeline, 04-calendar-publishing]
+affects: [02-02-onboarding, 03-ai-pipeline, 04-calendar-export]
 
 # Tech tracking
 tech-stack:
@@ -169,11 +169,11 @@ None beyond the auto-fixed deviations.
    - Add `http://localhost:5173/callback` to Redirect URLs
 
 ## Next Phase Readiness
-- Auth foundation complete -- ready for onboarding wizard (02-02) and LinkedIn OAuth (02-03)
+- Auth foundation complete -- ready for onboarding wizard (02-02)
 - Dashboard routes protected; user data available via layout server load
 - Supabase client available in hooks for all server-side operations
 - Pending: User must set up Supabase project and configure .env before testing
 
 ---
-*Phase: 02-auth-onboarding-linkedin*
+*Phase: 02-auth-onboarding*
 *Completed: 2026-02-16*

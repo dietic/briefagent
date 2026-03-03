@@ -51,6 +51,7 @@
 				name="password"
 				type="password"
 				required
+				placeholder="password"
 				autocomplete="current-password"
 				class="auth-input"
 			/>

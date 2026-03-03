@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { productBriefs, contentPlans, posts, socialAccounts } from '$lib/server/db/schema';
+import { productBriefs, contentPlans, posts } from '$lib/server/db/schema';
 import { eq, and, count } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 
@@ -91,19 +91,10 @@ export const load: PageServerLoad = async ({ parent }) => {
 		};
 	});
 
-	// Load social accounts for the active product
-	const accounts = product
-		? await db.query.socialAccounts.findMany({
-				where: eq(socialAccounts.productId, product.id),
-				orderBy: socialAccounts.createdAt
-			})
-		: [];
-
 	return {
 		brand,
 		voice,
 		contentPlans: campaigns,
-		socialAccounts: accounts,
 		stats: {
 			totalPosts: totalPostCount[0]?.count ?? 0
 		}

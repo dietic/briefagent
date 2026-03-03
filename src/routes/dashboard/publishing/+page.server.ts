@@ -31,6 +31,7 @@ export async function load({ parent }: { parent: () => Promise<{ product: { id: 
 			copyText: true,
 			hashtags: true,
 			keyMessage: true,
+			contentData: true,
 			rejectionReason: true
 		},
 		orderBy: posts.scheduledAt

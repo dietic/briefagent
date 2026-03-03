@@ -2,7 +2,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import * as m from '$lib/paraglide/messages.js';
 	import { AlertDialog } from 'bits-ui';
-	import { Trash2, Plus, Globe, CheckCircle2, AlertTriangle } from 'lucide-svelte';
+	import { Trash2, Plus, Globe, CheckCircle2, AlertTriangle, Pencil } from 'lucide-svelte';
 
 	let { data } = $props();
 
@@ -165,13 +165,30 @@
 										{m.settings_product_created({ date: formatDate(product.createdAt) })}
 									</span>
 								{/if}
-								{#if data.socialAccountCounts?.[product.id] > 0}
-									<span class="text-[0.7rem] flex items-center gap-1" style="color: var(--text-dim);">
-										&#x1F310; {data.socialAccountCounts[product.id]} social {data.socialAccountCounts[product.id] === 1 ? 'account' : 'accounts'}
-									</span>
-								{/if}
-							</div>
+								</div>
 						</div>
+
+						<!-- Edit button -->
+						<a
+							href="/dashboard/settings/{product.id}"
+							class="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] text-[0.78rem] font-semibold transition-all duration-150 shrink-0"
+							style="
+								color: var(--c-electric);
+								background: rgba(6,182,212,0.05);
+								border: 1px solid rgba(6,182,212,0.15);
+							"
+							onmouseenter={(e) => {
+								e.currentTarget.style.background = 'rgba(6,182,212,0.12)';
+								e.currentTarget.style.borderColor = 'rgba(6,182,212,0.3)';
+							}}
+							onmouseleave={(e) => {
+								e.currentTarget.style.background = 'rgba(6,182,212,0.05)';
+								e.currentTarget.style.borderColor = 'rgba(6,182,212,0.15)';
+							}}
+						>
+							<Pencil class="w-3.5 h-3.5" />
+							{m.settings_edit_product()}
+						</a>
 
 						<!-- Delete button -->
 						<button

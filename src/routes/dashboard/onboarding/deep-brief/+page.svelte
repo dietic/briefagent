@@ -1,22 +1,52 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import * as m from '$lib/paraglide/messages.js';
-	import { Loader2, X, ChevronDown, Plus, Trash2 } from 'lucide-svelte';
+	import { Loader2, X, ChevronDown, Plus, Trash2, Check } from 'lucide-svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 
 	const platformOptions = {
 		active: [
-			{ slug: 'linkedin', name: 'LinkedIn' },
-			{ slug: 'x', name: 'X (Twitter)' }
+			{ slug: 'linkedin', name: 'LinkedIn', color: '#0a66c2' },
+			{ slug: 'x', name: 'X (Twitter)', color: '#eff3f4' }
 		],
 		comingSoon: [
-			{ slug: 'instagram', name: 'Instagram' },
-			{ slug: 'youtube', name: 'YouTube' },
-			{ slug: 'tiktok', name: 'TikTok' }
+			{ slug: 'instagram', name: 'Instagram', color: '#e1306c' },
+			{ slug: 'youtube', name: 'YouTube', color: '#ff0000' },
+			{ slug: 'tiktok', name: 'TikTok', color: '#00f2ea' }
 		]
 	};
+
+	let openDropdown = $state<number | null>(null);
+
+	function toggleDropdown(index: number) {
+		openDropdown = openDropdown === index ? null : index;
+	}
+
+	function selectPlatform(pillarIndex: number, slug: string) {
+		pillars[pillarIndex].platform = slug;
+		openDropdown = null;
+	}
+
+	function getPlatformLabel(slug: string): string {
+		const all = [...platformOptions.active, ...platformOptions.comingSoon];
+		return all.find((p) => p.slug === slug)?.name ?? m.onb_brief_pillar_platform_none();
+	}
+
+	function getPlatformColor(slug: string): string | null {
+		const all = [...platformOptions.active, ...platformOptions.comingSoon];
+		return all.find((p) => p.slug === slug)?.color ?? null;
+	}
+
+	function handleClickOutside(event: MouseEvent) {
+		if (openDropdown !== null) {
+			const target = event.target as HTMLElement;
+			if (!target.closest('[data-platform-dropdown]')) {
+				openDropdown = null;
+			}
+		}
+	}
 
 	// Product Details
 	let problemSolved = $state(data.brief?.problemSolved ?? '');
@@ -140,6 +170,8 @@
 	}
 </script>
 
+<svelte:window onclick={handleClickOutside} />
+
 <div>
 	<!-- Header -->
 	<div class="text-center mb-10">
@@ -253,26 +285,94 @@
 								<label class="block text-[0.75rem] font-semibold" style="color: var(--text-dim);">
 									{m.onb_brief_pillar_platform()}
 								</label>
-								<div class="relative">
-									<select
-										bind:value={pillar.platform}
-										class="w-full px-3 py-2.5 rounded-lg text-[0.85rem] outline-none appearance-none transition-all duration-200 cursor-pointer"
-										style="background: var(--bg-surface); border: 1px solid var(--border-subtle); color: var(--text-main);"
-										onfocus={(e) => (e.currentTarget.style.borderColor = 'var(--c-electric)')}
-										onblur={(e) => (e.currentTarget.style.borderColor = 'var(--border-subtle)')}
+								<div class="relative" data-platform-dropdown>
+									<!-- Custom dropdown trigger -->
+									<button
+										type="button"
+										onclick={() => toggleDropdown(i)}
+										class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[0.85rem] outline-none transition-all duration-200 cursor-pointer text-left"
+										style="background: var(--bg-surface); border: 1px solid {openDropdown === i ? 'var(--c-electric)' : 'var(--border-subtle)'}; color: var(--text-main);"
 									>
-										<option value="">{m.onb_brief_pillar_platform_none()}</option>
-										{#each platformOptions.active as p}
-											<option value={p.slug}>{p.name}</option>
-										{/each}
-										{#each platformOptions.comingSoon as p}
-											<option value={p.slug} disabled>{p.name} — {m.onb_brief_pillar_platform_coming_soon()}</option>
-										{/each}
-									</select>
-									<ChevronDown
-										class="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
-										style="color: var(--text-muted);"
-									/>
+										{#if pillar.platform && getPlatformColor(pillar.platform)}
+											<span
+												class="w-2.5 h-2.5 rounded-full shrink-0"
+												style="background: {getPlatformColor(pillar.platform)};"
+											></span>
+										{/if}
+										<span class="flex-1 truncate" style="color: {pillar.platform ? 'var(--text-main)' : 'var(--text-muted)'};">
+											{getPlatformLabel(pillar.platform)}
+										</span>
+										<ChevronDown
+											class="w-4 h-4 shrink-0 transition-transform duration-200"
+											style="color: var(--text-muted); transform: {openDropdown === i ? 'rotate(180deg)' : 'rotate(0)'};"
+										/>
+									</button>
+
+									<!-- Dropdown panel -->
+									{#if openDropdown === i}
+										<div
+											class="absolute z-50 top-[calc(100%+4px)] left-0 w-full rounded-lg py-1 shadow-xl"
+											style="background: var(--bg-surface); border: 1px solid var(--border-subtle);"
+										>
+											<!-- Any platform -->
+											<button
+												type="button"
+												onclick={() => selectPlatform(i, '')}
+												class="w-full flex items-center gap-2.5 px-3 py-2 text-[0.82rem] text-left cursor-pointer transition-colors duration-150"
+												style="color: var(--text-dim); background: {pillar.platform === '' ? 'var(--c-electric-glow)' : 'transparent'};"
+												onmouseenter={(e) => { if (pillar.platform !== '') e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
+												onmouseleave={(e) => { if (pillar.platform !== '') e.currentTarget.style.background = 'transparent'; }}
+											>
+												<span class="flex-1">{m.onb_brief_pillar_platform_none()}</span>
+												{#if pillar.platform === ''}
+													<Check class="w-3.5 h-3.5" style="color: var(--c-electric);" />
+												{/if}
+											</button>
+
+											<div class="mx-2 my-1" style="border-top: 1px solid var(--border-subtle);"></div>
+
+											<!-- Active platforms -->
+											{#each platformOptions.active as p}
+												<button
+													type="button"
+													onclick={() => selectPlatform(i, p.slug)}
+													class="w-full flex items-center gap-2.5 px-3 py-2 text-[0.82rem] text-left cursor-pointer transition-colors duration-150"
+													style="color: var(--text-main); background: {pillar.platform === p.slug ? 'var(--c-electric-glow)' : 'transparent'};"
+													onmouseenter={(e) => { if (pillar.platform !== p.slug) e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
+													onmouseleave={(e) => { if (pillar.platform !== p.slug) e.currentTarget.style.background = 'transparent'; }}
+												>
+													<span
+														class="w-2.5 h-2.5 rounded-full shrink-0"
+														style="background: {p.color};"
+													></span>
+													<span class="flex-1">{p.name}</span>
+													{#if pillar.platform === p.slug}
+														<Check class="w-3.5 h-3.5" style="color: var(--c-electric);" />
+													{/if}
+												</button>
+											{/each}
+
+											<div class="mx-2 my-1" style="border-top: 1px solid var(--border-subtle);"></div>
+
+											<!-- Coming soon platforms -->
+											{#each platformOptions.comingSoon as p}
+												<div
+													class="w-full flex items-center gap-2.5 px-3 py-2 text-[0.82rem] opacity-40 cursor-not-allowed"
+													style="color: var(--text-muted);"
+												>
+													<span
+														class="w-2.5 h-2.5 rounded-full shrink-0 opacity-50"
+														style="background: {p.color};"
+													></span>
+													<span class="flex-1">{p.name}</span>
+													<span
+														class="text-[0.6rem] font-bold tracking-wider uppercase px-1.5 py-0.5 rounded"
+														style="background: rgba(255,255,255,0.06); color: var(--text-muted);"
+													>Soon</span>
+												</div>
+											{/each}
+										</div>
+									{/if}
 								</div>
 							</div>
 						</div>

@@ -24,6 +24,54 @@
 
 	let submitting = $state(false);
 
+	// Type-specific labels for step 2
+	const labels = $derived.by(() => {
+		if (selectedType === 'personal_brand') {
+			return {
+				title: () => m.onb_quick_brand_title(),
+				subtitle: () => m.onb_quick_brand_subtitle(),
+				name: () => m.onb_quick_brand_name(),
+				namePlaceholder: () => m.onb_quick_brand_name_placeholder(),
+				url: () => m.onb_quick_brand_url(),
+				urlPlaceholder: () => m.onb_quick_brand_url_placeholder(),
+				urlHint: () => m.onb_quick_brand_url_hint(),
+				description: () => m.onb_quick_brand_description(),
+				descriptionPlaceholder: () => m.onb_quick_brand_description_placeholder(),
+				logo: () => m.onb_quick_brand_logo(),
+				logoHint: () => m.onb_quick_brand_logo_hint()
+			};
+		}
+		if (selectedType === 'service') {
+			return {
+				title: () => m.onb_quick_service_title(),
+				subtitle: () => m.onb_quick_service_subtitle(),
+				name: () => m.onb_quick_service_name(),
+				namePlaceholder: () => m.onb_quick_service_name_placeholder(),
+				url: () => m.onb_quick_service_url(),
+				urlPlaceholder: () => m.onb_quick_service_url_placeholder(),
+				urlHint: () => m.onb_quick_service_url_hint(),
+				description: () => m.onb_quick_service_description(),
+				descriptionPlaceholder: () => m.onb_quick_service_description_placeholder(),
+				logo: () => m.onb_quick_service_logo(),
+				logoHint: () => m.onb_quick_service_logo_hint()
+			};
+		}
+		// Default: product
+		return {
+			title: () => m.onb_quick_title(),
+			subtitle: () => m.onb_quick_subtitle(),
+			name: () => m.onb_quick_name(),
+			namePlaceholder: () => m.onb_quick_name_placeholder(),
+			url: () => m.onb_quick_url(),
+			urlPlaceholder: () => m.onb_quick_url_placeholder(),
+			urlHint: () => m.onb_quick_url_hint(),
+			description: () => m.onb_quick_description(),
+			descriptionPlaceholder: () => m.onb_quick_description_placeholder(),
+			logo: () => m.onb_quick_logo(),
+			logoHint: () => m.onb_quick_logo_hint()
+		};
+	});
+
 	const typeOptions = [
 		{
 			value: 'personal_brand',
@@ -199,10 +247,10 @@
 					class="text-[1.75rem] font-extrabold tracking-tight mb-2"
 					style="color: var(--text-main);"
 				>
-					{m.onb_quick_title()}
+					{labels.title()}
 				</h1>
 				<p class="text-[0.9rem]" style="color: var(--text-dim);">
-					{m.onb_quick_subtitle()}
+					{labels.subtitle()}
 				</p>
 			</div>
 
@@ -231,17 +279,17 @@
 					</div>
 				{/if}
 
-				<!-- Product name -->
+				<!-- Name -->
 				<div class="space-y-1.5">
 					<label for="name" class="block text-[0.8rem] font-semibold" style="color: var(--text-main);">
-						{m.onb_quick_name()}
+						{labels.name()}
 					</label>
 					<input
 						id="name"
 						name="name"
 						type="text"
 						bind:value={name}
-						placeholder={m.onb_quick_name_placeholder()}
+						placeholder={labels.namePlaceholder()}
 						required
 						class="w-full px-4 py-3 rounded-xl text-[0.9rem] outline-none transition-all duration-200"
 						style="
@@ -257,7 +305,7 @@
 				<!-- Website URL -->
 				<div class="space-y-1.5">
 					<label for="websiteUrl" class="block text-[0.8rem] font-semibold" style="color: var(--text-main);">
-						{m.onb_quick_url()}
+						{labels.url()}
 					</label>
 					<div class="relative">
 						<div class="absolute left-3.5 top-1/2 -translate-y-1/2" style="color: var(--text-muted);">
@@ -268,7 +316,7 @@
 							name="websiteUrl"
 							type="url"
 							bind:value={websiteUrl}
-							placeholder={m.onb_quick_url_placeholder()}
+							placeholder={labels.urlPlaceholder()}
 							class="w-full pl-10 pr-4 py-3 rounded-xl text-[0.9rem] outline-none transition-all duration-200"
 							style="
 								background: var(--input-bg);
@@ -283,7 +331,7 @@
 						/>
 					</div>
 					<p class="text-[0.75rem]" style="color: var(--text-muted);">
-						{m.onb_quick_url_hint()}
+						{labels.urlHint()}
 					</p>
 
 					<!-- Scraping status indicators -->
@@ -314,16 +362,16 @@
 					{/if}
 				</div>
 
-				<!-- Short description -->
+				<!-- Description -->
 				<div class="space-y-1.5">
 					<label for="description" class="block text-[0.8rem] font-semibold" style="color: var(--text-main);">
-						{m.onb_quick_description()}
+						{labels.description()}
 					</label>
 					<textarea
 						id="description"
 						name="description"
 						bind:value={description}
-						placeholder={m.onb_quick_description_placeholder()}
+						placeholder={labels.descriptionPlaceholder()}
 						rows="3"
 						class="w-full px-4 py-3 rounded-xl text-[0.9rem] outline-none transition-all duration-200 resize-none"
 						style="
@@ -336,10 +384,10 @@
 					></textarea>
 				</div>
 
-				<!-- Logo upload -->
+				<!-- Logo / Photo upload -->
 				<div class="space-y-1.5">
 					<label class="block text-[0.8rem] font-semibold" style="color: var(--text-main);">
-						{m.onb_quick_logo()}
+						{labels.logo()}
 					</label>
 					{#if data.product?.id}
 						<div
@@ -362,10 +410,10 @@
 							{/if}
 							<div class="flex-1 min-w-0">
 								<p class="text-[0.8rem] font-medium" style="color: var(--text-main);">
-									{m.onb_quick_logo()}
+									{labels.logo()}
 								</p>
 								<p class="text-[0.7rem]" style="color: var(--text-muted);">
-									{m.onb_quick_logo_hint()}
+									{labels.logoHint()}
 								</p>
 							</div>
 							<input

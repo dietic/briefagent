@@ -11,10 +11,10 @@
 	const titleMap: Record<string, () => string> = {
 		'/dashboard': () => m.dash_breadcrumb_overview(),
 		'/dashboard/calendar': () => m.dash_breadcrumb_calendar(),
-		'/dashboard/editor': () => m.dash_breadcrumb_editor(),
 		'/dashboard/brand': () => m.dash_breadcrumb_brand(),
 		'/dashboard/publishing': () => m.dash_breadcrumb_publishing(),
-		'/dashboard/generate': () => m.gen_title()
+		'/dashboard/generate': () => m.gen_title(),
+		'/dashboard/settings': () => m.dash_breadcrumb_settings()
 	};
 
 	let pageTitle = $derived(titleMap[$page.url.pathname]?.() ?? m.dash_breadcrumb_overview());
@@ -48,7 +48,7 @@
 	</div>
 
 	<!-- Header -->
-	<DashboardHeader title={pageTitle} />
+	<DashboardHeader title={pageTitle} product={data.product} products={data.products} />
 
 	<!-- Main content area -->
 	<main class="overflow-y-auto p-8">

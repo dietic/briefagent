@@ -12,7 +12,8 @@ const updateSchema = z
 		copyText: z.string().optional(),
 		hashtags: z.array(z.string()).optional(),
 		scheduledAt: z.string().optional(),
-		rejectionReason: z.string().optional()
+		rejectionReason: z.string().optional(),
+		contentData: z.record(z.string(), z.unknown()).optional()
 	})
 	.refine(
 		(data) => {
@@ -63,6 +64,7 @@ export async function PATCH({ locals, params, request }: RequestEvent) {
 	if (data.hashtags !== undefined) updates.hashtags = data.hashtags;
 	if (data.rejectionReason !== undefined) updates.rejectionReason = data.rejectionReason;
 	if (data.scheduledAt !== undefined) updates.scheduledAt = new Date(data.scheduledAt);
+	if (data.contentData !== undefined) updates.contentData = data.contentData;
 	if (data.status === 'published') updates.publishedAt = new Date();
 
 	await db.update(posts).set(updates).where(eq(posts.id, params.id!));

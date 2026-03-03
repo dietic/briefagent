@@ -36,11 +36,18 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 	// Count posts to estimate total steps
 	const planPosts = await db.query.posts.findMany({
 		where: eq(posts.contentPlanId, contentPlanId),
-		columns: { id: true, postType: true }
+		columns: { id: true, postType: true, contentData: true }
 	});
 
-	const imagePostCount = planPosts.filter((p) => p.postType === 'static_image').length;
-	const estimatedSteps = 2 + planPosts.length + imagePostCount;
+	const imageSteps = planPosts.reduce((sum, p) => {
+		if (p.postType === 'static_image') return sum + 1;
+		if (p.postType === 'carousel') {
+			const data = p.contentData as { carouselSlideCount?: number } | null;
+			return sum + (data?.carouselSlideCount ?? 6);
+		}
+		return sum; // thread, poll, text_only = 0 image steps
+	}, 0);
+	const estimatedSteps = 2 + planPosts.length + imageSteps;
 
 	// Create job record
 	const [job] = await db

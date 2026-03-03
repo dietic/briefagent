@@ -13,11 +13,16 @@ async function updateJob(jobId: string, updates: Record<string, unknown>) {
 		.where(eq(generationJobs.id, jobId));
 }
 
-async function runPlanGeneration(jobId: string, userId: string, productId: string) {
+async function runPlanGeneration(
+	jobId: string,
+	userId: string,
+	productId: string,
+	pillarIds?: string[]
+) {
 	try {
 		// Step 1: Assemble brief
 		await updateJob(jobId, { status: 'running', currentStep: 1, progress: 'Assembling brief...' });
-		const brief = await assembleBrief(productId);
+		const brief = await assembleBrief(productId, pillarIds);
 
 		// Step 2: Generate content plan
 		await updateJob(jobId, { currentStep: 2, progress: 'Generating content plan...' });
@@ -32,7 +37,15 @@ async function runPlanGeneration(jobId: string, userId: string, productId: strin
 			})
 			.filter(Boolean);
 
-		const plan = await generateContentPlan(brief, summaries);
+		// Calculate dynamic post count based on selected pillars
+		let minPosts = 8;
+		let maxPosts = 12;
+		if (pillarIds?.length) {
+			minPosts = Math.max(4, pillarIds.length * 2);
+			maxPosts = Math.min(12, Math.max(minPosts, pillarIds.length * 3));
+		}
+
+		const plan = await generateContentPlan(brief, summaries, undefined, minPosts, maxPosts);
 
 		// Step 3: Save to database
 		await updateJob(jobId, { currentStep: 3, progress: 'Saving content plan...' });
@@ -52,17 +65,30 @@ async function runPlanGeneration(jobId: string, userId: string, productId: strin
 
 		// Insert all post slots
 		await db.insert(posts).values(
-			plan.postSlots.map((slot) => ({
-				contentPlanId: contentPlan.id,
-				productId,
-				platform: slot.platform,
-				postType: slot.postType,
-				scheduledAt: new Date(slot.dateTime),
-				topic: slot.topic,
-				contentCategory: slot.contentCategory,
-				keyMessage: slot.keyMessage,
-				assetReferences: slot.assetReferences
-			}))
+			plan.postSlots.map((slot) => {
+				// Build contentData for type-specific fields
+				let contentData: Record<string, unknown> | null = null;
+				if (slot.postType === 'carousel' && slot.carouselSlideCount) {
+					contentData = { carouselSlideCount: slot.carouselSlideCount };
+				} else if (slot.postType === 'thread' && slot.threadTweetCount) {
+					contentData = { threadTweetCount: slot.threadTweetCount };
+				} else if (slot.postType === 'poll' && slot.pollOptions) {
+					contentData = { pollOptions: slot.pollOptions };
+				}
+
+				return {
+					contentPlanId: contentPlan.id,
+					productId,
+					platform: slot.platform,
+					postType: slot.postType,
+					scheduledAt: new Date(slot.dateTime),
+					topic: slot.topic,
+					contentCategory: slot.contentCategory,
+					keyMessage: slot.keyMessage,
+					assetReferences: slot.assetReferences,
+					contentData
+				};
+			})
 		);
 
 		await updateJob(jobId, {
@@ -87,6 +113,10 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 
 	const body = await request.json();
 	const productId = body?.productId;
+	const pillarIds: string[] | undefined =
+		Array.isArray(body?.pillarIds) && body.pillarIds.every((id: unknown) => typeof id === 'string')
+			? body.pillarIds
+			: undefined;
 
 	if (!productId || typeof productId !== 'string') {
 		return error(400, 'productId is required');
@@ -114,7 +144,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 		.returning();
 
 	// Fire-and-forget the actual generation
-	runPlanGeneration(job.id, user.id, productId).catch((err) => {
+	runPlanGeneration(job.id, user.id, productId, pillarIds).catch((err) => {
 		console.error('Plan generation failed:', err);
 	});
 
